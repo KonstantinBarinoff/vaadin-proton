@@ -10,7 +10,10 @@ public class BzemDepartment {
     private Integer departmentNumber;
     private Integer departmentParentNumber;
     private String departmentName;
+    private BzemDepartment parent;
 
+    
+    
     @Override
     public int hashCode() {
 	final int prime = 31;

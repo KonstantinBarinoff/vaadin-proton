@@ -1,5 +1,11 @@
 package sumo.views;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 //import com.vaadin.flow.component.Component;
@@ -8,65 +14,47 @@ import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.treegrid.TreeGrid;
+import com.vaadin.flow.data.provider.hierarchy.HasHierarchicalDataProvider;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
 
 import lombok.extern.slf4j.Slf4j;
+import oracle.security.o3logon.b;
 import sumo.entities.BzemDepartment;
 import sumo.repositories.BzemDepartmentsDAO;
 import sumo.util.Paths;
 
 @Slf4j
-@Route( Paths.BZEM_DEPARTMENTS) // User Equipments
+@Route( Paths.BZEM_DEPARTMENTS) // Страница департаментов
 public class BzemDepartmentsView extends VerticalLayout {
-
-    private BzemDepartmentsDAO bzemDepartmentsDAO;
-    private final Grid<BzemDepartment> grid;
     
     @Autowired
     public BzemDepartmentsView(BzemDepartmentsDAO bzemDepartmentsDAO) {  
-	this.bzemDepartmentsDAO = bzemDepartmentsDAO;
-	grid = new Grid<>(BzemDepartment.class);
-
-        log.debug("CONSTRUCTOR");
-//	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//	if (auth.getAuthorities().stream()
-//		.map(GrantedAuthority::getAuthority)
-//		.filter(s -> s.toLowerCase().contains("bel_sql_sumo")).count() == 0 ) {
-//	    add(new Span(String.format("Вы определены как пользователь:  %s. У вас нет прав для просмотра этой страницы!",
-//		    auth.getName().replace("ENMASHBEL\\", ""))));
-//	    return;
-//	}
-
-	// build layout
-	TextField filter = new TextField();
-	filter.setPlaceholder("Поиск");
-	filter.setWidth("600px");
-	filter.setValueChangeMode(ValueChangeMode.EAGER);
-//	filter.addValueChangeListener(e -> listFiltered(e.getValue()));
-	HorizontalLayout header = new HorizontalLayout(filter);
-	
-	grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT);
-
-	setDefaultHorizontalComponentAlignment(Alignment.BASELINE);
-	setSizeFull();
-	
-	grid.setColumns("departmentNumber", "departmentParentNumber", "departmentName");
-	grid.getColumnByKey("departmentNumber").setFlexGrow(5).setHeader("Код подразделения");
-	grid.getColumnByKey("departmentParentNumber").setFlexGrow(10).setHeader("Код родительского подразделения");
-	grid.getColumnByKey("departmentName").setFlexGrow(20).setHeader("Наименование подразделения");
-	grid.setItems(bzemDepartmentsDAO.getAllDistincted());
-
-	add(header, grid);
+	log.debug("CONSTRUCTOR");
+        
+        TreeGrid<BzemDepartment> treeGrid = new TreeGrid<>();
+        treeGrid.addHierarchyColumn((BzemDepartment department) -> department.getDepartmentName()).setHeader("Подразделение");
+        setSizeFull();
+        treeGrid.setSizeFull();
+        
+        List<BzemDepartment> departments = bzemDepartmentsDAO.getAllDepartments();
+        
+        for (BzemDepartment department : departments) {
+            if (!treeGrid.getTreeData().contains(department)) {
+                List<BzemDepartment> depatmentBranch = new ArrayList<BzemDepartment>();
+                bzemDepartmentsDAO.getDepartmentBranch(department, depatmentBranch);
+                     
+                for (int i = depatmentBranch.size() - 2; i > 0; i--) {
+                    if (!treeGrid.getTreeData().contains(depatmentBranch.get(i))) {
+                        treeGrid.getTreeData().addItem(null, depatmentBranch.get(i));
+                        }
+                    if (!treeGrid.getTreeData().contains(depatmentBranch.get(i - 1))) {
+                        treeGrid.getTreeData().addItem(depatmentBranch.get(i), depatmentBranch.get(i - 1));
+                        }
+                    }
+                }
+            }
+        add(treeGrid);
     }
-    
-//    void listFiltered(String filterText) {
-//	if (StringUtils.isEmpty(filterText)) {
-//	    grid.setItems(bzemDepartmentsDAO.getAll());
-//	} else {
-//	    grid.setItems(bzemDepartmentsDAO.getByFilter(filterText));
-//	}
-//	}
-    
-    
 }
