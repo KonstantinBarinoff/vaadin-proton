@@ -1,0 +1,5 @@
+{"properties": [{
+  "name": "sumo.datasource.mssql.driverClassName",
+  "type": "java.lang.String",
+  "description": "A description for 'sumo.datasource.mssql.driverClassName'"
+}]}

@@ -1,0 +1,220 @@
+{
+  "id": "5a11498d-a83c-44e3-9497-3b1b7166c603",
+  "version": "2.0",
+  "name": "sumotori_localhost",
+  "url": "http://localhost:8080/",
+  "tests": [{
+    "id": "26501276-84f8-4c17-896b-a5eaa30dc85c",
+    "name": "wfc_archive_omk",
+    "commands": [{
+      "id": "84fb6b21-49e6-4123-9a6e-772ceb291892",
+      "comment": "",
+      "command": "open",
+      "target": "/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "874d32c2-ff61-4b25-9575-c9efbb9268af",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1600x868",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "34ecc067-a5a8-49fe-b42b-b93329100fb6",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=wfc",
+      "targets": [
+        ["linkText=wfc", "linkText"],
+        ["css=li:nth-child(3) > a", "css:finder"],
+        ["xpath=//a[contains(text(),'wfc')]", "xpath:link"],
+        ["xpath=//a[contains(@href, 'wfc')]", "xpath:href"],
+        ["xpath=//li[3]/a", "xpath:position"],
+        ["xpath=//a[contains(.,'wfc')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "e8764af2-af69-42c0-97c8-24fa60b3d9c4",
+      "comment": "",
+      "command": "click",
+      "target": "css=vaadin-grid",
+      "targets": [
+        ["css=vaadin-grid", "css:finder"],
+        ["xpath=//vaadin-grid", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "adbc8daf-8121-4009-bb25-6c292e828562",
+      "comment": "",
+      "command": "verifyElementPresent",
+      "target": "xpath=//vaadin-grid-cell-content[contains(.,'Архив_ОМК_ИЦ')]",
+      "targets": [
+        ["css=vaadin-grid-cell-content:nth-child(5)", "css:finder"],
+        ["xpath=//vaadin-grid-cell-content", "xpath:position"],
+        ["xpath=//vaadin-grid-cell-content[contains(.,'Архив_ОМК_ИЦ')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }]
+  }, {
+    "id": "4da91078-13d7-46d5-878c-9b730144a5b7",
+    "name": "user-equip",
+    "commands": [{
+      "id": "ca3c8f5b-fa43-4f66-8383-eb28d023ec18",
+      "comment": "",
+      "command": "open",
+      "target": "http://localhost:8080/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "4206193e-f865-4cc5-a373-7016617f6271",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1600x868",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "c08a7c65-f52a-4f30-8ab3-9f22d5f42154",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=user-equip",
+      "targets": [
+        ["linkText=user-equip", "linkText"],
+        ["css=li:nth-child(2) > a", "css:finder"],
+        ["xpath=//a[contains(text(),'user-equip')]", "xpath:link"],
+        ["xpath=//a[contains(@href, 'user-equip')]", "xpath:href"],
+        ["xpath=//li[2]/a", "xpath:position"],
+        ["xpath=//a[contains(.,'user-equip')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "b45b9fc0-aceb-4aae-b585-aaab5d08922f",
+      "comment": "",
+      "command": "click",
+      "target": "css=vaadin-vertical-layout",
+      "targets": [
+        ["css=vaadin-vertical-layout", "css:finder"],
+        ["xpath=//vaadin-vertical-layout", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "73f031cd-4a50-4411-aa69-39da40ba1a4a",
+      "comment": "",
+      "command": "verifyElementPresent",
+      "target": "css=span",
+      "targets": [
+        ["css=span", "css:finder"],
+        ["xpath=//span", "xpath:position"],
+        ["xpath=//span[contains(.,'ENMASHBEL\\alexz')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "4f80eb7c-1c98-4c2e-a24d-2f9b0f59a6af",
+      "comment": "",
+      "command": "click",
+      "target": "css=vaadin-grid-cell-content:nth-child(12)",
+      "targets": [
+        ["css=vaadin-grid-cell-content:nth-child(12)", "css:finder"],
+        ["xpath=//vaadin-grid-cell-content[6]", "xpath:position"],
+        ["xpath=//vaadin-grid-cell-content[contains(.,'Жигалов Александр Александрович')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "4b0ea3fd-dca0-4975-9d7c-3859ee263911",
+      "comment": "",
+      "command": "verifyElementPresent",
+      "target": "xpath=//vaadin-grid-cell-content[contains(.,'Жигалов Александр Александрович')]",
+      "targets": [
+        ["css=vaadin-grid-cell-content:nth-child(12)", "css:finder"],
+        ["xpath=//vaadin-grid-cell-content[6]", "xpath:position"],
+        ["xpath=//vaadin-grid-cell-content[contains(.,'Жигалов Александр Александрович')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }]
+  }, {
+    "id": "29e33c64-5998-4c4d-940f-26880c277793",
+    "name": "support-equip",
+    "commands": [{
+      "id": "53b8b2e2-c60e-4639-b093-38a80f35d772",
+      "comment": "",
+      "command": "open",
+      "target": "http://localhost:8080/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "01a35411-879e-4d6a-be19-b0801dd9b176",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1600x868",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "2826f237-5dfd-4a78-a863-48bfabcdc72f",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=support-equip",
+      "targets": [
+        ["linkText=support-equip", "linkText"],
+        ["css=li:nth-child(1) > a", "css:finder"],
+        ["xpath=//a[contains(text(),'support-equip')]", "xpath:link"],
+        ["xpath=//a[contains(@href, 'support-equip')]", "xpath:href"],
+        ["xpath=//a", "xpath:position"],
+        ["xpath=//a[contains(.,'support-equip')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "148a353f-f584-4f93-bd5d-20d8db76ac61",
+      "comment": "",
+      "command": "verifyElementPresent",
+      "target": "xpath=//vaadin-grid-cell-content[contains(.,'2099')]",
+      "targets": [
+        ["css=vaadin-grid-cell-content:nth-child(8)", "css:finder"],
+        ["xpath=//vaadin-grid-cell-content", "xpath:position"],
+        ["xpath=//vaadin-grid-cell-content[contains(.,'2099')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }]
+  }, {
+    "id": "cf16d35e-302e-4279-ba4b-dc864066fc9b",
+    "name": "user",
+    "commands": [{
+      "id": "7b21b929-2fda-41da-9f90-33a09df417de",
+      "comment": "",
+      "command": "open",
+      "target": "http://localhost:8080/user",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "9393ab1d-babe-4267-b5f3-14b10152c5c4",
+      "comment": "",
+      "command": "click",
+      "target": "css=html",
+      "targets": [
+        ["css=html", "css:finder"],
+        ["xpath=//html", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "4f7acf1f-2609-44d5-943a-ab3e9861f37e",
+      "comment": "",
+      "command": "verifyText",
+      "target": "css=p:nth-child(3)",
+      "targets": [
+        ["css=p:nth-child(3)", "css:finder"],
+        ["xpath=//p[3]", "xpath:position"],
+        ["xpath=//p[contains(.,'Доступные роли приложения:')]", "xpath:innerText"]
+      ],
+      "value": "Доступные роли приложения:"
+    }]
+  }],
+  "suites": [{
+    "id": "2c128f00-b74b-41fe-8598-9adc4ca469b9",
+    "name": "Default Suite",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["26501276-84f8-4c17-896b-a5eaa30dc85c"]
+  }],
+  "urls": ["http://localhost:8080/"],
+  "plugins": []
+}

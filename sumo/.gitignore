@@ -1,0 +1,28 @@
+logs/
+
+# Maven files
+target/
+
+# Eclipse files
+.project
+.settings
+.classpath
+
+# Idea files
+.idea/
+*.iml
+
+#selenium
+error-screenshots
+reference-screenshots
+
+# npm
+node_modules/
+package*.json
+pnpm-lock.yaml
+webpack.*.js
+tsconfig.json
+types.d.ts
+
+#vaadin-grid-flow-integration-tests/benchmark/reference-clone/
+#vaadin-grid-flow-integration-tests/benchmark/results
