@@ -31,7 +31,7 @@ public class ProtonConfirmationDialog extends Dialog {
         confirmButton.addClickListener(clickListener);
 
         cancelButton.getElement().getThemeList().add("primary");
-        cancelButton.addClickListener(e -> close());
+        cancelButton.addClickListener((ComponentEventListener<ClickEvent<Button>>) e -> ProtonConfirmationDialog.this.close());
 
         HorizontalLayout horizLayout = new HorizontalLayout(confirmButton, cancelButton);
         VerticalLayout vertLayout = new VerticalLayout(new Text(messageText), horizLayout);
