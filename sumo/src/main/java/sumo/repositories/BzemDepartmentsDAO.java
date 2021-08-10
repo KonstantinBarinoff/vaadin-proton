@@ -1,19 +1,15 @@
 package sumo.repositories;
-
-import java.util.*;
-import java.util.function.Predicate;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-
 import lombok.extern.slf4j.Slf4j;
 import sumo.entities.BzemDepartment;
+
 
 /**
  * Класс, содержащий методы для работы с сущностями BzemDepartment
