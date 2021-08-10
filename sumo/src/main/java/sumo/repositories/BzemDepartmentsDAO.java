@@ -1,12 +1,13 @@
 package sumo.repositories;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -15,11 +16,10 @@ import lombok.extern.slf4j.Slf4j;
 import sumo.entities.BzemDepartment;
 
 /**
- * Класс, содержащий методы для работы с сущностями BzemDepartment<p>
+ * Класс, содержащий методы для работы с сущностями BzemDepartment
  * 
  * @author Овсянников Сергей
  * @author Жигалов Александр
- * 
  * @see BzemDepartment
  *
  */
@@ -28,66 +28,63 @@ import sumo.entities.BzemDepartment;
 public class BzemDepartmentsDAO {
 
     @Autowired
-    @Qualifier("jdbcOracle")    
+    @Qualifier("jdbcOracle")
     private JdbcTemplate jdbcTemplate;
-    
+    private List<BzemDepartment> departmentList;
+
+
     /**
-     * @return Список всех департаментов для использования методами класса
+     * Сеттер для departmentList (c назначенными родительскими департаментами)
      */
-    private List<BzemDepartment> getAll() {
-        String sql = "SELECT departmentNumber, departmentParentNumber, departmentName FROM BZEM_DEPARTMENTS"; 
-	log.debug(sql);
-	return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(BzemDepartment.class));
-    }
-    
-    /**
-     * @return Список всех департаментов
-     */
-    public List<BzemDepartment> getAllDepartments() {
-        List<BzemDepartment> departments = getAll();
-        
-        // Назначение родительских департаметов
-        departments.forEach(department -> {
-            for (BzemDepartment parent : departments) {
+    @Autowired
+    private void setDepartmentList() {
+        String sql = "SELECT departmentNumber, departmentParentNumber, departmentName FROM bzem_departments";
+        log.debug(sql);
+        List<BzemDepartment> departmentList = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(BzemDepartment.class));
+        departmentList.forEach(department -> {
+            for (BzemDepartment parent : departmentList) {
                 if (department.getDepartmentParentNumber().equals(parent.getDepartmentNumber())) {
                     department.setParent(parent);
                 }
             }
-        });      
-        
-        return departments;
+        });
+        this.departmentList = departmentList;
     }
 
     /**
-     * Построение ветки департаментов типа: ChildDepartment - ParentDepartment - ParentDepartment ... - RootDepartment <p> 
-     * @param childDepartment Департамент от которого строится ветка
-     * @param departmentBranch Список для заполнения департаментами
-     * @return Список департаментов
+     * Получение корневого департамета (предприятие, завод и т.д.)
+     * @param department Департамент с которого начинается рекурсивный обход
+     * @return Корневой департамент
      */
-    public List<BzemDepartment> getDepartmentBranch(BzemDepartment childDepartment, List<BzemDepartment> departmentBranch) {
-        departmentBranch.add(childDepartment);
-        BzemDepartment parentDepartment = childDepartment.getParent();
+    private static BzemDepartment getGrandRootDepartment(BzemDepartment department) {
+        BzemDepartment parentDepartment = department.getParent();
         if (parentDepartment == null) {
-            return departmentBranch;
+            return department;
         }
-        return getDepartmentBranch(childDepartment.getParent(), departmentBranch);
+        return getGrandRootDepartment(department.getParent());
     }
-    
+
     /**
-     * Список департаментов, для которых parentDepartment, является родителем<p>
-     * 
-     * @param parentDepartment Департамент - родитель
-     * @return Список департаментов
+     * Получение департаметов в качестве корневых, для которых департамент самого верхнгего уровня является родителем
+     * @return Список корневых департаметов
      */
-    public List<BzemDepartment> getChildDepartments(BzemDepartment parentDepartment) {
-        List<BzemDepartment> childDepartments = new ArrayList<>();
-        
-        for (BzemDepartment department : getAllDepartments()) {
-            if (department.getParent() != null && department.getParent().equals(parentDepartment) ) {
-                childDepartments.add(department);
-            }
-        }        
-        return childDepartments;
+    public List<BzemDepartment> getRootDepartments() {
+        BzemDepartment grandRoot = getGrandRootDepartment(departmentList.get(0));
+        return departmentList.stream()
+                .filter(department -> department.getParent() != null && department.getParent().equals(grandRoot))
+                .collect(Collectors.toList());
+
+    }
+
+    /**
+     * Получение департаметов-детей
+     * @param parent Родительский департамент
+     * @return Список департаметов-детей
+     */
+    public List<BzemDepartment> getChildDepartments(BzemDepartment parent) {
+        return departmentList.stream()
+                .filter(department -> Objects.equals(department.getParent(), parent))
+                .collect(Collectors.toList());
+
     }
 }
-
