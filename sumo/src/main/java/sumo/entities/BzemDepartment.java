@@ -24,30 +24,16 @@ public class BzemDepartment {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        BzemDepartment that = (BzemDepartment) o;
+
+        if (!departmentNumber.equals(that.departmentNumber)) return false;
+        if (departmentParentNumber != null ? !departmentParentNumber.equals(that.departmentParentNumber) : that.departmentParentNumber != null)
             return false;
-        if (getClass() != obj.getClass())
-            return false;
-        BzemDepartment other = (BzemDepartment) obj;
-        if (departmentName == null) {
-            if (other.departmentName != null)
-                return false;
-        } else if (!departmentName.equals(other.departmentName))
-            return false;
-        if (departmentNumber == null) {
-            if (other.departmentNumber != null)
-                return false;
-        } else if (!departmentNumber.equals(other.departmentNumber))
-            return false;
-        if (departmentParentNumber == null) {
-            if (other.departmentParentNumber != null)
-                return false;
-        } else if (!departmentParentNumber.equals(other.departmentParentNumber))
-            return false;
-        return true;
+        return departmentName.equals(that.departmentName);
     }
 
     @Override
