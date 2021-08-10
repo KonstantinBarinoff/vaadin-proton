@@ -5,12 +5,12 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class BzemDepartment {
+public class SapDepartment {
 
     private Integer departmentNumber;
     private Integer departmentParentNumber;
     private String departmentName;
-    private BzemDepartment parent;
+    private SapDepartment parent;
 
 
     @Override
@@ -28,7 +28,7 @@ public class BzemDepartment {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        BzemDepartment that = (BzemDepartment) o;
+        SapDepartment that = (SapDepartment) o;
 
         if (!departmentNumber.equals(that.departmentNumber)) return false;
         if (departmentParentNumber != null ? !departmentParentNumber.equals(that.departmentParentNumber) : that.departmentParentNumber != null)

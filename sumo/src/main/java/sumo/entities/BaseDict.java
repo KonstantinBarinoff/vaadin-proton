@@ -1,11 +1,9 @@
 package sumo.entities;
 
-import java.io.BufferedReader;
-
-import javax.persistence.MappedSuperclass;
-
 import lombok.Getter;
 import lombok.Setter;
+
+import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
 @Getter
@@ -21,7 +19,5 @@ public class BaseDict extends BaseEntity {
 	return String.format("%s [id=%d, name=%s]", this.getClass().getSimpleName(), this.getId(), this.getName());
     }
     
-    BufferedReader b;
-    
-    
+
 }

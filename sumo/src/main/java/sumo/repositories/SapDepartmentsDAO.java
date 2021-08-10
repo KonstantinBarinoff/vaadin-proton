@@ -1,44 +1,45 @@
 package sumo.repositories;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-import lombok.extern.slf4j.Slf4j;
-import sumo.entities.BzemDepartment;
+import sumo.entities.SapDepartment;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 
 /**
  * Класс, содержащий методы для работы с сущностями BzemDepartment
- * 
+ *
  * @author Овсянников Сергей
  * @author Жигалов Александр
- * @see BzemDepartment
+ * @see SapDepartment
  *
  */
 @Slf4j
 @Component
-public class BzemDepartmentsDAO {
+public class SapDepartmentsDAO {
 
     @Autowired
-    @Qualifier("jdbcOracle")
+    @Qualifier("jdbcSumo")
     private JdbcTemplate jdbcTemplate;
-    private List<BzemDepartment> departmentList;
+    private List<SapDepartment> departmentList;
 
 
     /**
-     * Сеттер для departmentList (c назначенными родительскими департаментами)
+     *  Построение departmentList (c назначенными родительскими департаментами)
      */
     @Autowired
-    private void setDepartmentList() {
-        String sql = "SELECT departmentNumber, departmentParentNumber, departmentName FROM bzem_departments";
+    private void setupDepartmentList() {
+        String sql = "SELECT departmentNumber, departmentParentNumber, departmentName FROM SapDepartments";
         log.debug(sql);
-        List<BzemDepartment> departmentList = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(BzemDepartment.class));
+        List<SapDepartment> departmentList = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(SapDepartment.class));
         departmentList.forEach(department -> {
-            for (BzemDepartment parent : departmentList) {
+            for (SapDepartment parent : departmentList) {
                 if (department.getDepartmentParentNumber().equals(parent.getDepartmentNumber())) {
                     department.setParent(parent);
                 }
@@ -52,8 +53,8 @@ public class BzemDepartmentsDAO {
      * @param department Департамент с которого начинается рекурсивный обход
      * @return Корневой департамент
      */
-    private static BzemDepartment getGrandRootDepartment(BzemDepartment department) {
-        BzemDepartment parentDepartment = department.getParent();
+    private static SapDepartment getGrandRootDepartment(SapDepartment department) {
+        SapDepartment parentDepartment = department.getParent();
         if (parentDepartment == null) {
             return department;
         }
@@ -64,8 +65,8 @@ public class BzemDepartmentsDAO {
      * Получение департаметов в качестве корневых, для которых департамент самого верхнгего уровня является родителем
      * @return Список корневых департаметов
      */
-    public List<BzemDepartment> getRootDepartments() {
-        BzemDepartment grandRoot = getGrandRootDepartment(departmentList.get(0));
+    public List<SapDepartment> getRootDepartments() {
+        SapDepartment grandRoot = getGrandRootDepartment(departmentList.get(0));
         return departmentList.stream()
                 .filter(department -> department.getParent() != null && department.getParent().equals(grandRoot))
                 .collect(Collectors.toList());
@@ -77,7 +78,7 @@ public class BzemDepartmentsDAO {
      * @param parent Родительский департамент
      * @return Список департаметов-детей
      */
-    public List<BzemDepartment> getChildDepartments(BzemDepartment parent) {
+    public List<SapDepartment> getChildDepartments(SapDepartment parent) {
         return departmentList.stream()
                 .filter(department -> Objects.equals(department.getParent(), parent))
                 .collect(Collectors.toList());
