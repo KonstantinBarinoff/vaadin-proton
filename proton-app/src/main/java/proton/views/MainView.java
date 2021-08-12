@@ -79,7 +79,8 @@ public class MainView extends AppLayout {
     private Component[] createMenuItems() {
         return new Tab[]{
                 createTab("References View", ReferencesView.class),
-                createTab("SimpleDict1", SimpleDict1View.class),
+                createTab("Справочник 1", SimpleDict1View.class),
+                createTab("Справочник 2", SimpleDict2View.class),
                 createTab("CustomDict Grid Editor", CustomDictView.class),
                 createTab("CustomDict Dialog Editor", CustomDictDialogEditView.class),
                 createTab("Upload Image to File", UploadImageToFile.class),

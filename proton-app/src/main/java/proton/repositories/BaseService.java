@@ -4,7 +4,7 @@ import proton.entities.BaseDict;
 
 import java.util.List;
 
-public interface CommonService<E extends BaseDict>{
+public interface BaseService<E extends BaseDict>{
 
 //    E save(E entity);
 

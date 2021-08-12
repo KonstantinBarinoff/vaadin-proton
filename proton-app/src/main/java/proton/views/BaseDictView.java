@@ -7,12 +7,17 @@ import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.grid.editor.Editor;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import proton.entities.BaseDict;
-import proton.repositories.CommonService;
+import proton.repositories.BaseRepo;
+import proton.repositories.BaseService;
+import util.ProtonConfirmationDialog;
+import util.ProtonNotification;
 import util.ProtonStrings;
 
 import java.util.Collection;
@@ -20,22 +25,17 @@ import java.util.Collections;
 import java.util.WeakHashMap;
 
 @Slf4j
-public abstract class BaseDictView<E extends BaseDict, S extends CommonService<E>>  extends VerticalLayout {
+public abstract class BaseDictView<E extends BaseDict, S extends BaseService<E>> extends VerticalLayout {
 
-//    abstract protected Editor<E> getEditor();
-//    abstract protected JpaRepository<? extends BaseDict, Long> getRepo();
-//    abstract protected Binder<E> getBinder();
+    abstract E getNewItem();
 
-//    private final SimpleDict1Repo repo = null;
-//
-      protected final Grid<E> grid = new Grid<>();
+    protected BaseRepo<E> repo;
+    private S service = null;
 
-      protected Binder<E> binder = null;
-//    private final Binder<E> binder = new Binder<>(E.class);
+    protected final Grid<E> grid = new Grid<>();
+    protected Binder<E> binder = null;
+    protected final Editor<E> editor = grid.getEditor();
 
-     protected final Editor<E> editor = grid.getEditor();
-    //    protected Editor<? extends BaseDict> editor = null;
-//
     protected final Grid.Column<E> idColumn = grid.addColumn(E::getId)
             .setHeader("Код").setFlexGrow(1);
     protected final Grid.Column<E> nameColumn = grid.addColumn(E::getName)
@@ -66,34 +66,35 @@ public abstract class BaseDictView<E extends BaseDict, S extends CommonService<E
 //        add(grid);
 //    }
 
-    public BaseDictView() {
-
+    @Autowired
+    public BaseDictView(S Service) {
+        this.service = service;
     }
 
-//    public HorizontalLayout setupButtons() {
-//        deleteButton.setEnabled(false);
-//        deleteButton.addClickListener(event -> {
-//            if (grid.getSelectedItems().isEmpty()) {
-//                ProtonNotification.showWarning(ProtonStrings.RECORD_NOT_SELECTED);
-//                return;
-//            }
-//            ProtonConfirmationDialog dialog = new ProtonConfirmationDialog(ProtonStrings.DELETE_RECORD_Q);
-//            dialog.showConfirmation(e -> {
-//                grid.getSelectedItems().stream().forEach(repo::delete);
-//                grid.setItems(repo.findAll());
-//                dialog.close();
-//            });
-//        });
-//        insertButton.addClickListener(e -> {
-//            SimpleDict1 item = new SimpleDict1();
-//            repo.saveAndFlush(item);
-//            grid.setItems(repo.findAll());
-//            grid.select(item);
-//            grid.getEditor().editItem(item);
-//        });
-//        refreshButton.addClickListener(e -> grid.setItems(repo.findAll()));
-//        return new HorizontalLayout(insertButton, deleteButton, refreshButton);
-//    }
+    public HorizontalLayout setupButtons() {
+        deleteButton.setEnabled(false);
+        deleteButton.addClickListener(event -> {
+            if (grid.getSelectedItems().isEmpty()) {
+                ProtonNotification.showWarning(ProtonStrings.RECORD_NOT_SELECTED);
+                return;
+            }
+            ProtonConfirmationDialog dialog = new ProtonConfirmationDialog(ProtonStrings.DELETE_RECORD_Q);
+            dialog.showConfirmation(e -> {
+                grid.getSelectedItems().stream().forEach(repo::delete);
+                grid.setItems(repo.findAll());
+                dialog.close();
+            });
+        });
+        insertButton.addClickListener(e -> {
+            E item = getNewItem();
+            repo.saveAndFlush(item);
+            grid.setItems(repo.findAll());
+            grid.select(item);
+            grid.getEditor().editItem(item);
+        });
+        refreshButton.addClickListener(e -> grid.setItems(repo.findAll()));
+        return new HorizontalLayout(insertButton, deleteButton, refreshButton);
+    }
 
     public Div setupEditorButtons() {
         saveEditorButton.addClickListener(e -> editor.save());
@@ -110,6 +111,8 @@ public abstract class BaseDictView<E extends BaseDict, S extends CommonService<E
         editor.setBuffered(true);
         editor.addOpenListener(e -> editButtons.stream().forEach(button -> button.setEnabled(!editor.isOpen())));
         editor.addCloseListener(e -> editButtons.stream().forEach(button -> button.setEnabled(!editor.isOpen())));
+        editor.addSaveListener(e -> repo.saveAndFlush(e.getItem()));
+
     }
 
     public void setupFields() {
@@ -143,6 +146,18 @@ public abstract class BaseDictView<E extends BaseDict, S extends CommonService<E
             return editButton;
         });
         editorColumn.setEditorComponent(setupEditorButtons());
+    }
+
+    protected void setupView() {
+        setDefaultHorizontalComponentAlignment(Alignment.BASELINE);
+        setSizeFull();
+        setupGrid();
+        grid.setItems(repo.findAll());
+        setupFields();
+
+        setupEditor();
+        add(setupButtons());
+        add(grid);
     }
 
 }
