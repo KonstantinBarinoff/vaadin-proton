@@ -1,26 +1,15 @@
 package sumo.entities;
 
-import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.EntityListeners;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.annotation.Version;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import lombok.Getter;
-import lombok.Setter;
+import javax.persistence.*;
+import java.util.Date;
 
 @EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass
@@ -32,23 +21,23 @@ public class BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private Long id;
-    
+
+    @CreatedDate
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "CREATEDAT")
+    private Date createdAt;
+
+    @Column(name = "CREATEDBY")
+    private String createdBy;
+
     @LastModifiedDate
     @Version
     @Temporal(TemporalType.TIMESTAMP)    
-    @Column(name = "MDATE")
-    private Date modifiedDate;
+    @Column(name = "MODIFIEDAT")
+    private Date modifiedAt;
 
-    @CreatedDate
-    @Temporal(TemporalType.TIMESTAMP)    
-    @Column(name = "CDATE")
-    private Date createdDate;
-
-    @Column(name = "CUSER")  
-    private String createdUser;
-    
-    @Column(name = "MUSER")
-    private String modifiedUser;
+    @Column(name = "MODIFIEDBY")
+    private String modifiedBy;
     
     public boolean isPersisted() {
         return id != null;
@@ -56,12 +45,12 @@ public class BaseEntity {
     
     @PrePersist
     protected void onCreate() {
-	createdUser = SecurityContextHolder.getContext().getAuthentication().getName();
+	createdBy = SecurityContextHolder.getContext().getAuthentication().getName();
     }    
 
     @PreUpdate
     protected void onUpdate() {
-	modifiedUser = SecurityContextHolder.getContext().getAuthentication().getName();
+	modifiedBy = SecurityContextHolder.getContext().getAuthentication().getName();
     }    
     
     @Override

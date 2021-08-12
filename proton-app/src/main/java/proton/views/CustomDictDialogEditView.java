@@ -16,7 +16,7 @@ import com.vaadin.flow.router.Route;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import proton.entities.CustomDict;
-import proton.repositories.CustomDictRepository;
+import proton.repositories.CustomDictRepo;
 import util.ProtonConfirmationDialog;
 import util.ProtonNotification;
 import util.ProtonProperties;
@@ -29,7 +29,7 @@ import javax.persistence.EntityManagerFactory;
 @PageTitle("CustomDict Dialog Editor")
 public class CustomDictDialogEditView extends VerticalLayout {
 
-    private final CustomDictRepository repository;
+    private final CustomDictRepo repository;
     private final ProtonProperties properties;
     private final EntityManagerFactory emf;
 
@@ -65,7 +65,7 @@ public class CustomDictDialogEditView extends VerticalLayout {
     @Autowired
     // public Dictionary1DialogEditView(Dictionary1Repository repository,
     // Dictionary1Editor editor) {
-    public CustomDictDialogEditView(CustomDictRepository repository, ProtonProperties properties,
+    public CustomDictDialogEditView(CustomDictRepo repository, ProtonProperties properties,
                                     EntityManagerFactory emf) {
         this.repository = repository;
         this.properties = properties;

@@ -1,7 +1,5 @@
 package proton.views;
 
-import java.util.Optional;
-
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.applayout.AppLayout;
@@ -17,6 +15,8 @@ import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.tabs.TabsVariant;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.RouterLink;
+
+import java.util.Optional;
 
 /**
  * The main view is a top-level placeholder for other views.
@@ -78,16 +78,17 @@ public class MainView extends AppLayout {
 
     private Component[] createMenuItems() {
         return new Tab[]{
-        	createTab("References View", ReferencesView.class),
-        	createTab("CustomDict Grid Editor", CustomDictGridEditView.class),
-        	createTab("CustomDict Dialog Editor", CustomDictDialogEditView.class),
-        	createTab("Upload Image to File", UploadImageToFile.class),
-        	createTab("Byte Array to Image", ByteArrayToImage.class),
-        	
+                createTab("References View", ReferencesView.class),
+                createTab("SimpleDict1", SimpleDict1View.class),
+                createTab("CustomDict Grid Editor", CustomDictView.class),
+                createTab("CustomDict Dialog Editor", CustomDictDialogEditView.class),
+                createTab("Upload Image to File", UploadImageToFile.class),
+                createTab("Byte Array to Image", ByteArrayToImage.class),
+
 //        	createTab("Справочник-1 Grid", Dictionary1GridView.class)
 //        	createTab("User Equipments", UserEquipView.class), 
 //        	createTab("Work Folders", WorkFoldersView.class),
-        	};
+        };
     }
 
     private static Tab createTab(String text, Class<? extends Component> navigationTarget) {
@@ -103,6 +104,7 @@ public class MainView extends AppLayout {
         getTabForComponent(getContent()).ifPresent(menu::setSelectedTab);
         viewTitle.setText(getCurrentPageTitle());
     }
+
     private Optional<Tab> getTabForComponent(Component component) {
         return menu.getChildren().filter(tab -> ComponentUtil.getData(tab, Class.class).equals(component.getClass()))
                 .findFirst().map(Tab.class::cast);

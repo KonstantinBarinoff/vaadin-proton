@@ -1,21 +1,35 @@
 package proton.entities;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import javax.persistence.MappedSuperclass;
+import javax.validation.constraints.NotNull;
 
 @MappedSuperclass
-@Getter
-@Setter
 public class BaseDict extends BaseEntity {
 
-    private String name;
+    @NotNull
+    private String name = "";
 
     private String description;
 
     @Override
     public String toString() {
-	return String.format("%s [id=%d, name=%s]", this.getClass().getSimpleName(), this.getId(), this.getName());
+        return String.format("%s [id=%d, name=%s]", this.getClass().getSimpleName(), this.getId(), this.getName());
+    }
+
+
+    public @NotNull String getName() {
+        return this.name;
+    }
+
+    public String getDescription() {
+        return this.description;
+    }
+
+    public void setName(@NotNull String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

@@ -41,76 +41,76 @@ public class ImageForm extends Dialog implements KeyNotifier {
     private final Button closeButton = new Button(ProtonStrings.CLOSE, VaadinIcon.CLOSE.create());
     private final Button downloadButton = new Button(ProtonStrings.DOWNLOAD, VaadinIcon.DOWNLOAD.create());
     private Anchor downloadAnchor;
-    
+
     @Autowired
     public ImageForm(Long id, String imagePath, EntityManagerFactory emf) {
-	this.imagePath = imagePath;
+        this.imagePath = imagePath;
 
-	EntityManager em = emf.createEntityManager();
-	em.getTransaction().begin();
-	Query query = em.createQuery("SELECT u.image FROM CustomDict u WHERE u.id = :id");
-	query.setParameter("id", id);
+        EntityManager em = emf.createEntityManager();
+        em.getTransaction().begin();
+        Query query = em.createQuery("SELECT u.image FROM CustomDict u WHERE u.id = :id");
+        query.setParameter("id", id);
 
-	Image image;
+        Image image;
 
-	StreamResource streamResource;
-	byte[] bytes = (byte[]) query.getSingleResult();
-	if (bytes != null) {
-	    streamResource = new StreamResource("image.jpg", () -> new ByteArrayInputStream(bytes));
-	    image = new Image(streamResource, "Image... ");
+        StreamResource streamResource;
+        byte[] bytes = (byte[]) query.getSingleResult();
+        if (bytes != null) {
+            streamResource = new StreamResource("image.jpg", () -> new ByteArrayInputStream(bytes));
+            image = new Image(streamResource, "Image... ");
 
-	    streamResource.setContentType("image/jpg");
-	    downloadAnchor = new Anchor(streamResource, "");
-	    downloadAnchor.getElement().setAttribute("download", true);
-	    downloadAnchor.add(downloadButton);
-	    form.add(downloadAnchor);
-	} else
-	    try {
-		byte[] imageBytes = Base64.getDecoder().decode(imageString);
-		streamResource = new StreamResource("image.jpg", () -> new ByteArrayInputStream(imageBytes));
-		image = new Image(streamResource, " Image... ");
-	    } catch (Exception e1) {
-		image = new Image("https://dummyimage.com/600x400/000/fff", "Image... ");
-	    }
-	form.add(image);
+            streamResource.setContentType("image/jpg");
+            downloadAnchor = new Anchor(streamResource, "");
+            downloadAnchor.getElement().setAttribute("download", true);
+            downloadAnchor.add(downloadButton);
+            form.add(downloadAnchor);
+        } else
+            try {
+                byte[] imageBytes = Base64.getDecoder().decode(imageString);
+                streamResource = new StreamResource("image.jpg", () -> new ByteArrayInputStream(imageBytes));
+                image = new Image(streamResource, " Image... ");
+            } catch (Exception e1) {
+                image = new Image("https://dummyimage.com/600x400/000/fff", "Image... ");
+            }
+        form.add(image);
 
-	setupLayout();
-	log.debug("IMAGE FORM CONSTRUCTOR");
+        setupLayout();
+        log.debug("IMAGE FORM CONSTRUCTOR");
     }
 
     public void setupLayout() {
-	setModal(true);
-	setCloseOnOutsideClick(false);
-	setCloseOnEsc(true);
-	log.debug("IMAGE PATH : {}", imagePath);
+        setModal(true);
+        setCloseOnOutsideClick(false);
+        setCloseOnEsc(true);
+        log.debug("IMAGE PATH : {}", imagePath);
 
-	add(form);
-	add(new Paragraph());
-	add(setupButtons());
+        add(form);
+        add(new Paragraph());
+        add(setupButtons());
     }
 
     public byte[] extractBytes(String ImageName) throws IOException {
-	// open image
-	BufferedImage bufferedImage = ImageIO.read(new File(ImageName));
+        // open image
+        BufferedImage bufferedImage = ImageIO.read(new File(ImageName));
 
-	// get DataBufferBytes from Raster
-	WritableRaster raster = bufferedImage.getRaster();
-	DataBufferByte data = (DataBufferByte) raster.getDataBuffer();
+        // get DataBufferBytes from Raster
+        WritableRaster raster = bufferedImage.getRaster();
+        DataBufferByte data = (DataBufferByte) raster.getDataBuffer();
 
-	return (data.getData());
+        return (data.getData());
     }
 
     public HorizontalLayout setupButtons() {
-	closeButton.addClickListener(e -> closeEditor());
-	return new HorizontalLayout(downloadAnchor, closeButton);
+        closeButton.addClickListener(e -> closeEditor());
+        return new HorizontalLayout(downloadAnchor, closeButton);
     }
 
     void closeEditor() {
-	changeHandler.onChange();
+        changeHandler.onChange();
     }
 
     public void setChangeHandler(ChangeHandler h) {
-	changeHandler = h;
+        changeHandler = h;
     }
 
 }
