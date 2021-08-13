@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import sumo.entities.SapDepartment;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -29,11 +30,10 @@ public class SapDepartmentsDAO {
     private JdbcTemplate jdbcTemplate;
     private List<SapDepartment> departmentList;
 
-
     /**
      *  Построение departmentList (c назначенными родительскими департаментами)
      */
-    @Autowired
+    @PostConstruct
     private void setupDepartmentList() {
         String sql = "SELECT departmentNumber, departmentParentNumber, departmentName FROM SapDepartments";
         log.debug(sql);
@@ -70,7 +70,6 @@ public class SapDepartmentsDAO {
         return departmentList.stream()
                 .filter(department -> department.getParent() != null && department.getParent().equals(grandRoot))
                 .collect(Collectors.toList());
-
     }
 
     /**
@@ -82,6 +81,5 @@ public class SapDepartmentsDAO {
         return departmentList.stream()
                 .filter(department -> Objects.equals(department.getParent(), parent))
                 .collect(Collectors.toList());
-
     }
 }
