@@ -14,7 +14,7 @@ import proton.repositories.SimpleDict2Service;
 public class SimpleDict2View extends BaseDictView<SimpleDict2, SimpleDict2Service> {
 
     @Override
-    SimpleDict2 getNewItem() {
+    protected SimpleDict2 getNewItem() {
         return new SimpleDict2();
     }
 

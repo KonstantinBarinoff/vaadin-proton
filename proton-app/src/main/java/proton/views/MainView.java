@@ -81,8 +81,9 @@ public class MainView extends AppLayout {
                 createTab("References View", ReferencesView.class),
                 createTab("Справочник 1", SimpleDict1View.class),
                 createTab("Справочник 2", SimpleDict2View.class),
+                createTab("Base Form Dict ", BaseFormDictView.class),
                 createTab("CustomDict Grid Editor", CustomDictView.class),
-                createTab("CustomDict Dialog Editor", CustomDictDialogEditView.class),
+//                createTab("CustomDict Dialog Editor", CustomDictDialogEditView.class),
                 createTab("Upload Image to File", UploadImageToFile.class),
                 createTab("Byte Array to Image", ByteArrayToImage.class),
 

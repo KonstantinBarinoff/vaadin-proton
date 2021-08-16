@@ -12,7 +12,7 @@ public final class ProtonStrings {
     public static final String REFRESH = "Обновить";
     public static final String DOWNLOAD = "Скачать";
     public static final String IMAGE = "Изображение";
-    public static final String REQUIRED = "Обязательное поле";
+    public static final String REQUIRED = "Необходимо значение";
     public static final String NOT_IN_RANGE = "Ошибка диапазона";
     public static final String STRING_LENGTH = "Размер строки";
     public static final String BAD_EMAIL = "Некорректный E-mail";
