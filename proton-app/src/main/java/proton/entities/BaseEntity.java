@@ -15,13 +15,18 @@ import java.util.Date;
 @MappedSuperclass
 @Getter
 @Setter
-public class BaseEntity {
+public abstract class BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private Long id;
 
+    @Version
+    private Integer version;
+
+    // @Temporal should only be set on a java.util.Date or java.util.Calendar
+    // MSSQL: DATETIME
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "CREATEDAT")
@@ -55,8 +60,8 @@ public class BaseEntity {
 
     @Override
     public int hashCode() {
-        if (getId() != null) {
-            return getId().hashCode();
+        if (id != null) {
+            return id.hashCode();
         }
         return super.hashCode();
     }
@@ -66,17 +71,13 @@ public class BaseEntity {
         if (this == obj) {
             return true;
         }
-        if (obj == null) {
+        if (id == null) {
             return false;
         }
-        if (getClass() != obj.getClass()) {
-            return false;
+        if (obj instanceof BaseEntity && obj.getClass().equals(getClass())) {
+            return this.id.equals(((BaseEntity) obj).id);
         }
-        BaseEntity other = (BaseEntity) obj;
-        if (getId() == null || other.getId() == null) {
-            return false;
-        }
-        return getId().equals(other.getId());
+        return false;
     }
 
     @Override

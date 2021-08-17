@@ -25,7 +25,7 @@ public class SimpleDict1View extends BaseDictView<SimpleDict1, SimpleDict1Servic
     @Autowired
     public SimpleDict1View(SimpleDict1Service service) {
         super(service);
-        this.repo = service.getRepository();
+        repo = service.getRepository();
         binder = new Binder<>(SimpleDict1.class);
         setupView();
     }

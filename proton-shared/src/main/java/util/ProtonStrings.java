@@ -18,6 +18,7 @@ public final class ProtonStrings {
     public static final String BAD_EMAIL = "Некорректный E-mail";
 
     public static final String RECORD_NOT_SELECTED = "Запись не выбрана";
+    public static final String RECORD_NOT_FOUND = "Запись не найдена";
     public static final String DELETE_RECORD_Q = "Удалить запись?";
     
     private ProtonStrings() {}

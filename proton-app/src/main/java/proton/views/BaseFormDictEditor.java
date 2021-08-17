@@ -12,21 +12,18 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.validator.StringLengthValidator;
 import com.vaadin.flow.data.value.ValueChangeMode;
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import com.vaadin.flow.spring.annotation.UIScope;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import proton.entities.CustomDict;
-import proton.repositories.CustomDictRepo;
+import proton.entities.BaseDict;
+import proton.repositories.BaseRepo;
+import proton.repositories.BaseService;
 import util.ProtonConfirmationDialog;
 import util.ProtonStrings;
 
+import java.util.NoSuchElementException;
 
-@SpringComponent
-@UIScope
-@org.springframework.transaction.annotation.Transactional
+
 @Slf4j
-public class BaseFormDictDialog extends Dialog implements KeyNotifier {
+public abstract class BaseFormDictEditor<E extends BaseDict, S extends BaseService<E>> extends Dialog implements KeyNotifier {
 
     private final TextField nameField = new TextField("Наименование (Alt+N)");
     private final TextField descriptionField = new TextField("Примечание");
@@ -36,37 +33,37 @@ public class BaseFormDictDialog extends Dialog implements KeyNotifier {
     private final Button closeButton = new Button(ProtonStrings.CLOSE, VaadinIcon.CLOSE.create());
     private final Button deleteButton = new Button(ProtonStrings.DELETE, VaadinIcon.TRASH.create());
 
-    private final CustomDictRepo repository;
-    private final Binder<CustomDict> binder = new Binder<>(CustomDict.class);
+    protected BaseRepo<E> repo;
+    protected Binder<E> binder = null;
+    private S service = null;
     private final FormLayout form = new FormLayout();
-    private CustomDict item;
+    private E item;
 
     private ChangeHandler changeHandler;
 
-    @Autowired
-    public BaseFormDictDialog(CustomDictRepo repository) {
-        this.repository = repository;
+    public BaseFormDictEditor(S service) {
+        this.service = service;
+    }
+
+    public void setupView() {
         setupLayout();
         setupFields();
         addKeyPressListener(Key.ENTER, e -> save());
     }
 
     public void setupFields() {
-
-
         binder.forField(nameField)
                 .asRequired(ProtonStrings.REQUIRED)
                 .withValidator(string -> !string.isBlank(), ProtonStrings.REQUIRED)
-                .bind(CustomDict::getName, CustomDict::setName);
+                .bind(E::getName, E::setName);
         nameField.addFocusShortcut(Key.KEY_N, KeyModifier.ALT);
         nameField.setValueChangeMode(ValueChangeMode.EAGER);
 
         binder.forField(descriptionField)
                 .withValidator(new StringLengthValidator(ProtonStrings.NOT_IN_RANGE, 0, 50)) // MSSQL VARCHAR(50)
-                .bind(CustomDict::getDescription, CustomDict::setDescription);
+                .bind(E::getDescription, E::setDescription);
         descriptionField.setValueChangeMode(ValueChangeMode.EAGER);
         descriptionField.getElement().setProperty("placeholder", "Пример");
-
     }
 
     public void setupLayout() {
@@ -100,7 +97,7 @@ public class BaseFormDictDialog extends Dialog implements KeyNotifier {
     }
 
     void delete() {
-        repository.delete(item);
+        repo.delete(item);
         changeHandler.onChange();
     }
 
@@ -111,7 +108,7 @@ public class BaseFormDictDialog extends Dialog implements KeyNotifier {
     void save() {
         if (!binder.validate().isOk())
             return;
-        repository.save(item);
+        repo.save(item);
         changeHandler.onChange();
         log.debug("SAVE ITEM: {}", item);
     }
@@ -120,30 +117,33 @@ public class BaseFormDictDialog extends Dialog implements KeyNotifier {
         void onChange();
     }
 
-    public final void editItem(CustomDict i) {
-        revertButton.setEnabled(true);
-        deleteButton.setEnabled(true);
+    public final void editItem(E i) {
         if (i == null) {
             return;
         }
+        if (repo.findById(i.getId()).isEmpty()) {
+            throw new NoSuchElementException(ProtonStrings.RECORD_NOT_FOUND + ":   " + i);
+        }
         if (i.isPersisted()) {
-            item = repository.findById(i.getId()).get();
+            item = repo.findById(i.getId()).get();
         } else {
             item = i;
         }
+        revertButton.setEnabled(true);
+        deleteButton.setEnabled(true);
         binder.setBean(item);
         nameField.focus();
         log.debug("EDIT ITEM: {}", item);
     }
 
-    public final void newItem(CustomDict i) {
+    public final void newItem(E i) {
         revertButton.setEnabled(false);
         deleteButton.setEnabled(false);
         if (i == null) {
             return;
         }
         if (i.isPersisted()) {
-            item = repository.findById(i.getId()).get();
+            item = repo.findById(i.getId()).get();
         } else {
             item = i;
         }

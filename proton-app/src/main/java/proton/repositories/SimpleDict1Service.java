@@ -6,7 +6,7 @@ import proton.entities.SimpleDict1;
 import java.util.List;
 
 @Service
-public class SimpleDict1Service extends AbstractService<SimpleDict1, SimpleDict1Repository> {
+public class SimpleDict1Service extends BaseServiceImpl<SimpleDict1, SimpleDict1Repository> {
 
     public SimpleDict1Service(SimpleDict1Repository repository) {
         super(repository);

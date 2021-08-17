@@ -10,30 +10,37 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.page.Page;
-import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import proton.entities.CustomDict;
-import proton.repositories.CustomDictRepo;
+import proton.entities.BaseDict;
+import proton.repositories.BaseRepo;
+import proton.repositories.BaseService;
 import util.ProtonConfirmationDialog;
 import util.ProtonNotification;
 import util.ProtonStrings;
+import util.ProtonWarningDialog;
+
+import java.util.NoSuchElementException;
 
 @Slf4j
-@Route(value = "base-form-dict", layout = MainView.class)
-@PageTitle("Base Dictionary with Dialog Editor")
-public class BaseFormDictView extends VerticalLayout {
+public abstract class BaseFormDictView<E extends BaseDict, S extends BaseService<E>>
+        extends VerticalLayout {
 
-    private final CustomDictRepo repo;
-    private final BaseFormDictDialog editor;
-    private final Grid<CustomDict> grid = new Grid<>();
+    protected E item;
 
-    private final Grid.Column<CustomDict> idColumn = grid.addColumn(CustomDict::getId)
+    protected abstract E getNewItem();
+
+    protected BaseRepo<E> repo;
+    private S service = null;
+    protected BaseFormDictEditor editor;
+
+    private final Grid<E> grid = new Grid<>();
+
+    private final Grid.Column<E> idColumn = grid.addColumn(E::getId)
             .setHeader("Код").setFlexGrow(1);
-    private final Grid.Column<CustomDict> nameColumn = grid.addColumn(CustomDict::getName)
+    private final Grid.Column<E> nameColumn = grid.addColumn(E::getName)
             .setHeader("Наименование").setFlexGrow(15);
-    private final Grid.Column<CustomDict> descriptionColumn = grid.addColumn(CustomDict::getDescription)
+    private final Grid.Column<E> descriptionColumn = grid.addColumn(E::getDescription)
             .setHeader("Примечание").setFlexGrow(5);
 
     private final Button insertButton = new Button(ProtonStrings.INSERT, VaadinIcon.PLUS.create());
@@ -42,22 +49,19 @@ public class BaseFormDictView extends VerticalLayout {
     private final Button editButton = new Button(ProtonStrings.EDIT, VaadinIcon.EDIT.create());
 
     @Autowired
-    public BaseFormDictView(CustomDictRepo repo) {
-        this.repo = repo;
+    public BaseFormDictView(S service) {
+        this.service = service;
+    }
 
+    public void setupView() {
         setupBrowserWindowResizeListener();
-
         setupLayout();
         setupGrid();
-
-        editor = new BaseFormDictDialog(repo);
+//        editor = getNewEditor(service);
         setupEditor();
-
         grid.setItems(repo.findAll());
-
         add(setupButtons());
         add(grid);
-
     }
 
     public void setupLayout() {
@@ -72,19 +76,27 @@ public class BaseFormDictView extends VerticalLayout {
                 e -> Notification.show("Window width=" + e.getWidth() + ", height=" + e.getHeight()));
     }
 
-    public HorizontalLayout setupButtons() {
+    public void refreshGrid() {
+        grid.setItems(repo.findAll());
+    }
 
+    public HorizontalLayout setupButtons() {
         deleteButton.setEnabled(false);
         editButton.setEnabled(false);
 
         insertButton.addClickListener(e -> {
-            editor.newItem(new CustomDict());
+            editor.newItem(getNewItem());
             editor.open();
         });
 
-        editButton.addClickListener(e -> {
-            editor.editItem(grid.getSelectedItems().stream().findFirst().get());
-            editor.open();
+        editButton.addClickListener(event -> {
+            try {
+                editor.editItem(grid.getSelectedItems().stream().findFirst().get());
+                editor.open();
+            } catch (NoSuchElementException e) {
+                new ProtonWarningDialog(e.getMessage());
+                refreshGrid();
+            }
         });
 
         deleteButton.addClickListener(event -> {
@@ -94,12 +106,11 @@ public class BaseFormDictView extends VerticalLayout {
             }
             ProtonConfirmationDialog dialog = new ProtonConfirmationDialog(ProtonStrings.DELETE_RECORD_Q);
             dialog.showConfirmation(e -> {
-                for (CustomDict item : grid.getSelectedItems()) {
+                for (E item : grid.getSelectedItems()) {
                     log.debug("DELETE ITEM: {}", item);
                     repo.delete(item);
                 }
-
-                grid.setItems(repo.findAll());
+                refreshGrid();
                 dialog.close();
             });
         });
@@ -125,7 +136,7 @@ public class BaseFormDictView extends VerticalLayout {
         editor.setChangeHandler(() -> {
             log.debug("CHANGE HANDLER");
             editor.close();
-            grid.setItems(repo.findAll());
+            refreshGrid();
             // listCustomers(filter.getValue());
         });
     }

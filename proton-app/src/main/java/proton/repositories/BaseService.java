@@ -6,6 +6,7 @@ import java.util.List;
 
 public interface BaseService<E extends BaseDict>{
 
+
 //    E save(E entity);
 
       List<E> findAll(); // you might want a generic Collection if u prefer

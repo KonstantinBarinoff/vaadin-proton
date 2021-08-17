@@ -23,9 +23,11 @@ public class CustomDict extends BaseDict {
     @NotNull
     private Integer number = 0;
 
+//    @Temporal(TemporalType.TIMESTAMP)   // MSSQL: DATETIME
     private LocalDate date;
 
-    private BigDecimal price;    //MSSQL DECIMAL(18,2)
+    //MSSQL DECIMAL(18,2)
+    private BigDecimal price;
 
     private String email;
 

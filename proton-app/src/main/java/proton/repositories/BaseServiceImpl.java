@@ -3,14 +3,13 @@ package proton.repositories;
 import proton.entities.BaseDict;
 
 
-public abstract class AbstractService<E extends BaseDict, R extends BaseRepo<E>>
+public abstract class BaseServiceImpl<E extends BaseDict, R extends BaseRepo<E>>
         implements BaseService<E> {
 
     protected final R repository;
 
 //    @Autowired
-    public AbstractService(R repository) {
-
+    public BaseServiceImpl(R repository) {
         this.repository = repository;
     }
 

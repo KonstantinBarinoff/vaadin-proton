@@ -31,9 +31,7 @@ import java.util.WeakHashMap;
 public abstract class BaseDictView<E extends BaseDict, S extends BaseService<E>> extends VerticalLayout {
 
     protected E item;
-
     protected abstract E getNewItem();
-
     protected BaseRepo<E> repo;
     private S service = null;
 
