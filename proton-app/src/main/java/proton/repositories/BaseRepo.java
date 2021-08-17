@@ -7,4 +7,8 @@ import proton.entities.BaseDict;
 @NoRepositoryBean
 public interface BaseRepo<E extends BaseDict> extends JpaRepository<E, Long> {
 
+//    @Lock(LockModeType.OPTIMISTIC_FORCE_INCREMENT)
+//    public List<E> findAll();
+
+
 }

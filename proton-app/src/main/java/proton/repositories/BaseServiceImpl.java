@@ -16,6 +16,4 @@ public abstract class BaseServiceImpl<E extends BaseDict, R extends BaseRepo<E>>
     public R getRepository() {
         return repository;
     }
-
-//другие методы, переопределённые из интерфейса
 }

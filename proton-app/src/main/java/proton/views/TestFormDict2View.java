@@ -3,16 +3,16 @@ package proton.views;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import lombok.extern.slf4j.Slf4j;
-import proton.entities.SimpleDict2;
-import proton.repositories.SimpleDict2Service;
+import proton.entities.TestDict2;
+import proton.repositories.TestDict2Service;
 
 @Slf4j
 @Route(value = "simple-form-dict-2", layout = MainView.class)
 @PageTitle("SimpleDict2 Form Editor")
-public class TestFormDict2View extends BaseFormDictView<SimpleDict2, SimpleDict2Service> {
+public class TestFormDict2View extends BaseFormDictView<TestDict2, TestDict2Service> {
 
     //@Autowired
-    public TestFormDict2View(SimpleDict2Service service) {
+    public TestFormDict2View(TestDict2Service service) {
         super(service);
         this.repo = service.getRepository();
         editor = new TestFormDict2Editor(service);
@@ -20,8 +20,8 @@ public class TestFormDict2View extends BaseFormDictView<SimpleDict2, SimpleDict2
     }
 
     @Override
-    protected SimpleDict2 getNewItem() {
-        return new SimpleDict2();
+    protected TestDict2 getNewItem() {
+        return new TestDict2();
     }
 
 //    @Override

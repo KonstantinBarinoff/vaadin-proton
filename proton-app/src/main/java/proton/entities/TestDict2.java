@@ -4,6 +4,6 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "SIMPLEDICT2")
-public class SimpleDict2 extends BaseDict {
+@Table(name = "TESTDICT2")
+public class TestDict2 extends BaseDict {
 }

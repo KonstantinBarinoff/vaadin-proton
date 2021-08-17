@@ -18,6 +18,7 @@ import proton.repositories.BaseRepo;
 import proton.repositories.BaseService;
 import util.ProtonConfirmationDialog;
 import util.ProtonStrings;
+import util.ProtonWarningDialog;
 
 import java.util.NoSuchElementException;
 
@@ -89,8 +90,17 @@ public abstract class BaseFormDictEditor<E extends BaseDict, S extends BaseServi
 
             ProtonConfirmationDialog dialog = new ProtonConfirmationDialog(ProtonStrings.DELETE_RECORD_Q);
             dialog.showConfirmation(l -> {
-                delete();
-                dialog.close();
+
+                try {
+                    delete();
+                    dialog.close();
+                } catch (Exception ex) {
+                    editItem(item);
+                    new ProtonWarningDialog(ProtonStrings.UPDATED_ON_LOCK_ERROR);
+                    new ProtonWarningDialog(ex.getMessage());
+                    log.error(ex.getStackTrace().toString());
+                    dialog.close();
+                }
             });
         });
         return new HorizontalLayout(saveButton, revertButton, deleteButton, closeButton);
@@ -108,9 +118,15 @@ public abstract class BaseFormDictEditor<E extends BaseDict, S extends BaseServi
     void save() {
         if (!binder.validate().isOk())
             return;
-        repo.save(item);
-        changeHandler.onChange();
-        log.debug("SAVE ITEM: {}", item);
+        try {
+            repo.save(item);
+            changeHandler.onChange();
+        } catch (Exception e) {
+            editItem(item);
+            new ProtonWarningDialog(ProtonStrings.UPDATED_ON_LOCK_ERROR);
+            new ProtonWarningDialog(e.getMessage());
+            log.error(e.getStackTrace().toString());
+        }
     }
 
     public interface ChangeHandler {
@@ -149,7 +165,7 @@ public abstract class BaseFormDictEditor<E extends BaseDict, S extends BaseServi
         }
         binder.setBean(item);
         nameField.focus();
-        log.debug("NEW ITEM: {}", item);
+//        log.debug("NEW ITEM: {}", item);
     }
 
     public void setChangeHandler(ChangeHandler h) {

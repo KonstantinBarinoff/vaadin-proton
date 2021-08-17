@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.annotation.Version;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -23,7 +22,8 @@ public abstract class BaseEntity {
     private Long id;
 
     @Version
-    private Integer version;
+    @Column(name = "VERSION")
+    private Integer version = 0;
 
     // @Temporal should only be set on a java.util.Date or java.util.Calendar
     // MSSQL: DATETIME
@@ -36,7 +36,6 @@ public abstract class BaseEntity {
     private String createdBy;
 
     @LastModifiedDate
-    @Version
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "MODIFIEDAT")
     private Date modifiedAt;

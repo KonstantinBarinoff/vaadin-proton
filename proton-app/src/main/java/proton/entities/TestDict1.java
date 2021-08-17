@@ -8,10 +8,10 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "SIMPLEDICT1")
+@Table(name = "TESTDICT1")
 @Getter
 @Setter
-public class SimpleDict1 extends BaseDict {
+public class TestDict1 extends BaseDict {
 
     @Column(name = "Coefficient")
     private Double coefficient;

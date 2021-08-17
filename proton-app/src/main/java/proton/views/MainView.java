@@ -79,10 +79,10 @@ public class MainView extends AppLayout {
     private Component[] createMenuItems() {
         return new Tab[]{
                 createTab("References View", ReferencesView.class),
-                createTab("Справочник 1", SimpleDict1View.class),
-                createTab("Справочник 2", SimpleDict2View.class),
-                createTab("Simple Form Dict 1", TestFormDict1View.class),
-                createTab("Simple Form Dict 2", TestFormDict2View.class),
+                createTab("Test Dict 1 (buffered)", TestDict1View.class),
+                createTab("Test Dict 2 (buffered)", TestDict2View.class),
+                createTab("Test Dict 1 (editor)", TestFormDict1View.class),
+                createTab("Test Dict 2 (editor)", TestFormDict2View.class),
                 createTab("CustomDict Grid Editor", CustomDictView.class),
 //                createTab("CustomDict Dialog Editor", CustomDictDialogEditView.class),
                 createTab("Upload Image to File", UploadImageToFile.class),

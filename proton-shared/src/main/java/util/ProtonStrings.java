@@ -20,6 +20,6 @@ public final class ProtonStrings {
     public static final String RECORD_NOT_SELECTED = "Запись не выбрана";
     public static final String RECORD_NOT_FOUND = "Запись не найдена";
     public static final String DELETE_RECORD_Q = "Удалить запись?";
-    
+    public static final String UPDATED_ON_LOCK_ERROR = "Запись была обновлена в соответствии с изменениями внесенными другим пользователем"
     private ProtonStrings() {}
 }

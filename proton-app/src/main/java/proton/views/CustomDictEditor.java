@@ -276,7 +276,7 @@ public class CustomDictEditor extends Dialog implements KeyNotifier {
         }
         binder.setBean(item);
         nameField.focus();
-        log.debug("NEW ITEM: {}", item);
+        //log.debug("NEW ITEM: {}", item);
     }
 
     public void setChangeHandler(ChangeHandler h) {

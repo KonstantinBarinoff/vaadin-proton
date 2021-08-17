@@ -5,24 +5,24 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import proton.entities.SimpleDict2;
-import proton.repositories.SimpleDict2Service;
+import proton.entities.TestDict2;
+import proton.repositories.TestDict2Service;
 
 @Slf4j
 @Route(value = "simple-dict-2", layout = MainView.class)
 @PageTitle("SimpleDict2 Buffered Editor")
-public class SimpleDict2View extends BaseDictView<SimpleDict2, SimpleDict2Service> {
+public class TestDict2View extends BaseDictView<TestDict2, TestDict2Service> {
 
     @Override
-    protected SimpleDict2 getNewItem() {
-        return new SimpleDict2();
+    protected TestDict2 getNewItem() {
+        return new TestDict2();
     }
 
     @Autowired
-    public SimpleDict2View(SimpleDict2Service service) {
+    public TestDict2View(TestDict2Service service) {
         super(service);
         this.repo = service.getRepository();
-        binder = new Binder<>(SimpleDict2.class);
+        binder = new Binder<>(TestDict2.class);
 
         setupView();
     }
