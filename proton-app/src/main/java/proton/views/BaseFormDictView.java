@@ -123,12 +123,12 @@ public abstract class BaseFormDictView<E extends BaseDict, S extends BaseService
             try {
                 for (E item : grid.getSelectedItems()) {
                     if (!repo.existsById(item.getId())) {
-                        throw new OptimisticLockException((ProtonStrings.RECORD_NOT_FOUND + ": " + item));
+                        throw new OptimisticLockException(ProtonStrings.RECORD_NOT_FOUND + ": " + item);
                     }
                     repo.delete(item);
                 }
             } catch (Exception ex) {
-                new ProtonWarningDialog(ex.getMessage());
+                new ProtonWarningDialog(ProtonStrings.RECORD_NOT_FOUND + ": " + item);
                 log.error(Arrays.toString(ex.getStackTrace()));
             } finally {
                 refreshGrid();

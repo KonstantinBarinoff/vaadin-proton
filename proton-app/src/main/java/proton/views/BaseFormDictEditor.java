@@ -71,17 +71,13 @@ public abstract class BaseFormDictEditor<E extends BaseDict, S extends BaseServi
         setModal(true);
         setCloseOnOutsideClick(false);
         setCloseOnEsc(true);
-
         form.add(nameField, descriptionField);
-
         add(form);
         add(setupButtons());
     }
 
     public HorizontalLayout setupButtons() {
         saveButton.getElement().getThemeList().add("primary");
-
-        // wire action buttons to save, delete and reset
         saveButton.addClickListener(e -> saveItem());
         revertButton.addClickListener(e -> editItem(item));
         closeButton.addClickListener(e -> closeEditor());
@@ -125,11 +121,8 @@ public abstract class BaseFormDictEditor<E extends BaseDict, S extends BaseServi
         log.debug("EDIT ITEM: {}", item);
     }
 
-    public final void newItem(E i) {
+    public final void newItem(@NotNull E i) {
         revertButton.setEnabled(false);
-        if (i == null) {
-            return;
-        }
         if (i.isPersisted()) {
             item = repo.findById(i.getId()).get();
         } else {
