@@ -1,5 +1,6 @@
 package proton.views;
 
+import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
@@ -20,6 +21,8 @@ import util.ProtonNotification;
 import util.ProtonStrings;
 import util.ProtonWarningDialog;
 
+import javax.persistence.OptimisticLockException;
+import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 @Slf4j
@@ -59,7 +62,7 @@ public abstract class BaseFormDictView<E extends BaseDict, S extends BaseService
         setupGrid();
 //        editor = getNewEditor(service);
         setupEditor();
-        grid.setItems(repo.findAll());
+        onRefreshButtonClick(null);
         add(setupButtons());
         add(grid);
     }
@@ -67,7 +70,6 @@ public abstract class BaseFormDictView<E extends BaseDict, S extends BaseService
     public void setupLayout() {
         setDefaultHorizontalComponentAlignment(Alignment.BASELINE);
         setSizeFull();
-
     }
 
     public void setupBrowserWindowResizeListener() {
@@ -77,49 +79,19 @@ public abstract class BaseFormDictView<E extends BaseDict, S extends BaseService
     }
 
     public void refreshGrid() {
-        grid.setItems(repo.findAll());
+        onRefreshButtonClick(null);
     }
 
     public HorizontalLayout setupButtons() {
         deleteButton.setEnabled(false);
         editButton.setEnabled(false);
-
         insertButton.addClickListener(e -> {
             editor.newItem(getNewItem());
             editor.open();
         });
-
-        editButton.addClickListener(event -> {
-            try {
-                editor.editItem(grid.getSelectedItems().stream().findFirst().get());
-                editor.open();
-            } catch (NoSuchElementException e) {
-                new ProtonWarningDialog(e.getMessage());
-                refreshGrid();
-            }
-        });
-
-        deleteButton.addClickListener(event -> {
-            if (grid.getSelectedItems().isEmpty()) {
-                ProtonNotification.showWarning(ProtonStrings.RECORD_NOT_SELECTED);
-                return;
-            }
-            ProtonConfirmationDialog dialog = new ProtonConfirmationDialog(ProtonStrings.DELETE_RECORD_Q);
-            dialog.showConfirmation(e -> {
-                for (E item : grid.getSelectedItems()) {
-                    log.debug("DELETE ITEM: {}", item);
-                    repo.delete(item);
-                }
-                refreshGrid();
-                dialog.close();
-            });
-        });
-
-        refreshButton.addClickListener(e -> {
-            grid.setItems(repo.findAll());
-        });
-
-
+        editButton.addClickListener(this::onEditButtonClick);
+        deleteButton.addClickListener(this::onDeleteButtonClick);
+        refreshButton.addClickListener(this::onRefreshButtonClick);
         return new HorizontalLayout(insertButton, deleteButton, refreshButton, editButton);
     }
 
@@ -139,5 +111,43 @@ public abstract class BaseFormDictView<E extends BaseDict, S extends BaseService
             refreshGrid();
             // listCustomers(filter.getValue());
         });
+    }
+
+    void onDeleteButtonClick(ClickEvent<Button> event) {
+        if (grid.getSelectedItems().isEmpty()) {
+            ProtonNotification.showWarning(ProtonStrings.RECORD_NOT_SELECTED);
+            return;
+        }
+        ProtonConfirmationDialog dialog = new ProtonConfirmationDialog(ProtonStrings.DELETE_RECORD_Q);
+        dialog.showConfirmation(e -> {
+            try {
+                for (E item : grid.getSelectedItems()) {
+                    if (!repo.existsById(item.getId())) {
+                        throw new OptimisticLockException((ProtonStrings.RECORD_NOT_FOUND + ": " + item));
+                    }
+                    repo.delete(item);
+                }
+            } catch (Exception ex) {
+                new ProtonWarningDialog(ex.getMessage());
+                log.error(Arrays.toString(ex.getStackTrace()));
+            } finally {
+                refreshGrid();
+                dialog.close();
+            }
+        });
+    }
+
+    private void onEditButtonClick(ClickEvent<Button> event) {
+        try {
+            editor.editItem(grid.getSelectedItems().stream().findFirst().get());
+            editor.open();
+        } catch (NoSuchElementException e) {
+            new ProtonWarningDialog(e.getMessage());
+            refreshGrid();
+        }
+    }
+
+    private void onRefreshButtonClick(ClickEvent<Button> e) {
+        grid.setItems(repo.findAll());
     }
 }

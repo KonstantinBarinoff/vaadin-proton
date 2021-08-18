@@ -13,13 +13,14 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.validator.StringLengthValidator;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import proton.entities.BaseDict;
 import proton.repositories.BaseRepo;
 import proton.repositories.BaseService;
-import util.ProtonConfirmationDialog;
 import util.ProtonStrings;
 import util.ProtonWarningDialog;
 
+import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 
@@ -32,7 +33,6 @@ public abstract class BaseFormDictEditor<E extends BaseDict, S extends BaseServi
     private final Button saveButton = new Button(ProtonStrings.SAVE, VaadinIcon.CHECK.create());
     private final Button revertButton = new Button(ProtonStrings.REVERT, VaadinIcon.REFRESH.create());
     private final Button closeButton = new Button(ProtonStrings.CLOSE, VaadinIcon.CLOSE.create());
-    private final Button deleteButton = new Button(ProtonStrings.DELETE, VaadinIcon.TRASH.create());
 
     protected BaseRepo<E> repo;
     protected Binder<E> binder = null;
@@ -49,7 +49,7 @@ public abstract class BaseFormDictEditor<E extends BaseDict, S extends BaseServi
     public void setupView() {
         setupLayout();
         setupFields();
-        addKeyPressListener(Key.ENTER, e -> save());
+        addKeyPressListener(Key.ENTER, e -> saveItem());
     }
 
     public void setupFields() {
@@ -80,42 +80,19 @@ public abstract class BaseFormDictEditor<E extends BaseDict, S extends BaseServi
 
     public HorizontalLayout setupButtons() {
         saveButton.getElement().getThemeList().add("primary");
-        deleteButton.getElement().getThemeList().add("error");
 
         // wire action buttons to save, delete and reset
-        saveButton.addClickListener(e -> save());
+        saveButton.addClickListener(e -> saveItem());
         revertButton.addClickListener(e -> editItem(item));
         closeButton.addClickListener(e -> closeEditor());
-        deleteButton.addClickListener(e -> {
-
-            ProtonConfirmationDialog dialog = new ProtonConfirmationDialog(ProtonStrings.DELETE_RECORD_Q);
-            dialog.showConfirmation(l -> {
-
-                try {
-                    delete();
-                    dialog.close();
-                } catch (Exception ex) {
-                    editItem(item);
-                    new ProtonWarningDialog(ProtonStrings.UPDATED_ON_LOCK_ERROR);
-                    new ProtonWarningDialog(ex.getMessage());
-                    log.error(ex.getStackTrace().toString());
-                    dialog.close();
-                }
-            });
-        });
-        return new HorizontalLayout(saveButton, revertButton, deleteButton, closeButton);
-    }
-
-    void delete() {
-        repo.delete(item);
-        changeHandler.onChange();
+        return new HorizontalLayout(saveButton, revertButton, closeButton);
     }
 
     void closeEditor() {
         changeHandler.onChange();
     }
 
-    void save() {
+    void saveItem() {
         if (!binder.validate().isOk())
             return;
         try {
@@ -123,9 +100,9 @@ public abstract class BaseFormDictEditor<E extends BaseDict, S extends BaseServi
             changeHandler.onChange();
         } catch (Exception e) {
             editItem(item);
-            new ProtonWarningDialog(ProtonStrings.UPDATED_ON_LOCK_ERROR);
+            new ProtonWarningDialog(ProtonStrings.OPTLOCK_UPDATE_ERROR);
             new ProtonWarningDialog(e.getMessage());
-            log.error(e.getStackTrace().toString());
+            log.error(Arrays.toString(e.getStackTrace()));
         }
     }
 
@@ -133,12 +110,9 @@ public abstract class BaseFormDictEditor<E extends BaseDict, S extends BaseServi
         void onChange();
     }
 
-    public final void editItem(E i) {
-        if (i == null) {
-            return;
-        }
-        if (repo.findById(i.getId()).isEmpty()) {
-            throw new NoSuchElementException(ProtonStrings.RECORD_NOT_FOUND + ":   " + i);
+    public final void editItem(@NotNull E i) {
+        if (!repo.existsById(i.getId())) {
+            throw new NoSuchElementException(ProtonStrings.RECORD_NOT_FOUND + ": " + i);
         }
         if (i.isPersisted()) {
             item = repo.findById(i.getId()).get();
@@ -146,7 +120,6 @@ public abstract class BaseFormDictEditor<E extends BaseDict, S extends BaseServi
             item = i;
         }
         revertButton.setEnabled(true);
-        deleteButton.setEnabled(true);
         binder.setBean(item);
         nameField.focus();
         log.debug("EDIT ITEM: {}", item);
@@ -154,7 +127,6 @@ public abstract class BaseFormDictEditor<E extends BaseDict, S extends BaseServi
 
     public final void newItem(E i) {
         revertButton.setEnabled(false);
-        deleteButton.setEnabled(false);
         if (i == null) {
             return;
         }
