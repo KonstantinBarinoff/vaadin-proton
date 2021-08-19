@@ -27,7 +27,7 @@ import java.util.WeakHashMap;
 
 @Slf4j
 
-@CssImport(themeFor = "vaadin-grid", value = "./styles/densegrid/dense-grid.css")
+@CssImport(themeFor = "vaadin-grid", value = "./styles/dense-grid.css")
 public abstract class BaseDictView<E extends BaseDict, S extends BaseService<E>> extends VerticalLayout {
 
     protected E item;
