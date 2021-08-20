@@ -2,6 +2,7 @@ package proton.views;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentUtil;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.contextmenu.MenuItem;
@@ -20,6 +21,7 @@ import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.tabs.TabsVariant;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.RouterLink;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
@@ -29,7 +31,6 @@ import java.util.Optional;
 public class MainView extends AppLayout {
 
     private Tabs mainMenu;
-    private Tabs dictMenu;
 
     private H1 viewTitle;
 
@@ -55,9 +56,9 @@ public class MainView extends AppLayout {
 
     private Component createDrawerContent() {
         mainMenu = createMainMenu();
-        dictMenu = createDictMenu();
 
         VerticalLayout drawerLayout = new VerticalLayout();
+
         drawerLayout.setSizeFull();
         drawerLayout.setPadding(false);
         drawerLayout.setSpacing(false);
@@ -69,22 +70,25 @@ public class MainView extends AppLayout {
         logoLayout.setAlignItems(FlexComponent.Alignment.CENTER);
         //logoLayout.add(new Image("images/logo.png", "My Project logo"));
         logoLayout.add(new H1("PROTON"));
-        drawerLayout.add(logoLayout, mainMenu);
 
+        drawerLayout.add(logoLayout, mainMenu);
+        drawerLayout.add(createMenuBar());
+        return drawerLayout;
+    }
+
+    @NotNull
+    private MenuBar createMenuBar() {
         MenuBar menuBar = new MenuBar();
 
-        // Set menubar to be vertical with css
         menuBar.getElement().setAttribute("theme", "menu-vertical");
-        Span span = new Span("Справочники");
-        Div div = new Div(span, VaadinIcon.ANGLE_RIGHT.create());
+        MenuItem dictMenuItem = menuBar.addItem(new Div(new Span("Справочники"), VaadinIcon.ANGLE_RIGHT.create()));
 
-        MenuItem first = menuBar.addItem(div);
-        MenuItem item = first.getSubMenu().addItem("Справочник 1");
-        item.add(new RouterLink("sdsds", TestDict1View.class));
-        ComponentUtil.setData(item, Class.class, TestDict1View.class);
+        MenuItem dict1MenuItem = dictMenuItem.getSubMenu().addItem("Справочник 1");
+        dict1MenuItem.addClickListener(e -> UI.getCurrent().navigate(TestFormDict1View.class));
 
+        MenuItem dict2MenuItem = dictMenuItem.getSubMenu().addItem("Справочник 2");
+        dict2MenuItem.addClickListener(e -> UI.getCurrent().navigate(TestFormDict2View.class));
 
-        first.getSubMenu().addItem("Справочник 2");
         menuBar.addItem("Отчеты");
         menuBar.addItem("Настройки");
         menuBar.setOpenOnHover(true);
@@ -99,9 +103,7 @@ public class MainView extends AppLayout {
                 rootMenu.__y = rect.top;
                 rootMenu.__alignOverlayPosition();
                 });""");
-
-        drawerLayout.add(menuBar);
-        return drawerLayout;
+        return menuBar;
     }
 
     private Tabs createMainMenu() {
@@ -119,15 +121,6 @@ public class MainView extends AppLayout {
         return tabs;
     }
 
-    private Tabs createDictMenu() {
-        final Tabs tabs = new Tabs();
-        tabs.setOrientation(Tabs.Orientation.VERTICAL);
-        tabs.addThemeVariants(TabsVariant.LUMO_MINIMAL);
-        tabs.setId("tabs");
-        tabs.add(createTab("Test Dict 1 (editor)", TestFormDict1View.class));
-        tabs.add(createTab("Test Dict 2 (editor)", TestFormDict2View.class));
-        return tabs;
-    }
 
     private static Tab createTab(String text, Class<? extends Component> navigationTarget) {
         final Tab tab = new Tab();
