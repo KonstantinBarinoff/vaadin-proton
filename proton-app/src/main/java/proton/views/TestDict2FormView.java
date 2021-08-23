@@ -24,11 +24,4 @@ public class TestDict2FormView extends BaseDictFormView<TestDict2, TestDict2Serv
         return new TestDict2();
     }
 
-//    @Override
-//    protected TestFormDict2Editor getNewEditor(SimpleDict2Service service) {
-//        return new TestFormDict2Editor(service);
-//    }
-
-
-
 }

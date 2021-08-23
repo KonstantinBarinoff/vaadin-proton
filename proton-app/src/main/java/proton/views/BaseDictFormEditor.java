@@ -41,7 +41,7 @@ public abstract class BaseDictFormEditor<E extends BaseDict, S extends BaseServi
     protected final FormLayout form = new FormLayout();
     private E item;
 
-    private ChangeHandler changeHandler;
+    private OnChangeHandler onChangeHandler;
 
     public BaseDictFormEditor(S service) {
         this.service = service;
@@ -66,22 +66,24 @@ public abstract class BaseDictFormEditor<E extends BaseDict, S extends BaseServi
                 .bind(E::getName, E::setName);
         nameField.addFocusShortcut(Key.KEY_N, KeyModifier.ALT);
         nameField.setValueChangeMode(ValueChangeMode.EAGER);
-        form.add(nameField);
+        form.add(nameField, 4);
 
         binder.forField(descriptionField)
                 .withValidator(new StringLengthValidator(ProtonStrings.NOT_IN_RANGE, 0, 50)) // MSSQL VARCHAR(50)
                 .bind(E::getDescription, E::setDescription);
         descriptionField.setValueChangeMode(ValueChangeMode.EAGER);
         descriptionField.getElement().setProperty("placeholder", "Пример");
-        form.add(descriptionField);
+        form.add(descriptionField, 4);
     }
 
     public void setupLayout() {
-        form.setResponsiveSteps(new FormLayout.ResponsiveStep("25em", 1),
+        form.setResponsiveSteps(
+                new FormLayout.ResponsiveStep("25em", 1),
                 new FormLayout.ResponsiveStep("32em", 2),
                 new FormLayout.ResponsiveStep("40em", 3),
-                new FormLayout.ResponsiveStep("48em", 4));
-
+                new FormLayout.ResponsiveStep("48em", 4),
+                new FormLayout.ResponsiveStep("56em", 6),
+                new FormLayout.ResponsiveStep("64em", 8));
 
         setCloseOnOutsideClick(false);
         setCloseOnEsc(true);
@@ -101,7 +103,7 @@ public abstract class BaseDictFormEditor<E extends BaseDict, S extends BaseServi
     }
 
     void closeEditor() {
-        changeHandler.onChange();
+        onChangeHandler.onChange();
     }
 
     void saveItem() {
@@ -109,7 +111,7 @@ public abstract class BaseDictFormEditor<E extends BaseDict, S extends BaseServi
             return;
         try {
             repo.save(item);
-            changeHandler.onChange();
+            onChangeHandler.onChange();
         } catch (Exception e) {
             editItem(item);
             new ProtonWarningDialog(ProtonStrings.OPTLOCK_UPDATE_ERROR);
@@ -118,7 +120,7 @@ public abstract class BaseDictFormEditor<E extends BaseDict, S extends BaseServi
         }
     }
 
-    public interface ChangeHandler {
+    public interface OnChangeHandler {
         void onChange();
     }
 
@@ -149,8 +151,8 @@ public abstract class BaseDictFormEditor<E extends BaseDict, S extends BaseServi
 //        log.debug("NEW ITEM: {}", item);
     }
 
-    public void setChangeHandler(ChangeHandler h) {
-        changeHandler = h;
+    public void setOnChange(OnChangeHandler h) {
+        onChangeHandler = h;
     }
 
 }

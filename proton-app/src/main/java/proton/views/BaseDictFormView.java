@@ -39,11 +39,11 @@ public abstract class BaseDictFormView<E extends BaseDict, S extends BaseService
 
     protected final Grid<E> grid = new Grid<>();
 
-    private final Grid.Column<E> idColumn = grid.addColumn(E::getId).setHeader("Код").setFlexGrow(1);
+    private final Grid.Column<E> idColumn = grid.addColumn(E::getId).setKey("id").setHeader("Код").setFlexGrow(1);
     private final Grid.Column<E> nameColumn = grid.addColumn(E::getName)
-            .setHeader("Наименование").setFlexGrow(100);
+            .setKey("name").setHeader("Наименование").setFlexGrow(100);
     private final Grid.Column<E> descriptionColumn = grid.addColumn(E::getDescription)
-            .setHeader("Примечание").setFlexGrow(50);
+            .setKey("description").setHeader("Примечание").setFlexGrow(50);
 
     private final Button insertButton = new Button(ProtonStrings.INSERT, VaadinIcon.PLUS.create());
     private final Button deleteButton = new Button(ProtonStrings.DELETE, VaadinIcon.MINUS.create());
@@ -82,15 +82,12 @@ public abstract class BaseDictFormView<E extends BaseDict, S extends BaseService
     }
 
     public HorizontalLayout setupButtons() {
-        deleteButton.setEnabled(false);
-        editButton.setEnabled(false);
-        insertButton.addClickListener(e -> {
-            editor.newItem(getNewItem());
-            editor.open();
-        });
-        editButton.addClickListener(this::onEditButtonClick);
+        insertButton.addClickListener(this::onInsertButtonClick);
         deleteButton.addClickListener(this::onDeleteButtonClick);
+        deleteButton.setEnabled(false);
         refreshButton.addClickListener(this::onRefreshButtonClick);
+        editButton.addClickListener(this::onEditButtonClick);
+        editButton.setEnabled(false);
         return new HorizontalLayout(insertButton, deleteButton, refreshButton, editButton);
     }
 
@@ -104,12 +101,7 @@ public abstract class BaseDictFormView<E extends BaseDict, S extends BaseService
     }
 
     public void setupEditor() {
-        editor.setChangeHandler(() -> {
-            log.debug("CHANGE HANDLER");
-            editor.close();
-            refreshGrid();
-            // listCustomers(filter.getValue());
-        });
+        editor.setOnChange(this::onEditorChange);
     }
 
     void onDeleteButtonClick(ClickEvent<Button> event) {
@@ -148,5 +140,17 @@ public abstract class BaseDictFormView<E extends BaseDict, S extends BaseService
 
     private void onRefreshButtonClick(ClickEvent<Button> e) {
         grid.setItems(repo.findAll());
+    }
+
+    private void onEditorChange() {
+        log.debug("CHANGE HANDLER");
+        editor.close();
+        refreshGrid();
+        // listCustomers(filter.getValue());
+    }
+
+    private void onInsertButtonClick(ClickEvent<Button> e) {
+        editor.newItem(getNewItem());
+        editor.open();
     }
 }

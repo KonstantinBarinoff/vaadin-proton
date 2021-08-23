@@ -6,8 +6,7 @@ import javax.validation.constraints.NotNull;
 @MappedSuperclass
 public abstract class BaseDict extends BaseEntity {
 
-    @NotNull(message = "ANNOTATED NOTNUL MESSAGE")
-    private String name = "";
+    private String name;
 
     private String description;
 

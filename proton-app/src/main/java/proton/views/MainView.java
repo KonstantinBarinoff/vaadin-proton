@@ -121,7 +121,6 @@ public class MainView extends AppLayout {
         tabs.setId("tabs");
 //        tabs.add(createMenuItems());
         tabs.add(createTab("References View", ReferencesView.class));
-        tabs.add(createTab("Test Dict 1 Buff Editor", TestDict1GridBuffView.class));
         tabs.add(createTab("Upload Image to File", UploadImageToFile.class));
         tabs.add(createTab("Byte Array to Image", ByteArrayToImage.class));
         return tabs;

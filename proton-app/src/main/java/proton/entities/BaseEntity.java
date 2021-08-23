@@ -8,7 +8,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass
@@ -18,29 +18,22 @@ public abstract class BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
     private Long id;
 
+    // значение NULL недопустимо - ломается логика JPA (Insert вместо Update)
+    // Version int NOT NULL CONSTRAINT DF_version DEFAULT 0
     @Version
-    @Column(name = "VERSION")
-    private Integer version = 0;
+    private int version;
 
-    // @Temporal should only be set on a java.util.Date or java.util.Calendar
     // MSSQL: DATETIME
     @CreatedDate
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "CREATEDAT")
-    private Date createdAt;
-
-    @Column(name = "CREATEDBY")
-    private String createdBy;
+    private LocalDateTime createdAt;
 
     @LastModifiedDate
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "MODIFIEDAT")
-    private Date modifiedAt;
+    private LocalDateTime modifiedAt;
 
-    @Column(name = "MODIFIEDBY")
+    private String createdBy;
+
     private String modifiedBy;
 
     public boolean isPersisted() {

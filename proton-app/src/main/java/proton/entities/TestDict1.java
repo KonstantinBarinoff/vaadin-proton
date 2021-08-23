@@ -3,8 +3,7 @@ package proton.entities;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -14,14 +13,20 @@ import java.time.LocalDateTime;
 @Setter
 public class TestDict1 extends BaseDict {
 
-    private Double coefficient; // MSSQL: Float
+    private Double coefficient;         // MSSQL: Float
 
-    private Integer number;     // MSSQL: Integer
+    private Integer number;             // MSSQL: Integer
 
-    private LocalDate date;     // MSSQL: Date
+    private LocalDate date;             // MSSQL: Date
 
-    private LocalDateTime dateTime; // MSSQL:   Data type: DateTime       Column name: Date_Time
+    private LocalDateTime dateTime;     // MSSQL: Data type: DateTime       Column name: Date_Time
 
-    private Boolean checked = false;
+    private Boolean checked;            // MSSQL: Bit
 
+    @Column(name="Dict2_Id", insertable = false, updatable = false)  // TODO: Why doesnt work implicit dict2_id?
+    private Integer dict2Id;
+
+    @OneToOne
+    @JoinColumn(name="Dict2_Id", referencedColumnName = "id")
+    private TestDict2 testDict2;
 }
