@@ -49,7 +49,7 @@ import java.time.LocalDate;
 @UIScope
 @org.springframework.transaction.annotation.Transactional
 @Slf4j
-public class CustomDictEditor extends Dialog implements KeyNotifier {
+public class CustomDictFormEditor extends Dialog implements KeyNotifier {
 
     private final TextField nameField = new TextField("Наименование (5-20 знаков) (Alt+N)");
     private final IntegerField numberField = new IntegerField("Количество (Integer) (Alt+K)");
@@ -76,7 +76,7 @@ public class CustomDictEditor extends Dialog implements KeyNotifier {
 //    private EntityManagerFactory emf;
 
     @Autowired
-    public CustomDictEditor(CustomDictRepo repository, EntityManagerFactory emf) {
+    public CustomDictFormEditor(CustomDictRepo repository, EntityManagerFactory emf) {
         this.repository = repository;
         setupLayout();
         setupFields();

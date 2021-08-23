@@ -27,13 +27,13 @@ import javax.persistence.EntityManagerFactory;
 @Slf4j
 @Route(value = "dictionary1-dialog", layout = MainView.class)
 @PageTitle("CustomDict Dialog Editor")
-public class CustomDictDialogEditView extends VerticalLayout {
+public class CustomDictFormView extends VerticalLayout {
 
     private final CustomDictRepo repository;
     private final ProtonProperties properties;
     private final EntityManagerFactory emf;
 
-    private final CustomDictEditor editor;
+    private final CustomDictFormEditor editor;
     // private final ImageForm imageForm;
 
     private final Grid<CustomDict> grid = new Grid<>();
@@ -65,8 +65,8 @@ public class CustomDictDialogEditView extends VerticalLayout {
     @Autowired
     // public Dictionary1DialogEditView(Dictionary1Repository repository,
     // Dictionary1Editor editor) {
-    public CustomDictDialogEditView(CustomDictRepo repository, ProtonProperties properties,
-                                    EntityManagerFactory emf) {
+    public CustomDictFormView(CustomDictRepo repository, ProtonProperties properties,
+                              EntityManagerFactory emf) {
         this.repository = repository;
         this.properties = properties;
         this.emf = emf;
@@ -77,7 +77,7 @@ public class CustomDictDialogEditView extends VerticalLayout {
         setupLayout();
         setupGrid();
 
-        editor = new CustomDictEditor(repository, emf);
+        editor = new CustomDictFormEditor(repository, emf);
         setupEditor();
 
         grid.setItems(repository.findAll());

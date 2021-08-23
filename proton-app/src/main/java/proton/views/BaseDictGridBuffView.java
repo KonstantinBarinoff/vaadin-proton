@@ -28,7 +28,7 @@ import java.util.WeakHashMap;
 @Slf4j
 
 @CssImport(themeFor = "vaadin-grid", value = "./styles/dense-grid.css")
-public abstract class BaseDictView<E extends BaseDict, S extends BaseService<E>> extends VerticalLayout {
+public abstract class BaseDictGridBuffView<E extends BaseDict, S extends BaseService<E>> extends VerticalLayout {
 
     protected E item;
     protected abstract E getNewItem();
@@ -59,7 +59,7 @@ public abstract class BaseDictView<E extends BaseDict, S extends BaseService<E>>
 
 
     @Autowired
-    public BaseDictView(S Service) {
+    public BaseDictGridBuffView(S Service) {
         this.service = service;
     }
 

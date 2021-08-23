@@ -9,13 +9,13 @@ import proton.repositories.TestDict2Service;
 @Slf4j
 @Route(value = "simple-form-dict-2", layout = MainView.class)
 @PageTitle("SimpleDict2 Form Editor")
-public class TestFormDict2View extends BaseFormDictView<TestDict2, TestDict2Service> {
+public class TestDict2FormView extends BaseDictFormView<TestDict2, TestDict2Service> {
 
     //@Autowired
-    public TestFormDict2View(TestDict2Service service) {
+    public TestDict2FormView(TestDict2Service service) {
         super(service);
         this.repo = service.getRepository();
-        editor = new TestFormDict2Editor(service);
+        editor = new TestDict2FormEditor(service);
         setupView();
     }
 

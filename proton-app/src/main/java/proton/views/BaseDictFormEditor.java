@@ -25,7 +25,8 @@ import java.util.NoSuchElementException;
 
 
 @Slf4j
-public abstract class BaseFormDictEditor<E extends BaseDict, S extends BaseService<E>> extends Dialog implements KeyNotifier {
+//@CssImport(themeFor = "vaadin-grid", value = "./styles/layout-with-border.css")
+public abstract class BaseDictFormEditor<E extends BaseDict, S extends BaseService<E>> extends Dialog implements KeyNotifier {
 
     private final TextField nameField = new TextField("Наименование (Alt+N)");
     private final TextField descriptionField = new TextField("Примечание");
@@ -37,21 +38,27 @@ public abstract class BaseFormDictEditor<E extends BaseDict, S extends BaseServi
     protected BaseRepo<E> repo;
     protected Binder<E> binder = null;
     private S service = null;
-    private final FormLayout form = new FormLayout();
+    protected final FormLayout form = new FormLayout();
     private E item;
 
     private ChangeHandler changeHandler;
 
-    public BaseFormDictEditor(S service) {
+    public BaseDictFormEditor(S service) {
         this.service = service;
     }
 
     public void setupView() {
+        setResizable(true);
+        setDraggable(true);
+        setModal(true);
+
         setupLayout();
-        setupFields();
         addKeyPressListener(Key.ENTER, e -> saveItem());
     }
 
+    /**
+     * Создаем поле, настраиваем валидатор, добавляем поле в форму
+     */
     public void setupFields() {
         binder.forField(nameField)
                 .asRequired(ProtonStrings.REQUIRED)
@@ -59,19 +66,28 @@ public abstract class BaseFormDictEditor<E extends BaseDict, S extends BaseServi
                 .bind(E::getName, E::setName);
         nameField.addFocusShortcut(Key.KEY_N, KeyModifier.ALT);
         nameField.setValueChangeMode(ValueChangeMode.EAGER);
+        form.add(nameField);
 
         binder.forField(descriptionField)
                 .withValidator(new StringLengthValidator(ProtonStrings.NOT_IN_RANGE, 0, 50)) // MSSQL VARCHAR(50)
                 .bind(E::getDescription, E::setDescription);
         descriptionField.setValueChangeMode(ValueChangeMode.EAGER);
         descriptionField.getElement().setProperty("placeholder", "Пример");
+        form.add(descriptionField);
     }
 
     public void setupLayout() {
-        setModal(true);
+        form.setResponsiveSteps(new FormLayout.ResponsiveStep("25em", 1),
+                new FormLayout.ResponsiveStep("32em", 2),
+                new FormLayout.ResponsiveStep("40em", 3),
+                new FormLayout.ResponsiveStep("48em", 4));
+
+
         setCloseOnOutsideClick(false);
         setCloseOnEsc(true);
-        form.add(nameField, descriptionField);
+
+        setupFields();
+
         add(form);
         add(setupButtons());
     }

@@ -26,7 +26,7 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 @Slf4j
-public abstract class BaseFormDictView<E extends BaseDict, S extends BaseService<E>>
+public abstract class BaseDictFormView<E extends BaseDict, S extends BaseService<E>>
         extends VerticalLayout {
 
     protected E item;
@@ -35,16 +35,15 @@ public abstract class BaseFormDictView<E extends BaseDict, S extends BaseService
 
     protected BaseRepo<E> repo;
     private S service = null;
-    protected BaseFormDictEditor editor;
+    protected BaseDictFormEditor editor;
 
-    private final Grid<E> grid = new Grid<>();
+    protected final Grid<E> grid = new Grid<>();
 
-    private final Grid.Column<E> idColumn = grid.addColumn(E::getId)
-            .setHeader("Код").setFlexGrow(1);
+    private final Grid.Column<E> idColumn = grid.addColumn(E::getId).setHeader("Код").setFlexGrow(1);
     private final Grid.Column<E> nameColumn = grid.addColumn(E::getName)
-            .setHeader("Наименование").setFlexGrow(15);
+            .setHeader("Наименование").setFlexGrow(100);
     private final Grid.Column<E> descriptionColumn = grid.addColumn(E::getDescription)
-            .setHeader("Примечание").setFlexGrow(5);
+            .setHeader("Примечание").setFlexGrow(50);
 
     private final Button insertButton = new Button(ProtonStrings.INSERT, VaadinIcon.PLUS.create());
     private final Button deleteButton = new Button(ProtonStrings.DELETE, VaadinIcon.MINUS.create());
@@ -52,7 +51,7 @@ public abstract class BaseFormDictView<E extends BaseDict, S extends BaseService
     private final Button editButton = new Button(ProtonStrings.EDIT, VaadinIcon.EDIT.create());
 
     @Autowired
-    public BaseFormDictView(S service) {
+    public BaseDictFormView(S service) {
         this.service = service;
     }
 

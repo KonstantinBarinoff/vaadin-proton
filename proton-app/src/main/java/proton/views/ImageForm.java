@@ -14,7 +14,7 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import proton.views.CustomDictEditor.ChangeHandler;
+import proton.views.CustomDictFormEditor.ChangeHandler;
 import util.ProtonStrings;
 
 import javax.imageio.ImageIO;

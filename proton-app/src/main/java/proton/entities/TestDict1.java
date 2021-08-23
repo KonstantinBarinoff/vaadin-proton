@@ -3,9 +3,10 @@ package proton.entities;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "TESTDICT1")
@@ -13,7 +14,14 @@ import javax.persistence.Table;
 @Setter
 public class TestDict1 extends BaseDict {
 
-    @Column(name = "Coefficient")
-    private Double coefficient;
+    private Double coefficient; // MSSQL: Float
+
+    private Integer number;     // MSSQL: Integer
+
+    private LocalDate date;     // MSSQL: Date
+
+    private LocalDateTime dateTime; // MSSQL:   Data type: DateTime       Column name: Date_Time
+
+    private Boolean checked = false;
 
 }

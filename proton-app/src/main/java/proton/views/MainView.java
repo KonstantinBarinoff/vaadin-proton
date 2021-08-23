@@ -82,16 +82,24 @@ public class MainView extends AppLayout {
 
         menuBar.getElement().setAttribute("theme", "menu-vertical");
         MenuItem dictMenuItem = menuBar.addItem(new Div(new Span("Справочники"), VaadinIcon.ANGLE_RIGHT.create()));
+        dictMenuItem.getElement().setAttribute("style","justify-content: left;");
 
         MenuItem dict1MenuItem = dictMenuItem.getSubMenu().addItem("Справочник 1");
-        dict1MenuItem.addClickListener(e -> UI.getCurrent().navigate(TestFormDict1View.class));
+        dict1MenuItem.addClickListener(e -> UI.getCurrent().navigate(TestDict1FormView.class));
 
         MenuItem dict2MenuItem = dictMenuItem.getSubMenu().addItem("Справочник 2");
-        dict2MenuItem.addClickListener(e -> UI.getCurrent().navigate(TestFormDict2View.class));
+        dict1MenuItem.getElement().setAttribute("style","justify-content: left;");
+        dict2MenuItem.addClickListener(e -> UI.getCurrent().navigate(TestDict2FormView.class));
 
-        menuBar.addItem("Отчеты");
-        menuBar.addItem("Настройки");
+        MenuItem reportsMenuItam = menuBar.addItem("Отчеты");
+        reportsMenuItam.getElement().setAttribute("style","justify-content: left;");
+
+        MenuItem settMenuItam = menuBar.addItem("Настройки");
+        settMenuItam.getElement().setAttribute("style","justify-content: left;");
+
         menuBar.setOpenOnHover(true);
+        menuBar.getItems().forEach(item -> item.getElement().setAttribute("style","justify-content: left;")); //TODO: Почему не работает???
+
         // Adjust the opening position with JavaScript
         menuBar.getElement().executeJs("""
                 this._subMenu.addEventListener('opened-changed', function(e) { 
@@ -113,9 +121,7 @@ public class MainView extends AppLayout {
         tabs.setId("tabs");
 //        tabs.add(createMenuItems());
         tabs.add(createTab("References View", ReferencesView.class));
-        tabs.add(createTab("Test Dict 1 (buffered)", TestDict1View.class));
-        tabs.add(createTab("Test Dict 2 (buffered)", TestDict2View.class));
-        tabs.add(createTab("CustomDict Grid Editor", CustomDictView.class));
+        tabs.add(createTab("Test Dict 1 Buff Editor", TestDict1GridBuffView.class));
         tabs.add(createTab("Upload Image to File", UploadImageToFile.class));
         tabs.add(createTab("Byte Array to Image", ByteArrayToImage.class));
         return tabs;

@@ -4,9 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -23,7 +21,7 @@ public class CustomDict extends BaseDict {
     @NotNull
     private Integer number = 0;
 
-//    @Temporal(TemporalType.TIMESTAMP)   // MSSQL: DATETIME
+    // MSSQL: DATETIME
     private LocalDate date;
 
     //MSSQL DECIMAL(18,2)
