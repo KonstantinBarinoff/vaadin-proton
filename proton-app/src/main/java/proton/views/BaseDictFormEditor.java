@@ -47,6 +47,8 @@ public abstract class BaseDictFormEditor<E extends BaseDict, S extends BaseServi
         this.service = service;
     }
 
+
+
     public void setupView() {
         setResizable(true);
         setDraggable(true);

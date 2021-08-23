@@ -22,6 +22,7 @@ import com.vaadin.flow.component.tabs.TabsVariant;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.RouterLink;
 import org.jetbrains.annotations.NotNull;
+import proton.employees.EmployeeFormView;
 
 import java.util.Optional;
 
@@ -87,9 +88,9 @@ public class MainView extends AppLayout {
         MenuItem dict1MenuItem = dictMenuItem.getSubMenu().addItem("Справочник 1");
         dict1MenuItem.addClickListener(e -> UI.getCurrent().navigate(TestDict1FormView.class));
 
-        MenuItem dict2MenuItem = dictMenuItem.getSubMenu().addItem("Справочник 2");
+        MenuItem dict2MenuItem = dictMenuItem.getSubMenu().addItem("Сотрудники");
         dict1MenuItem.getElement().setAttribute("style","justify-content: left;");
-        dict2MenuItem.addClickListener(e -> UI.getCurrent().navigate(TestDict2FormView.class));
+        dict2MenuItem.addClickListener(e -> UI.getCurrent().navigate(EmployeeFormView.class));
 
         MenuItem reportsMenuItam = menuBar.addItem("Отчеты");
         reportsMenuItam.getElement().setAttribute("style","justify-content: left;");

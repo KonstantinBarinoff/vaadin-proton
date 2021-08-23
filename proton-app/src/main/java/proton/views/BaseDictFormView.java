@@ -12,7 +12,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.page.Page;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import proton.entities.BaseDict;
 import proton.repositories.BaseRepo;
 import proton.repositories.BaseService;
@@ -29,12 +29,15 @@ import java.util.NoSuchElementException;
 public abstract class BaseDictFormView<E extends BaseDict, S extends BaseService<E>>
         extends VerticalLayout {
 
+//    @Autowired
+//    private S service;
+
+
     protected E item;
 
     protected abstract E getNewItem();
 
     protected BaseRepo<E> repo;
-    private S service = null;
     protected BaseDictFormEditor editor;
 
     protected final Grid<E> grid = new Grid<>();
@@ -50,10 +53,10 @@ public abstract class BaseDictFormView<E extends BaseDict, S extends BaseService
     private final Button refreshButton = new Button(ProtonStrings.REFRESH, VaadinIcon.REFRESH.create());
     private final Button editButton = new Button(ProtonStrings.EDIT, VaadinIcon.EDIT.create());
 
-    @Autowired
-    public BaseDictFormView(S service) {
-        this.service = service;
-    }
+//    @Autowired
+//    public BaseDictFormView(S service) {
+//        this.service = service;
+//    }
 
     public void setupView() {
         setupBrowserWindowResizeListener();
@@ -118,6 +121,9 @@ public abstract class BaseDictFormView<E extends BaseDict, S extends BaseService
                     }
                     repo.delete(item);
                 }
+            } catch (DataIntegrityViolationException ex) {
+                new ProtonWarningDialog(ProtonStrings.DATA_INTEGRITY_VIOLETION);
+                log.error(Arrays.toString(ex.getStackTrace()));
             } catch (Exception ex) {
                 new ProtonWarningDialog(ProtonStrings.RECORD_NOT_FOUND + ": " + item);
                 log.error(Arrays.toString(ex.getStackTrace()));
