@@ -1,4 +1,4 @@
-package proton.views;
+package proton.base;
 
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.UI;
@@ -12,10 +12,8 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.page.Page;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.NestedExceptionUtils;
 import org.springframework.dao.DataIntegrityViolationException;
-import proton.entities.BaseDict;
-import proton.repositories.BaseRepo;
-import proton.repositories.BaseService;
 import util.ProtonConfirmationDialog;
 import util.ProtonNotification;
 import util.ProtonStrings;
@@ -26,19 +24,18 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 @Slf4j
-public abstract class BaseDictFormView<E extends BaseDict, S extends BaseService<E>>
+public abstract class BaseDictView<E extends BaseDict, S extends BaseService<E>>
         extends VerticalLayout {
-
-//    @Autowired
-//    private S service;
-
 
     protected E item;
 
     protected abstract E getNewItem();
 
-    protected BaseRepo<E> repo;
-    protected BaseDictFormEditor editor;
+//    protected BaseRepository<E> repo;
+    protected BaseService<E> service;
+
+
+    protected BaseDictViewEditor editor;
 
     protected final Grid<E> grid = new Grid<>();
 
@@ -53,16 +50,10 @@ public abstract class BaseDictFormView<E extends BaseDict, S extends BaseService
     private final Button refreshButton = new Button(ProtonStrings.REFRESH, VaadinIcon.REFRESH.create());
     private final Button editButton = new Button(ProtonStrings.EDIT, VaadinIcon.EDIT.create());
 
-//    @Autowired
-//    public BaseDictFormView(S service) {
-//        this.service = service;
-//    }
-
     public void setupView() {
         setupBrowserWindowResizeListener();
         setupLayout();
         setupGrid();
-//        editor = getNewEditor(service);
         setupEditor();
         onRefreshButtonClick(null);
         add(setupButtons());
@@ -116,16 +107,18 @@ public abstract class BaseDictFormView<E extends BaseDict, S extends BaseService
         dialog.showConfirmation(e -> {
             try {
                 for (E item : grid.getSelectedItems()) {
-                    if (!repo.existsById(item.getId())) {
+                    if (!service.existsById(item.getId())) {
                         throw new OptimisticLockException(ProtonStrings.RECORD_NOT_FOUND + ": " + item);
                     }
-                    repo.delete(item);
+                    service.delete(item);
                 }
             } catch (DataIntegrityViolationException ex) {
-                new ProtonWarningDialog(ProtonStrings.DATA_INTEGRITY_VIOLETION);
+                new ProtonWarningDialog(ProtonStrings.DATA_INTEGRITY_VIOLETION,
+                        NestedExceptionUtils.getMostSpecificCause(ex).getMessage());
                 log.error(Arrays.toString(ex.getStackTrace()));
             } catch (Exception ex) {
-                new ProtonWarningDialog(ProtonStrings.RECORD_NOT_FOUND + ": " + item);
+                new ProtonWarningDialog(ProtonStrings.RECORD_NOT_FOUND + ": " + item,
+                        NestedExceptionUtils.getMostSpecificCause(ex).getMessage());
                 log.error(Arrays.toString(ex.getStackTrace()));
             } finally {
                 refreshGrid();
@@ -139,13 +132,13 @@ public abstract class BaseDictFormView<E extends BaseDict, S extends BaseService
             editor.editItem(grid.getSelectedItems().stream().findFirst().get());
             editor.open();
         } catch (NoSuchElementException e) {
-            new ProtonWarningDialog(e.getMessage());
+            new ProtonWarningDialog(e.getMessage(), NestedExceptionUtils.getMostSpecificCause(e).getMessage());
             refreshGrid();
         }
     }
 
     private void onRefreshButtonClick(ClickEvent<Button> e) {
-        grid.setItems(repo.findAll());
+        grid.setItems(service.findAll());
     }
 
     private void onEditorChange() {

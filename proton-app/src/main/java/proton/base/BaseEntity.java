@@ -1,4 +1,4 @@
-package proton.entities;
+package proton.base;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -12,19 +12,19 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.validator.IntegerRangeValidator;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
-import proton.entities.TestDict1;
-import proton.repositories.TestDict1Service;
+import proton.base.BaseDictViewEditor;
+import proton.products.Product;
+import proton.products.ProductService;
 import util.ProtonDatePicker;
 import util.ProtonStrings;
 
 @SpringComponent
 @UIScope
-public class ComplexFormEditor extends BaseDictFormEditor<TestDict1, TestDict1Service> {
+public class ComplexEditor extends BaseDictViewEditor<Product, ProductService> {
 
-    public ComplexFormEditor(TestDict1Service service) {
-        super(service);
-        repo = service.getRepository();
-        binder = new Binder<>(TestDict1.class);
+    public ComplexEditor(ProductService service) {
+        //repo = service.getRepository();
+        binder = new Binder<>(Product.class);
         setupView();
     }
 
@@ -37,7 +37,7 @@ public class ComplexFormEditor extends BaseDictFormEditor<TestDict1, TestDict1Se
         binder.forField(numberField)
                 .withValidator(new IntegerRangeValidator(ProtonStrings.NOT_IN_RANGE, 1, Integer.MAX_VALUE))
                 .asRequired(ProtonStrings.REQUIRED)
-                .bind(TestDict1::getNumber, TestDict1::setNumber);
+                .bind(Product::getNumber, Product::setNumber);
         form.add(numberField);
 
         final NumberField coefficientField = new NumberField("Коэффициент (Alt+K)");
@@ -46,24 +46,24 @@ public class ComplexFormEditor extends BaseDictFormEditor<TestDict1, TestDict1Se
         //      coefficientField.setValueChangeMode(ValueChangeMode.EAGER);
         binder.forField(coefficientField)
                 .withValidator(d -> !d.isNaN(), ProtonStrings.REQUIRED)
-                .bind(TestDict1::getCoefficient, TestDict1::setCoefficient);
+                .bind(Product::getCoefficient, Product::setCoefficient);
         form.add(coefficientField);
 
         final ProtonDatePicker dateField = new ProtonDatePicker("Дата");
         binder.forField(dateField)
-                .bind(TestDict1::getDate, TestDict1::setDate);
+                .bind(Product::getDate, Product::setDate);
         form.add(dateField);
 
         final DateTimePicker dateTimeField = new DateTimePicker("Дата/время");
         binder.forField(dateTimeField)
-                .bind(TestDict1::getDateTime, TestDict1::setDateTime);
+                .bind(Product::getDateTime, Product::setDateTime);
         form.add(dateField);
 
         final Checkbox checkedField = new Checkbox("Отметка");
         checkedField.getElement().setAttribute("border", "1px solid blue;");
         binder.forField(checkedField)
                 .asRequired(ProtonStrings.REQUIRED)
-                .bind(TestDict1::getChecked, TestDict1::setChecked);
+                .bind(Product::getChecked, Product::setChecked);
         form.add(checkedField);
 
         for (int i = 0; i < 12; i++) {

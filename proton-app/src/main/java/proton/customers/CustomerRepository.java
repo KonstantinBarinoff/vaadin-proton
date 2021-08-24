@@ -1,8 +1,8 @@
-package proton.employees;
+package proton.customers;
 
 import org.springframework.stereotype.Repository;
 import proton.base.BaseRepository;
 
 @Repository
-public interface EmployeeRepository extends BaseRepository<Employee> {
+public interface CustomerRepository extends BaseRepository<Customer> {
 }

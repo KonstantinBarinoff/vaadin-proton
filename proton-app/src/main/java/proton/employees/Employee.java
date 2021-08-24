@@ -1,11 +1,14 @@
 package proton.employees;
 
-import proton.entities.BaseDict;
+import proton.base.BaseDict;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+/**
+ * Сотрудник (производства)
+ */
 @Entity
 @Table(name = "Employees")
-public class EmployeeDict extends BaseDict {
+public class Employee extends BaseDict {
 }

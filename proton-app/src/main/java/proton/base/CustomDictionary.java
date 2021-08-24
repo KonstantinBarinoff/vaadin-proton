@@ -1,4 +1,4 @@
-package proton.entities;
+package proton.base;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 @Getter
 @Setter
-public class CustomDict extends BaseDict {
+public class CustomDictionary extends BaseDict {
 
     @NotEmpty
     @NotNull

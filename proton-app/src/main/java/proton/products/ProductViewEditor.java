@@ -1,4 +1,4 @@
-package proton.views;
+package proton.products;
 
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.KeyModifier;
@@ -13,24 +13,26 @@ import com.vaadin.flow.data.validator.IntegerRangeValidator;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import org.jetbrains.annotations.NotNull;
-import proton.entities.TestDict1;
-import proton.employees.EmployeeDict;
-import proton.repositories.TestDict1Service;
+import proton.base.BaseDictViewEditor;
+import proton.customers.Customer;
+import proton.customers.CustomerService;
+import proton.employees.Employee;
 import proton.employees.EmployeeService;
 import util.ProtonDatePicker;
 import util.ProtonStrings;
 
 @SpringComponent
 @UIScope
-public class TestDict1FormEditor extends BaseDictFormEditor<TestDict1, TestDict1Service> {
+public class ProductViewEditor extends BaseDictViewEditor<Product, ProductService> {
 
-    EmployeeService dict2Service;
+    EmployeeService employeeService;
+    CustomerService customerService;
 
-    public TestDict1FormEditor(TestDict1Service service, EmployeeService dict2Service) {
-        super(service);
-        this.dict2Service = dict2Service;
-        repo = service.getRepository();
-        binder = new Binder<>(TestDict1.class);
+    public ProductViewEditor(ProductService productService, EmployeeService employeeService, CustomerService customerService) {
+        this.service = productService;
+        this.customerService = customerService;
+        this.employeeService = employeeService;
+        binder = new Binder<>(Product.class);
         setupView();
     }
 
@@ -43,8 +45,9 @@ public class TestDict1FormEditor extends BaseDictFormEditor<TestDict1, TestDict1
         form.add(getDateField());
         form.add(getDateTimeField(),2);
         form.add(getCheckedField());
-        form.add(getDict2Combobox());
-        form.add(getDict3Combobox());
+        form.add(getEmployeeCombobox());
+        form.add(getCheckEmployeeCombobox());
+        form.add(getCustomerCombobox());
     }
 
     @NotNull
@@ -52,14 +55,14 @@ public class TestDict1FormEditor extends BaseDictFormEditor<TestDict1, TestDict1
         final Checkbox field = new Checkbox("Отметка");
         field.getElement().setAttribute("border", "1px solid blue;");
         binder.forField(field)
-                .bind(TestDict1::getChecked, TestDict1::setChecked);
+                .bind(Product::getChecked, Product::setChecked);
         return field;
     }
 
     @NotNull
     private DateTimePicker getDateTimeField() {
         final DateTimePicker field = new DateTimePicker("Дата/время");
-        binder.forField(field).bind(TestDict1::getDateTime, TestDict1::setDateTime);
+        binder.forField(field).bind(Product::getDateTime, Product::setDateTime);
         return field;
     }
 
@@ -80,7 +83,7 @@ public class TestDict1FormEditor extends BaseDictFormEditor<TestDict1, TestDict1
         binder.forField(field)
                 .asRequired(ProtonStrings.REQUIRED)
                 .withValidator(d -> !d.isNaN(), ProtonStrings.REQUIRED)
-                .bind(TestDict1::getCoefficient, TestDict1::setCoefficient);
+                .bind(Product::getCoefficient, Product::setCoefficient);
         return field;
     }
 
@@ -91,32 +94,45 @@ public class TestDict1FormEditor extends BaseDictFormEditor<TestDict1, TestDict1
         binder.forField(field)
                 .withValidator(new IntegerRangeValidator(ProtonStrings.NOT_IN_RANGE, 1, Integer.MAX_VALUE))
                 .asRequired(ProtonStrings.REQUIRED)
-                .bind(TestDict1::getNumber, TestDict1::setNumber);
+                .bind(Product::getNumber, Product::setNumber);
         return field;
     }
 
     @NotNull
-    private ComboBox<EmployeeDict> getDict2Combobox() {
-        final ComboBox<EmployeeDict> comboBox = new ComboBox<EmployeeDict>("Изготовил");
-        comboBox.setItems(dict2Service.getRepository().findAll());
+    private ComboBox<Employee> getEmployeeCombobox() {
+        final ComboBox<Employee> comboBox = new ComboBox<>("Изготовил");
+        comboBox.setItems(employeeService.findAll());
         comboBox.setItemLabelGenerator(i -> i.getId() + " - " + i.getName());
         comboBox.getStyle().set("--vaadin-combo-box-overlay-width", "24em");
         binder.forField(comboBox)
                   .asRequired(ProtonStrings.REQUIRED)
-                  .bind(TestDict1::getEmployeeDict, TestDict1::setEmployeeDict);
+                  .bind(Product::getProduceEmployee, Product::setProduceEmployee);
         return comboBox;
     }
 
     @NotNull
-    private ComboBox<EmployeeDict> getDict3Combobox() {
-        final ComboBox<EmployeeDict> comboBox = new ComboBox<EmployeeDict>("Проверил");
-        comboBox.setItems(dict2Service.getRepository().findAll());
+    private ComboBox<Employee> getCheckEmployeeCombobox() {
+        final ComboBox<Employee> comboBox = new ComboBox<>("Проверил");
+        comboBox.setItems(employeeService.findAll());
         comboBox.setItemLabelGenerator(i -> i.getId() + " - " + i.getName());
         comboBox.getStyle().set("--vaadin-combo-box-overlay-width", "24em");
         binder.forField(comboBox)
                   .asRequired(ProtonStrings.REQUIRED)
-                  .bind(TestDict1::getTestDict3, TestDict1::setTestDict3);
+                  .bind(Product::getCheckEmployee, Product::setCheckEmployee);
         return comboBox;
     }
+
+    @NotNull
+    private ComboBox<Customer> getCustomerCombobox() {
+        final ComboBox<Customer> comboBox = new ComboBox<>("Заказчик");
+        comboBox.setItems(customerService.findAll());
+        comboBox.setItemLabelGenerator(i -> i.getId() + " - " + i.getName());
+        comboBox.getStyle().set("--vaadin-combo-box-overlay-width", "24em");
+        binder.forField(comboBox)
+                  .asRequired(ProtonStrings.REQUIRED)
+                  .bind(Product::getCustomer, Product::setCustomer);
+        return comboBox;
+    }
+
 
 }

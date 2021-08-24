@@ -1,4 +1,4 @@
-package proton.views;
+package proton.base;
 
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.KeyModifier;
@@ -14,9 +14,8 @@ import com.vaadin.flow.data.validator.StringLengthValidator;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
-import proton.entities.BaseDict;
-import proton.repositories.BaseRepo;
-import proton.repositories.BaseService;
+import org.springframework.core.NestedExceptionUtils;
+import org.springframework.dao.DataIntegrityViolationException;
 import util.ProtonStrings;
 import util.ProtonWarningDialog;
 
@@ -26,7 +25,7 @@ import java.util.NoSuchElementException;
 
 @Slf4j
 //@CssImport(themeFor = "vaadin-grid", value = "./styles/layout-with-border.css")
-public abstract class BaseDictFormEditor<E extends BaseDict, S extends BaseService<E>> extends Dialog implements KeyNotifier {
+public abstract class BaseDictViewEditor<E extends BaseDict, S extends BaseService<E>> extends Dialog implements KeyNotifier {
 
     private final TextField nameField = new TextField("Наименование (Alt+N)");
     private final TextField descriptionField = new TextField("Примечание");
@@ -35,19 +34,13 @@ public abstract class BaseDictFormEditor<E extends BaseDict, S extends BaseServi
     private final Button revertButton = new Button(ProtonStrings.REVERT, VaadinIcon.REFRESH.create());
     private final Button closeButton = new Button(ProtonStrings.CLOSE, VaadinIcon.CLOSE.create());
 
-    protected BaseRepo<E> repo;
+    //protected BaseRepository<E> repo;
+    protected BaseService<E> service;
     protected Binder<E> binder = null;
-    private S service = null;
     protected final FormLayout form = new FormLayout();
     private E item;
 
     private OnChangeHandler onChangeHandler;
-
-    public BaseDictFormEditor(S service) {
-        this.service = service;
-    }
-
-
 
     public void setupView() {
         setResizable(true);
@@ -74,7 +67,7 @@ public abstract class BaseDictFormEditor<E extends BaseDict, S extends BaseServi
                 .withValidator(new StringLengthValidator(ProtonStrings.NOT_IN_RANGE, 0, 50)) // MSSQL VARCHAR(50)
                 .bind(E::getDescription, E::setDescription);
         descriptionField.setValueChangeMode(ValueChangeMode.EAGER);
-        descriptionField.getElement().setProperty("placeholder", "Пример");
+        descriptionField.getElement().setProperty("placeholder", "");
         form.add(descriptionField, 4);
     }
 
@@ -112,12 +105,14 @@ public abstract class BaseDictFormEditor<E extends BaseDict, S extends BaseServi
         if (!binder.validate().isOk())
             return;
         try {
-            repo.save(item);
+            service.save(item);
             onChangeHandler.onChange();
+        } catch (DataIntegrityViolationException e) {
+            new ProtonWarningDialog(ProtonStrings.ERROR, NestedExceptionUtils.getMostSpecificCause(e).getMessage());
+            log.error(Arrays.toString(e.getStackTrace()));
         } catch (Exception e) {
             editItem(item);
-            new ProtonWarningDialog(ProtonStrings.OPTLOCK_UPDATE_ERROR);
-            new ProtonWarningDialog(e.getMessage());
+            new ProtonWarningDialog(ProtonStrings.OPTLOCK_UPDATE_ERROR, NestedExceptionUtils.getMostSpecificCause(e).getMessage());
             log.error(Arrays.toString(e.getStackTrace()));
         }
     }
@@ -127,11 +122,11 @@ public abstract class BaseDictFormEditor<E extends BaseDict, S extends BaseServi
     }
 
     public final void editItem(@NotNull E i) {
-        if (!repo.existsById(i.getId())) {
+        if (!service.existsById(i.getId())) {
             throw new NoSuchElementException(ProtonStrings.RECORD_NOT_FOUND + ": " + i);
         }
         if (i.isPersisted()) {
-            item = repo.findById(i.getId()).get();
+            item = service.findById(i.getId()).get();
         } else {
             item = i;
         }
@@ -144,7 +139,7 @@ public abstract class BaseDictFormEditor<E extends BaseDict, S extends BaseServi
     public final void newItem(@NotNull E i) {
         revertButton.setEnabled(false);
         if (i.isPersisted()) {
-            item = repo.findById(i.getId()).get();
+            item = service.findById(i.getId()).get();
         } else {
             item = i;
         }

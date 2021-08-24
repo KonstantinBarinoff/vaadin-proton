@@ -28,7 +28,7 @@ import com.vaadin.flow.spring.annotation.UIScope;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import proton.entities.CustomDict;
+import proton.base.CustomDictionary;
 import proton.repositories.CustomDictRepo;
 import util.ProtonConfirmationDialog;
 import util.ProtonDatePicker;
@@ -49,7 +49,7 @@ import java.time.LocalDate;
 @UIScope
 @org.springframework.transaction.annotation.Transactional
 @Slf4j
-public class CustomDictFormEditor extends Dialog implements KeyNotifier {
+public class CustomDictViewEditor extends Dialog implements KeyNotifier {
 
     private final TextField nameField = new TextField("Наименование (5-20 знаков) (Alt+N)");
     private final IntegerField numberField = new IntegerField("Количество (Integer) (Alt+K)");
@@ -65,9 +65,9 @@ public class CustomDictFormEditor extends Dialog implements KeyNotifier {
     private final Button deleteButton = new Button(ProtonStrings.DELETE, VaadinIcon.TRASH.create());
 
     private final CustomDictRepo repository;
-    private final Binder<CustomDict> binder = new Binder<>(CustomDict.class);
+    private final Binder<CustomDictionary> binder = new Binder<>(CustomDictionary.class);
     private final FormLayout form = new FormLayout();
-    private CustomDict item;
+    private CustomDictionary item;
 
     private ChangeHandler changeHandler;
 
@@ -76,7 +76,7 @@ public class CustomDictFormEditor extends Dialog implements KeyNotifier {
 //    private EntityManagerFactory emf;
 
     @Autowired
-    public CustomDictFormEditor(CustomDictRepo repository, EntityManagerFactory emf) {
+    public CustomDictViewEditor(CustomDictRepo repository, EntityManagerFactory emf) {
         this.repository = repository;
         setupLayout();
         setupFields();
@@ -101,7 +101,7 @@ public class CustomDictFormEditor extends Dialog implements KeyNotifier {
                 em.getTransaction().begin();
 
                 // Upload image to database to user id = 1
-                Query query = em.createQuery("UPDATE CustomDict u SET u.image = :data WHERE u.id = :id");
+                Query query = em.createQuery("UPDATE CustomDictionary u SET u.image = :data WHERE u.id = :id");
                 query.setParameter("data", bytes);
                 query.setParameter("id", item.getId());
                 query.executeUpdate();
@@ -158,28 +158,28 @@ public class CustomDictFormEditor extends Dialog implements KeyNotifier {
         binder.forField(nameField)
                 .asRequired(ProtonStrings.REQUIRED)
                 .withValidator(new StringLengthValidator(ProtonStrings.NOT_IN_RANGE, 5, 20)) // MSSQL VARCHAR(20)
-                .bind(CustomDict::getName, CustomDict::setName);
+                .bind(CustomDictionary::getName, CustomDictionary::setName);
         nameField.addFocusShortcut(Key.KEY_N, KeyModifier.ALT);
         nameField.setValueChangeMode(ValueChangeMode.EAGER);
 
         binder.forField(numberField)
                 .withValidator(new IntegerRangeValidator(ProtonStrings.NOT_IN_RANGE, 1, Integer.MAX_VALUE))
                 .asRequired(ProtonStrings.REQUIRED)
-                .bind(CustomDict::getNumber, CustomDict::setNumber);
+                .bind(CustomDictionary::getNumber, CustomDictionary::setNumber);
         numberField.addFocusShortcut(Key.KEY_K, KeyModifier.ALT);
         numberField.setValueChangeMode(ValueChangeMode.EAGER);
 
         binder.forField(priceField) //MSSQL DECIMAL(18,2)
                 .asRequired(ProtonStrings.REQUIRED)
                 .withValidator(new BigDecimalRangeValidator(ProtonStrings.NOT_IN_RANGE, BigDecimal.valueOf(0.01), BigDecimal.valueOf(9999999999999999L)))
-                .bind(CustomDict::getPrice, CustomDict::setPrice);
+                .bind(CustomDictionary::getPrice, CustomDictionary::setPrice);
         priceField.setValueChangeMode(ValueChangeMode.EAGER);
 
         binder.forField(emailField)
 //		.withValidator(new EmailValidator(ProtonStrings.BAD_EMAIL))
-                .bind(CustomDict::getEmail, CustomDict::setEmail);
+                .bind(CustomDictionary::getEmail, CustomDictionary::setEmail);
 
-        binder.forField(dateField).bind(CustomDict::getDate, CustomDict::setDate);
+        binder.forField(dateField).bind(CustomDictionary::getDate, CustomDictionary::setDate);
         dateField.setMin(LocalDate.now().plusDays(1));
         dateField.getElement().addEventListener("click", e -> {
             Notification.show("Element Event Listener clock");
@@ -187,7 +187,7 @@ public class CustomDictFormEditor extends Dialog implements KeyNotifier {
 
         binder.forField(descriptionField)
                 .withValidator(new StringLengthValidator(ProtonStrings.NOT_IN_RANGE, 0, 50)) // MSSQL VARCHAR(50)
-                .bind(CustomDict::getDescription, CustomDict::setDescription);
+                .bind(CustomDictionary::getDescription, CustomDictionary::setDescription);
         descriptionField.setValueChangeMode(ValueChangeMode.EAGER);
         descriptionField.getElement().setProperty("placeholder", "Пример");
 
@@ -247,7 +247,7 @@ public class CustomDictFormEditor extends Dialog implements KeyNotifier {
         void onChange();
     }
 
-    public final void editItem(CustomDict i) {
+    public final void editItem(CustomDictionary i) {
         revertButton.setEnabled(true);
         deleteButton.setEnabled(true);
         if (i == null) {
@@ -263,7 +263,7 @@ public class CustomDictFormEditor extends Dialog implements KeyNotifier {
         log.debug("EDIT ITEM: {}", item);
     }
 
-    public final void newItem(CustomDict i) {
+    public final void newItem(CustomDictionary i) {
         revertButton.setEnabled(false);
         deleteButton.setEnabled(false);
         if (i == null) {

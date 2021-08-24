@@ -14,7 +14,7 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import proton.views.CustomDictFormEditor.ChangeHandler;
+import proton.views.CustomDictViewEditor.ChangeHandler;
 import util.ProtonStrings;
 
 import javax.imageio.ImageIO;
@@ -48,7 +48,7 @@ public class ImageForm extends Dialog implements KeyNotifier {
 
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
-        Query query = em.createQuery("SELECT u.image FROM CustomDict u WHERE u.id = :id");
+        Query query = em.createQuery("SELECT u.image FROM CustomDictionary u WHERE u.id = :id");
         query.setParameter("id", id);
 
         Image image;

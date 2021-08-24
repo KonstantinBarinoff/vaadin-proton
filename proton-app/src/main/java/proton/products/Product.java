@@ -1,8 +1,10 @@
-package proton.entities;
+package proton.products;
 
 import lombok.Getter;
 import lombok.Setter;
-import proton.employees.EmployeeDict;
+import proton.customers.Customer;
+import proton.employees.Employee;
+import proton.base.BaseDict;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -11,11 +13,14 @@ import javax.persistence.Table;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+/**
+ * Производимые изделия
+ */
 @Entity
-@Table(name = "TESTDICT1")
+@Table(name = "Products")
 @Getter
 @Setter
-public class TestDict1 extends BaseDict {
+public class Product extends BaseDict {
 
     private Double coefficient;         // MSSQL: Float
 
@@ -32,11 +37,15 @@ public class TestDict1 extends BaseDict {
 
 
     @ManyToOne()
-    @JoinColumn(name="Dict2_Id", referencedColumnName = "id")
-    private EmployeeDict employeeDict;
+    @JoinColumn(name="Produce_Employee_Id", referencedColumnName = "id")
+    private Employee produceEmployee;
 
     @ManyToOne()
-    @JoinColumn(name="Dict3_Id", referencedColumnName = "id")
-    private EmployeeDict testDict3;
+    @JoinColumn(name="Check_Employee_Id", referencedColumnName = "id")
+    private Employee checkEmployee;
+
+    @ManyToOne()
+    @JoinColumn(name="Customer_Id", referencedColumnName = "id")
+    private Customer customer;
 
 }

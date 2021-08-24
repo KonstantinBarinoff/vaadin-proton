@@ -22,7 +22,9 @@ import com.vaadin.flow.component.tabs.TabsVariant;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.RouterLink;
 import org.jetbrains.annotations.NotNull;
-import proton.employees.EmployeeFormView;
+import proton.customers.CustomerView;
+import proton.employees.EmployeeView;
+import proton.products.ProductView;
 
 import java.util.Optional;
 
@@ -80,23 +82,28 @@ public class MainView extends AppLayout {
     @NotNull
     private MenuBar createMenuBar() {
         MenuBar menuBar = new MenuBar();
-
         menuBar.getElement().setAttribute("theme", "menu-vertical");
-        MenuItem dictMenuItem = menuBar.addItem(new Div(new Span("Справочники"), VaadinIcon.ANGLE_RIGHT.create()));
-        dictMenuItem.getElement().setAttribute("style","justify-content: left;");
 
-        MenuItem dict1MenuItem = dictMenuItem.getSubMenu().addItem("Справочник 1");
-        dict1MenuItem.addClickListener(e -> UI.getCurrent().navigate(TestDict1FormView.class));
+        MenuItem mi1 = menuBar.addItem("Изделия");
+        mi1.addClickListener(e -> UI.getCurrent().navigate(ProductView.class));
+        mi1.getElement().setAttribute("style","justify-content: left;");
 
-        MenuItem dict2MenuItem = dictMenuItem.getSubMenu().addItem("Сотрудники");
-        dict1MenuItem.getElement().setAttribute("style","justify-content: left;");
-        dict2MenuItem.addClickListener(e -> UI.getCurrent().navigate(EmployeeFormView.class));
+        MenuItem mi2 = menuBar.addItem(new Div(new Span("Справочники"), VaadinIcon.ANGLE_RIGHT.create()));
+        mi2.getElement().setAttribute("style","justify-content: left;");
 
-        MenuItem reportsMenuItam = menuBar.addItem("Отчеты");
-        reportsMenuItam.getElement().setAttribute("style","justify-content: left;");
+        MenuItem mi3 = mi2.getSubMenu().addItem("Сотрудники");
+        mi3.getElement().setAttribute("style","justify-content: left;");
+        mi3.addClickListener(e -> UI.getCurrent().navigate(EmployeeView.class));
 
-        MenuItem settMenuItam = menuBar.addItem("Настройки");
-        settMenuItam.getElement().setAttribute("style","justify-content: left;");
+        MenuItem mi4 = mi2.getSubMenu().addItem("Заказчики");
+        mi4.getElement().setAttribute("style","justify-content: left;");
+        mi4.addClickListener(e -> UI.getCurrent().navigate(CustomerView.class));
+
+        MenuItem mi5 = menuBar.addItem("Отчеты");
+        mi5.getElement().setAttribute("style","justify-content: left;");
+
+        MenuItem mi6 = menuBar.addItem("Настройки");
+        mi6.getElement().setAttribute("style","justify-content: left;");
 
         menuBar.setOpenOnHover(true);
         menuBar.getItems().forEach(item -> item.getElement().setAttribute("style","justify-content: left;")); //TODO: Почему не работает???

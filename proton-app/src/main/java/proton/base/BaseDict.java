@@ -1,4 +1,4 @@
-package proton.entities;
+package proton.base;
 
 import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotNull;

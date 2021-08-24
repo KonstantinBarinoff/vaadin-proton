@@ -1,4 +1,4 @@
-package proton.views;
+package proton.base;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -14,9 +14,6 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import proton.entities.BaseDict;
-import proton.repositories.BaseRepo;
-import proton.repositories.BaseService;
 import util.ProtonConfirmationDialog;
 import util.ProtonNotification;
 import util.ProtonStrings;
@@ -28,11 +25,11 @@ import java.util.WeakHashMap;
 @Slf4j
 
 @CssImport(themeFor = "vaadin-grid", value = "./styles/dense-grid.css")
-public abstract class BaseDictGridBuffView<E extends BaseDict, S extends BaseService<E>> extends VerticalLayout {
+public abstract class ObsoleteBaseDictGridBuffView<E extends BaseDict, S extends BaseService<E>> extends VerticalLayout {
 
     protected E item;
     protected abstract E getNewItem();
-    protected BaseRepo<E> repo;
+    protected BaseRepository<E> repo;
     private S service = null;
 
     protected final Grid<E> grid = new Grid<>();
@@ -59,7 +56,7 @@ public abstract class BaseDictGridBuffView<E extends BaseDict, S extends BaseSer
 
 
     @Autowired
-    public BaseDictGridBuffView(S Service) {
+    public ObsoleteBaseDictGridBuffView(S Service) {
         this.service = service;
     }
 

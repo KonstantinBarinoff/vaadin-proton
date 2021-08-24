@@ -15,7 +15,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import proton.entities.CustomDict;
+import proton.base.CustomDictionary;
 import proton.repositories.CustomDictRepo;
 import util.ProtonConfirmationDialog;
 import util.ProtonNotification;
@@ -27,32 +27,32 @@ import javax.persistence.EntityManagerFactory;
 @Slf4j
 @Route(value = "dictionary1-dialog", layout = MainView.class)
 @PageTitle("CustomDict Dialog Editor")
-public class CustomDictFormView extends VerticalLayout {
+public class CustomDictView extends VerticalLayout {
 
     private final CustomDictRepo repository;
     private final ProtonProperties properties;
     private final EntityManagerFactory emf;
 
-    private final CustomDictFormEditor editor;
+    private final CustomDictViewEditor editor;
     // private final ImageForm imageForm;
 
-    private final Grid<CustomDict> grid = new Grid<>();
+    private final Grid<CustomDictionary> grid = new Grid<>();
 //    private final Binder<Dictionary1> binder = new Binder<>(Dictionary1.class);
 
-    private final Grid.Column<CustomDict> idColumn = grid.addColumn(CustomDict::getId).setHeader("Код");
-    private final Grid.Column<CustomDict> nameColumn = grid.addColumn(CustomDict::getName)
+    private final Grid.Column<CustomDictionary> idColumn = grid.addColumn(CustomDictionary::getId).setHeader("Код");
+    private final Grid.Column<CustomDictionary> nameColumn = grid.addColumn(CustomDictionary::getName)
             .setHeader("Наименование (не пуст.)");
-    private final Grid.Column<CustomDict> numberColumn = grid.addColumn(CustomDict::getNumber)
+    private final Grid.Column<CustomDictionary> numberColumn = grid.addColumn(CustomDictionary::getNumber)
             .setHeader("Количество (целое > 0)");
-    private final Grid.Column<CustomDict> priceColumn = grid.addColumn(CustomDict::getPrice)
+    private final Grid.Column<CustomDictionary> priceColumn = grid.addColumn(CustomDictionary::getPrice)
             .setHeader("Цена");
-    private final Grid.Column<CustomDict> dateColumn = grid.addColumn(CustomDict::getDate)
+    private final Grid.Column<CustomDictionary> dateColumn = grid.addColumn(CustomDictionary::getDate)
             .setHeader("Дата");
-    private final Grid.Column<CustomDict> descriptionColumn = grid.addColumn(CustomDict::getDescription)
+    private final Grid.Column<CustomDictionary> descriptionColumn = grid.addColumn(CustomDictionary::getDescription)
             .setHeader("Примечание");
-    private final Grid.Column<CustomDict> checkedColumn = grid.addColumn(i -> i.getChecked() ? "Да" : "")
+    private final Grid.Column<CustomDictionary> checkedColumn = grid.addColumn(i -> i.getChecked() ? "Да" : "")
             .setHeader("Отметка");
-    private final Grid.Column<CustomDict> emailColumn = grid.addColumn(CustomDict::getEmail)
+    private final Grid.Column<CustomDictionary> emailColumn = grid.addColumn(CustomDictionary::getEmail)
             .setHeader("E-mail");
 
     private final Button insertButton = new Button(ProtonStrings.INSERT, VaadinIcon.PLUS.create());
@@ -65,8 +65,8 @@ public class CustomDictFormView extends VerticalLayout {
     @Autowired
     // public Dictionary1DialogEditView(Dictionary1Repository repository,
     // Dictionary1Editor editor) {
-    public CustomDictFormView(CustomDictRepo repository, ProtonProperties properties,
-                              EntityManagerFactory emf) {
+    public CustomDictView(CustomDictRepo repository, ProtonProperties properties,
+                          EntityManagerFactory emf) {
         this.repository = repository;
         this.properties = properties;
         this.emf = emf;
@@ -77,7 +77,7 @@ public class CustomDictFormView extends VerticalLayout {
         setupLayout();
         setupGrid();
 
-        editor = new CustomDictFormEditor(repository, emf);
+        editor = new CustomDictViewEditor(repository, emf);
         setupEditor();
 
         grid.setItems(repository.findAll());
@@ -106,7 +106,7 @@ public class CustomDictFormView extends VerticalLayout {
         imageButton.setEnabled(false);
 
         insertButton.addClickListener(e -> {
-            editor.newItem(new CustomDict());
+            editor.newItem(new CustomDictionary());
             editor.open();
         });
 
@@ -122,7 +122,7 @@ public class CustomDictFormView extends VerticalLayout {
             }
             ProtonConfirmationDialog dialog = new ProtonConfirmationDialog(ProtonStrings.DELETE_RECORD_Q);
             dialog.showConfirmation(e -> {
-                for (CustomDict item : grid.getSelectedItems()) {
+                for (CustomDictionary item : grid.getSelectedItems()) {
                     log.debug("DELETE ITEM: {}", item);
                     repository.delete(item);
                 }
