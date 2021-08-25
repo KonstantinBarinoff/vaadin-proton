@@ -10,7 +10,6 @@ import proton.base.BaseDictViewEditor;
 public class EmployeeViewEditor extends BaseDictViewEditor<Employee, EmployeeService> {
 
     public EmployeeViewEditor(EmployeeService service) {
-        //repo = service.getRepository();
         this.service = service;
         binder = new Binder<>(Employee.class);
         setupView();

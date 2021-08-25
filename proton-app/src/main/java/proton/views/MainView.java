@@ -24,6 +24,7 @@ import com.vaadin.flow.router.RouterLink;
 import org.jetbrains.annotations.NotNull;
 import proton.customers.CustomerView;
 import proton.employees.EmployeeView;
+import proton.parts.PartView;
 import proton.products.ProductView;
 
 import java.util.Optional;
@@ -86,24 +87,21 @@ public class MainView extends AppLayout {
 
         MenuItem mi1 = menuBar.addItem("Изделия");
         mi1.addClickListener(e -> UI.getCurrent().navigate(ProductView.class));
-        mi1.getElement().setAttribute("style","justify-content: left;");
+
+        MenuItem mi7 = menuBar.addItem("Детали");
+        mi7.addClickListener(e -> UI.getCurrent().navigate(PartView.class));
 
         MenuItem mi2 = menuBar.addItem(new Div(new Span("Справочники"), VaadinIcon.ANGLE_RIGHT.create()));
-        mi2.getElement().setAttribute("style","justify-content: left;");
 
         MenuItem mi3 = mi2.getSubMenu().addItem("Сотрудники");
-        mi3.getElement().setAttribute("style","justify-content: left;");
         mi3.addClickListener(e -> UI.getCurrent().navigate(EmployeeView.class));
 
         MenuItem mi4 = mi2.getSubMenu().addItem("Заказчики");
-        mi4.getElement().setAttribute("style","justify-content: left;");
         mi4.addClickListener(e -> UI.getCurrent().navigate(CustomerView.class));
 
         MenuItem mi5 = menuBar.addItem("Отчеты");
-        mi5.getElement().setAttribute("style","justify-content: left;");
 
         MenuItem mi6 = menuBar.addItem("Настройки");
-        mi6.getElement().setAttribute("style","justify-content: left;");
 
         menuBar.setOpenOnHover(true);
         menuBar.getItems().forEach(item -> item.getElement().setAttribute("style","justify-content: left;")); //TODO: Почему не работает???
@@ -119,6 +117,8 @@ public class MainView extends AppLayout {
                 rootMenu.__y = rect.top;
                 rootMenu.__alignOverlayPosition();
                 });""");
+
+        menuBar.getItems().forEach(i -> i.getElement().setAttribute("style","justify-content: left;"));
         return menuBar;
     }
 

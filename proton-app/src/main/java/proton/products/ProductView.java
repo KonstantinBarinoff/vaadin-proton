@@ -5,9 +5,12 @@ import com.vaadin.flow.data.renderer.LocalDateTimeRenderer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import proton.base.BaseDictView;
 import proton.customers.CustomerService;
 import proton.employees.EmployeeService;
+import proton.parts.PartService;
+import proton.parts.PartView;
 import proton.views.MainView;
 
 import javax.annotation.PostConstruct;
@@ -54,4 +57,19 @@ public class ProductView extends BaseDictView<Product, ProductService> {
         return new Product();
     }
 
+
+
+    @Autowired
+    ProductService productService;
+    @Autowired
+    PartService partService;
+
+    @Override
+    public void setupView() {
+        super.setupView();
+        PartView partView = new PartView(partService, productService);
+        partView.init();
+        add(partView);
+
+    }
 }

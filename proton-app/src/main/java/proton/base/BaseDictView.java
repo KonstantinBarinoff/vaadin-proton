@@ -11,6 +11,7 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.page.Page;
+import com.vaadin.flow.data.selection.SelectionEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.NestedExceptionUtils;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -31,13 +32,12 @@ public abstract class BaseDictView<E extends BaseDict, S extends BaseService<E>>
 
     protected abstract E getNewItem();
 
-//    protected BaseRepository<E> repo;
     protected BaseService<E> service;
-
 
     protected BaseDictViewEditor editor;
 
     protected final Grid<E> grid = new Grid<>();
+
 
     private final Grid.Column<E> idColumn = grid.addColumn(E::getId).setKey("id").setHeader("Код").setFlexGrow(1);
     private final Grid.Column<E> nameColumn = grid.addColumn(E::getName)
@@ -86,17 +86,20 @@ public abstract class BaseDictView<E extends BaseDict, S extends BaseService<E>>
     }
 
     public void setupGrid() {
+        grid.addSelectionListener(this::onGridSelectionEvent);
         grid.setSelectionMode(SelectionMode.SINGLE);
         grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT, GridVariant.MATERIAL_COLUMN_DIVIDERS, GridVariant.LUMO_COMPACT);
-        grid.addSelectionListener(e -> {
-            deleteButton.setEnabled(e.getFirstSelectedItem().isPresent());
-            editButton.setEnabled(e.getFirstSelectedItem().isPresent());
-        });
     }
 
     public void setupEditor() {
         editor.setOnChange(this::onEditorChange);
     }
+
+    protected void onGridSelectionEvent(SelectionEvent<Grid<E>, E> e) {
+        deleteButton.setEnabled(e.getFirstSelectedItem().isPresent());
+        editButton.setEnabled(e.getFirstSelectedItem().isPresent());
+    }
+
 
     void onDeleteButtonClick(ClickEvent<Button> event) {
         if (grid.getSelectedItems().isEmpty()) {
@@ -152,4 +155,6 @@ public abstract class BaseDictView<E extends BaseDict, S extends BaseService<E>>
         editor.newItem(getNewItem());
         editor.open();
     }
+
+
 }

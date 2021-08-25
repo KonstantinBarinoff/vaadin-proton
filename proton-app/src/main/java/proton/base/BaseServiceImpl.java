@@ -7,8 +7,6 @@ import java.util.Optional;
 public abstract class BaseServiceImpl<E extends BaseDict, R extends BaseRepository<E>>
         implements BaseService<E> {
 
-
-
     protected final R repository;
 
     public BaseServiceImpl(R repository) {
@@ -41,8 +39,5 @@ public abstract class BaseServiceImpl<E extends BaseDict, R extends BaseReposito
     }
 
     @Override
-    public void deleteById(Long id) {
-        repository.deleteById(id);
-
-    }
+    public void deleteById(Long id) { repository.deleteById(id); }
 }
