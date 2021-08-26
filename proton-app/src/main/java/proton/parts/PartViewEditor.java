@@ -5,6 +5,7 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
 import proton.base.BaseDictViewEditor;
 import proton.products.Product;
 import proton.products.ProductService;
@@ -14,8 +15,12 @@ import util.ProtonStrings;
 @UIScope
 public class PartViewEditor extends BaseDictViewEditor<Part, PartService> {
 
-    ProductService productService;
 
+    private final ProductService productService;
+
+    public ComboBox<Product> productComboBox;
+
+    @Autowired
     public PartViewEditor(PartService service, ProductService productService) {
         this.productService = productService;
         this.service = service;
@@ -24,7 +29,7 @@ public class PartViewEditor extends BaseDictViewEditor<Part, PartService> {
     }
 
     @NotNull
-    private ComboBox<Product> getEmployeeCombobox() {
+    private ComboBox<Product> getProductCombobox() {
         final ComboBox<Product> comboBox = new ComboBox<>("Изделие");
         comboBox.setItems(productService.findAll());
         comboBox.setItemLabelGenerator(i -> i.getId() + " - " + i.getName());
@@ -38,6 +43,7 @@ public class PartViewEditor extends BaseDictViewEditor<Part, PartService> {
     @Override
     public void setupFields() {
         super.setupFields();
-        form.add(getEmployeeCombobox());
+        productComboBox = getProductCombobox();
+        form.add(productComboBox);
     }
 }

@@ -1,11 +1,12 @@
 package proton.products;
 
+import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.data.renderer.LocalDateRenderer;
 import com.vaadin.flow.data.renderer.LocalDateTimeRenderer;
+import com.vaadin.flow.data.selection.SelectionEvent;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import proton.base.BaseDictView;
 import proton.customers.CustomerService;
 import proton.employees.EmployeeService;
@@ -14,24 +15,36 @@ import proton.parts.PartView;
 import proton.views.MainView;
 
 import javax.annotation.PostConstruct;
+import java.util.Optional;
 
 @Slf4j
-@Route(value = "product-ciew", layout = MainView.class)
+@Route(value = "product-view", layout = MainView.class)
 @PageTitle("Изделия")
 public class ProductView extends BaseDictView<Product, ProductService> {
 
-    EmployeeService employeeService;
-    CustomerService customerService;
 
-    public ProductView(ProductService productService, EmployeeService employeeService, CustomerService customerService) {
+
+
+    private final EmployeeService employeeService;
+    private final CustomerService customerService;
+    private final PartService partService;
+    private final ProductService productService;
+
+    /** Дочерний форма для отображения Деталей выбранного Изделия **/
+    PartView    partView;
+
+    public ProductView(ProductService productService, EmployeeService employeeService, CustomerService customerService, PartService partService) {
         this.service = productService;
+        this.productService = productService;
         this.employeeService = employeeService;
         this.customerService = customerService;
+        this.partService = partService;
         editor = new ProductViewEditor(productService, employeeService, customerService);
     }
 
     @PostConstruct
     public void init() {
+        partView = new PartView(partService, productService);
         setupView();
     }
 
@@ -57,19 +70,21 @@ public class ProductView extends BaseDictView<Product, ProductService> {
         return new Product();
     }
 
+    @Override
+    protected void onGridSelectionEvent(SelectionEvent<Grid<Product>, Product> e) {
+        super.onGridSelectionEvent(e);
+        if (e.getFirstSelectedItem().isPresent()) {
+            partView.refreshProductFilter(Optional.of(e.getFirstSelectedItem().get()));
+        } else {
+            partView.refreshProductFilter(Optional.empty());
+        }
+    }
 
-
-    @Autowired
-    ProductService productService;
-    @Autowired
-    PartService partService;
 
     @Override
     public void setupView() {
         super.setupView();
-        PartView partView = new PartView(partService, productService);
-        partView.init();
+        partView.initFiltered(Optional.empty());
         add(partView);
-
     }
 }

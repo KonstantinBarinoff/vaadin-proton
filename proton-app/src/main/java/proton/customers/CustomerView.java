@@ -49,6 +49,7 @@ public class CustomerView extends BaseDictView<Customer, CustomerService> {
 
     @Override
     protected void onGridSelectionEvent(SelectionEvent<Grid<Customer>, Customer> e) {
+        super.onGridSelectionEvent(e);
         if (e.getFirstSelectedItem().isPresent()) {
             productGrid.setItems(productService.findByCustomerId(e.getFirstSelectedItem().get().getId()));
         } else {

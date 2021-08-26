@@ -45,17 +45,17 @@ public abstract class BaseDictView<E extends BaseDict, S extends BaseService<E>>
     private final Grid.Column<E> descriptionColumn = grid.addColumn(E::getDescription)
             .setKey("description").setHeader("Примечание").setFlexGrow(50);
 
-    private final Button insertButton = new Button(ProtonStrings.INSERT, VaadinIcon.PLUS.create());
-    private final Button deleteButton = new Button(ProtonStrings.DELETE, VaadinIcon.MINUS.create());
-    private final Button refreshButton = new Button(ProtonStrings.REFRESH, VaadinIcon.REFRESH.create());
-    private final Button editButton = new Button(ProtonStrings.EDIT, VaadinIcon.EDIT.create());
+    protected final Button insertButton = new Button(ProtonStrings.INSERT, VaadinIcon.PLUS.create());
+    protected final Button deleteButton = new Button(ProtonStrings.DELETE, VaadinIcon.MINUS.create());
+    protected final Button refreshButton = new Button(ProtonStrings.REFRESH, VaadinIcon.REFRESH.create());
+    protected final Button editButton = new Button(ProtonStrings.EDIT, VaadinIcon.EDIT.create());
 
     public void setupView() {
         setupBrowserWindowResizeListener();
         setupLayout();
         setupGrid();
         setupEditor();
-        onRefreshButtonClick(null);
+        refreshGrid();
         add(setupButtons());
         add(grid);
     }
@@ -71,16 +71,16 @@ public abstract class BaseDictView<E extends BaseDict, S extends BaseService<E>>
                 e -> Notification.show("Window width=" + e.getWidth() + ", height=" + e.getHeight()));
     }
 
-    public void refreshGrid() {
-        onRefreshButtonClick(null);
+    protected void refreshGrid() {
+        grid.setItems(service.findAll());
     }
 
     public HorizontalLayout setupButtons() {
         insertButton.addClickListener(this::onInsertButtonClick);
         deleteButton.addClickListener(this::onDeleteButtonClick);
-        deleteButton.setEnabled(false);
         refreshButton.addClickListener(this::onRefreshButtonClick);
         editButton.addClickListener(this::onEditButtonClick);
+        deleteButton.setEnabled(false);
         editButton.setEnabled(false);
         return new HorizontalLayout(insertButton, deleteButton, refreshButton, editButton);
     }
@@ -130,7 +130,7 @@ public abstract class BaseDictView<E extends BaseDict, S extends BaseService<E>>
         });
     }
 
-    private void onEditButtonClick(ClickEvent<Button> event) {
+    protected void onEditButtonClick(ClickEvent<Button> event) {
         try {
             editor.editItem(grid.getSelectedItems().stream().findFirst().get());
             editor.open();
@@ -140,8 +140,8 @@ public abstract class BaseDictView<E extends BaseDict, S extends BaseService<E>>
         }
     }
 
-    private void onRefreshButtonClick(ClickEvent<Button> e) {
-        grid.setItems(service.findAll());
+    protected void onRefreshButtonClick(ClickEvent<Button> e) {
+        refreshGrid();
     }
 
     private void onEditorChange() {
@@ -151,10 +151,12 @@ public abstract class BaseDictView<E extends BaseDict, S extends BaseService<E>>
         // listCustomers(filter.getValue());
     }
 
-    private void onInsertButtonClick(ClickEvent<Button> e) {
+    protected void onInsertButtonClick(ClickEvent<Button> e) {
         editor.newItem(getNewItem());
         editor.open();
     }
+
+
 
 
 }
