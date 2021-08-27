@@ -2,9 +2,9 @@ package proton.products;
 
 import lombok.Getter;
 import lombok.Setter;
+import proton.base.BaseDict;
 import proton.customers.Customer;
 import proton.employees.Employee;
-import proton.base.BaseDict;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -22,28 +22,32 @@ import java.time.LocalDateTime;
 @Setter
 public class Product extends BaseDict {
 
+    /** Пример поля с дробным числом */
     private Double coefficient;         // MSSQL: Float
 
+    /** Пример целого поля */
     private Integer number;             // MSSQL: Integer
 
+    /** Пример поля с датой */
     private LocalDate date;             // MSSQL: Date
 
+    /** Пример поля с датой и временем*/
     private LocalDateTime dateTime;     // MSSQL: Data type: DateTime       Column name: Date_Time
 
+    /** Пример поля с отметкой */
     private Boolean checked;            // MSSQL: Bit
 
-//    @Column(name="Dict2_Id", insertable = false, updatable = false)  // TODO: Why doesnt work implicit dict2_id?
-//    private Integer dict2Id;
-
-
+    /** Сотрудник изготовивший изделие */
     @ManyToOne()
     @JoinColumn(name="Produce_Employee_Id", referencedColumnName = "id")
     private Employee produceEmployee;
 
+    /** Сотрудник проверивший изделие */
     @ManyToOne()
     @JoinColumn(name="Check_Employee_Id", referencedColumnName = "id")
     private Employee checkEmployee;
 
+    /** Заказчик изделия */
     @ManyToOne()
     @JoinColumn(name="Customer_Id", referencedColumnName = "id")
     private Customer customer;

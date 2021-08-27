@@ -3,11 +3,16 @@ package proton.base;
 import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotNull;
 
+/**
+ * Расширение для сущностей представляющих из себя вид справочников, т.е. имеющих поля Наименование и Примечание (Описание)
+ */
 @MappedSuperclass
 public abstract class BaseDict extends BaseEntity {
 
+    /** Наименование */
     private String name;
 
+    /** Примечание */
     private String description;
 
     @Override

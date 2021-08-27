@@ -10,6 +10,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+
+/**
+ * Базовый класс сущности - общий предок всех сущностей.
+ * Все таблицы БД должны иметь эти поля
+ */
 @EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass
 @Getter
@@ -20,20 +25,28 @@ public abstract class BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // значение NULL недопустимо - ломается логика JPA (Insert вместо Update)
-    // Version int NOT NULL CONSTRAINT DF_version DEFAULT 0
+    /**
+     * Для поддержки Оптимистических блокировок, Hibernate увеличивает поле version
+     * при каждом изменении записи.
+     * Значение NULL недопустимо - ломается логика JPA (Insert вместо Update)
+     * MSSQL: Version int NOT NULL CONSTRAINT DF_version DEFAULT 0
+     */
     @Version
     private int version;
 
     // MSSQL: DATETIME
+    /** Дата/время создания записи*/
     @CreatedDate
     private LocalDateTime createdAt;
 
+    /** Дата/время изменения записи*/
     @LastModifiedDate
     private LocalDateTime modifiedAt;
 
+    /** Учетная запись пользователя, создавшего запись */
     private String createdBy;
 
+    /** Учетная запись пользователя последнего изменения записи */
     private String modifiedBy;
 
     public boolean isPersisted() {
@@ -42,7 +55,7 @@ public abstract class BaseEntity {
 
     @PrePersist
     protected void onCreate() {
-        /** Внутри Теста SecurityContext не создается */
+        /** Обходим т.к. при выполнения Теста SecurityContext не создается */
         if (isJUnitTest()) {
             return;
         }
@@ -51,7 +64,7 @@ public abstract class BaseEntity {
 
     @PreUpdate
     protected void onUpdate() {
-        /** Внутри Теста SecurityContext не создается */
+        /** Обходим т.к. при выполнения Теста SecurityContext не создается */
         if (isJUnitTest()) {
             return;
         }
@@ -84,7 +97,6 @@ public abstract class BaseEntity {
     public String toString() {
         return String.format("%s [id=%d]", this.getClass().getSimpleName(), this.getId());
     }
-
 
     /**
      * Проверка на выполнения внутри теста
