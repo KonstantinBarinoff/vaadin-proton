@@ -85,7 +85,7 @@ public class MainView extends AppLayout {
         MenuBar menuBar = new MenuBar();
         menuBar.getElement().setAttribute("theme", "menu-vertical");
 
-        MenuItem mi1 = menuBar.addItem("Изделия");
+        MenuItem mi1 = menuBar.addItem("Изделия...");
         mi1.addClickListener(e -> UI.getCurrent().navigate(ProductView.class));
 
         MenuItem mi7 = menuBar.addItem("Детали");
@@ -108,7 +108,7 @@ public class MainView extends AppLayout {
 
         // Adjust the opening position with JavaScript
         menuBar.getElement().executeJs("""
-                this._subMenu.addEventListener('opened-changed', function(e) { 
+                this._subMenu.addEventListener('opened-changed', function(e) {
                 const rootMenu = e.target;
                 const button = rootMenu._context.target;
                 if(!button) return;
@@ -145,8 +145,8 @@ public class MainView extends AppLayout {
     @Override
     protected void afterNavigation() {
         super.afterNavigation();
-//        getTabForComponent(getContent()).ifPresent(mainMenu::setSelectedTab);
-//        viewTitle.setText(getCurrentPageTitle());
+        getTabForComponent(getContent()).ifPresent(mainMenu::setSelectedTab);
+        viewTitle.setText(getCurrentPageTitle());
     }
 
     private Optional<Tab> getTabForComponent(Component component) {

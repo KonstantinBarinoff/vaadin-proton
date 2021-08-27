@@ -58,7 +58,6 @@
             <groupId>org.energomash</groupId>
             <artifactId>proton-shared</artifactId>
             <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.jetbrains</groupId>
@@ -139,6 +138,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>2.3.2.RELEASE</version>
                 <!-- Clean build and startup time for Vaadin apps sometimes may exceed
                     the default Spring Boot's 30sec timeout. -->
                 <configuration>
@@ -191,6 +191,7 @@
                     <plugin>
                         <groupId>org.springframework.boot</groupId>
                         <artifactId>spring-boot-maven-plugin</artifactId>
+                        <version>2.3.2.RELEASE</version>
                         <configuration>
                             <jvmArguments>-Dvaadin.productionMode</jvmArguments>
                         </configuration>

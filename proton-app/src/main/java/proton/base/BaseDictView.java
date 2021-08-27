@@ -116,7 +116,7 @@ public abstract class BaseDictView<E extends BaseDict, S extends BaseService<E>>
                     service.delete(item);
                 }
             } catch (DataIntegrityViolationException ex) {
-                new ProtonWarningDialog(ProtonStrings.DATA_INTEGRITY_VIOLETION,
+                new ProtonWarningDialog(ProtonStrings.DATA_INTEGRITY_VIOLATION,
                         NestedExceptionUtils.getMostSpecificCause(ex).getMessage());
                 log.error(Arrays.toString(ex.getStackTrace()));
             } catch (Exception ex) {
@@ -131,11 +131,14 @@ public abstract class BaseDictView<E extends BaseDict, S extends BaseService<E>>
     }
 
     protected void onEditButtonClick(ClickEvent<Button> event) {
+        if (grid.getSelectedItems().stream().findFirst().isEmpty()) {
+            return;
+        }
         try {
             editor.editItem(grid.getSelectedItems().stream().findFirst().get());
             editor.open();
         } catch (NoSuchElementException e) {
-            new ProtonWarningDialog(e.getMessage(), NestedExceptionUtils.getMostSpecificCause(e).getMessage());
+//            new ProtonWarningDialog(e.getMessage(), NestedExceptionUtils.getMostSpecificCause(e).getMessage());
             refreshGrid();
         }
     }

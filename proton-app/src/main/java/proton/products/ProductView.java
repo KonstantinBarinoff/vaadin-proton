@@ -15,7 +15,6 @@ import proton.parts.PartView;
 import proton.views.MainView;
 
 import javax.annotation.PostConstruct;
-import java.util.Optional;
 
 @Slf4j
 @Route(value = "product-view", layout = MainView.class)
@@ -25,8 +24,8 @@ public class ProductView extends BaseDictView<Product, ProductService> {
 
 
 
-    private final EmployeeService employeeService;
-    private final CustomerService customerService;
+//    private final EmployeeService employeeService;
+//    private final CustomerService customerService;
     private final PartService partService;
     private final ProductService productService;
 
@@ -36,8 +35,8 @@ public class ProductView extends BaseDictView<Product, ProductService> {
     public ProductView(ProductService productService, EmployeeService employeeService, CustomerService customerService, PartService partService) {
         this.service = productService;
         this.productService = productService;
-        this.employeeService = employeeService;
-        this.customerService = customerService;
+//        this.employeeService = employeeService;
+//        this.customerService = customerService;
         this.partService = partService;
         editor = new ProductViewEditor(productService, employeeService, customerService);
     }
@@ -74,9 +73,9 @@ public class ProductView extends BaseDictView<Product, ProductService> {
     protected void onGridSelectionEvent(SelectionEvent<Grid<Product>, Product> e) {
         super.onGridSelectionEvent(e);
         if (e.getFirstSelectedItem().isPresent()) {
-            partView.refreshProductFilter(Optional.of(e.getFirstSelectedItem().get()));
+            partView.refreshProductFilter(e.getFirstSelectedItem().get());
         } else {
-            partView.refreshProductFilter(Optional.empty());
+            partView.refreshProductFilter(null);
         }
     }
 
@@ -84,7 +83,7 @@ public class ProductView extends BaseDictView<Product, ProductService> {
     @Override
     public void setupView() {
         super.setupView();
-        partView.initFiltered(Optional.empty());
+        partView.initFiltered(null);
         add(partView);
     }
 }

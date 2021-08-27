@@ -22,7 +22,7 @@ public final class ProtonStrings {
     public static final String DELETE_RECORD_Q = "Удалить запись? 222";
     public static final String OPTLOCK_UPDATE_ERROR = "Запись была обновлена в соответствии с изменениями внесенными другим пользователем";
     public static final String OPTLOCK_DELETE_ERROR = "Запись была удалена другим пользователеи";
-    public static final String DATA_INTEGRITY_VIOLETION = "Невозможно выполнить оперцию. Нарушение целостности данных.";
+    public static final String DATA_INTEGRITY_VIOLATION = "Невозможно выполнить оперцию. Нарушение целостности данных.";
     public static final String ERROR = "Ошибка приложения. Обратитесь к разработчикам.";
     private ProtonStrings() {}
 }

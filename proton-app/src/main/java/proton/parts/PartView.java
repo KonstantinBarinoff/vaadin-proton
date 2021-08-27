@@ -13,7 +13,6 @@ import proton.views.MainView;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Route(value = "Part-view", layout = MainView.class)
@@ -30,7 +29,7 @@ public class PartView extends BaseDictView<Part, PartService> {
     }
 
     private ViewType viewType;
-    private Optional<Product> filteredProduct = Optional.empty();
+    private Product filteredProduct;
 
     @Autowired
     public PartView(PartService service, ProductService productService) {
@@ -48,16 +47,13 @@ public class PartView extends BaseDictView<Part, PartService> {
     /**
      * @param filteredProduct Код изделия для фильтрации деталей
      */
-    public void initFiltered(Optional<Product> filteredProduct) {
+    public void initFiltered(Product filteredProduct) {
         this.viewType = ViewType.FILTERED;
         this.filteredProduct = filteredProduct;
         setupView();
     }
 
-    /**
-     * @param filteredProduct
-     */
-    public void refreshProductFilter(Optional<Product> filteredProduct) {
+    public void refreshProductFilter(Product filteredProduct) {
         this.filteredProduct = filteredProduct;
         refreshGrid();
     }
@@ -71,8 +67,8 @@ public class PartView extends BaseDictView<Part, PartService> {
         if (viewType == ViewType.ALL_RECORDS) {
             grid.setItems(service.findAll());
         } else {
-            if (filteredProduct.isPresent()) {
-                grid.setItems(((PartService) service).findByProductId(filteredProduct.get().getId()));
+            if (filteredProduct != null) {
+                grid.setItems(((PartService) service).findByProductId(filteredProduct.getId()));
                 insertButton.setEnabled(true);
                 refreshButton.setEnabled(true);
             } else {
@@ -91,7 +87,7 @@ public class PartView extends BaseDictView<Part, PartService> {
     @Override
     public void setupGrid() {
         super.setupGrid();
-        if (filteredProduct.isEmpty()) {
+        if (viewType == ViewType.ALL_RECORDS) {
             grid.addColumn(i -> i.getProduct().getName()).setHeader("Изделие").setFlexGrow(10);
         }
     }
@@ -99,8 +95,8 @@ public class PartView extends BaseDictView<Part, PartService> {
     @Override
     protected void onInsertButtonClick(ClickEvent<Button> e) {
         super.onInsertButtonClick(e);
-        if (viewType == ViewType.FILTERED && filteredProduct.isPresent()) {
-            ((PartViewEditor) editor).productComboBox.setValue(filteredProduct.get());
+        if (viewType == ViewType.FILTERED && filteredProduct != null) {
+            ((PartViewEditor) editor).productComboBox.setValue(filteredProduct);
             ((PartViewEditor) editor).productComboBox.setEnabled(false);
         }
     }
@@ -108,8 +104,8 @@ public class PartView extends BaseDictView<Part, PartService> {
     @Override
     protected void onEditButtonClick(ClickEvent<Button> event) {
         super.onEditButtonClick(event);
-        if (viewType == ViewType.FILTERED && filteredProduct.isPresent()) {
-            ((PartViewEditor) editor).productComboBox.setValue(filteredProduct.get());
+        if (viewType == ViewType.FILTERED && filteredProduct != null) {
+            ((PartViewEditor) editor).productComboBox.setValue(filteredProduct);
             ((PartViewEditor) editor).productComboBox.setEnabled(false);
         }
     }
