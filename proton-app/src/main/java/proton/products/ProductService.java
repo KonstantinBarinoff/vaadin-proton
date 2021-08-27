@@ -16,5 +16,8 @@ public class ProductService extends BaseServiceImpl<Product, ProductRepository> 
         return repository.findByCustomerId(id);
     }
 
+//    public List<ProductGeneral> findAll(Long id) {
+//        return repository.findAll(id);
+//    }
 
 }

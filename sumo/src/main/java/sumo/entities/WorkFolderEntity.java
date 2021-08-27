@@ -1,14 +1,14 @@
 package sumo.entities;
 
+import lombok.Getter;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import lombok.Getter;
 
-
-@Entity		// TODO: Switch to DAO?
+@Entity
 @Getter  	// View Entity, only getters  
 @Table(name = "VIEW_WORKFOLDERSCATALOG")   
 public class WorkFolderEntity {

@@ -35,6 +35,7 @@ public class PartView extends BaseDictView<Part, PartService> {
     public PartView(PartService service, ProductService productService) {
         this.service = service;
         this.productService = productService;
+        //TODO: Вынести непосредственно в место создания. (Вариант не вызывать конструутор напрямую, но инжектить бин)
         editor = new PartViewEditor(service, productService);
     }
 

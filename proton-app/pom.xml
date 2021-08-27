@@ -55,6 +55,23 @@
     <dependencies>
 
         <dependency>
+            <groupId>p6spy</groupId>
+            <artifactId>p6spy</artifactId>
+            <version>3.7.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-ehcache</artifactId>
+        </dependency>
+
+
+
+
+        <dependency>
             <groupId>org.energomash</groupId>
             <artifactId>proton-shared</artifactId>
             <version>0.0.1-SNAPSHOT</version>
@@ -163,10 +180,24 @@
                 <configuration>
                     <frontendDirectory>${project.basedir}/frontend</frontendDirectory>
                 </configuration>
-                <!-- 				<configuration>					For Vaadin 19.0.4
-                                    <pnpmEnable>true</pnpmEnable>
-                                </configuration>
-                 -->
+            </plugin>
+            <plugin>
+                <groupId>org.hibernate.orm.tooling</groupId>
+                <artifactId>hibernate-enhance-maven-plugin</artifactId>
+                <version>${hibernate.version}</version>
+                <executions>
+                    <execution>
+                        <configuration>
+                            <failOnError>false</failOnError>
+                            <enableDirtyTracking>true</enableDirtyTracking>
+                            <enableAssociationManagement>true</enableAssociationManagement>
+                        </configuration>
+                        <goals>
+                            <goal>enhance</goal>
+                        </goals>
+                        <phase>test</phase>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
