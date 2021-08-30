@@ -12,7 +12,7 @@ public class ProductService extends BaseServiceImpl<Product, ProductRepository> 
         super(repository);
     }
 
-    public List<ProductGeneral> findByCustomerId(Long id) {
+    public List<ProductSummary> findByCustomerId(Long id) {
         return repository.findByCustomerId(id);
     }
 

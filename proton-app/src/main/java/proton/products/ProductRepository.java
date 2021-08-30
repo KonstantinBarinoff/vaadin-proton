@@ -11,13 +11,18 @@ import java.util.List;
 @Transactional
 public interface ProductRepository extends BaseRepository<Product> {
 
-    @Query(value = "SELECT d1 FROM Product d1 LEFT JOIN FETCH d1.produceEmployee d2 LEFT JOIN FETCH d1.customer d3")
+    @Query(value = """
+        SELECT p FROM Product p
+            LEFT JOIN FETCH p.produceEmployee
+            LEFT JOIN FETCH p.checkEmployee
+            LEFT JOIN FETCH p.customer
+        """)
     @Override
     List<Product> findAll();
 
 //    List<ProductGeneral> findAll(Long id);
 
-    List<ProductGeneral> findByCustomerId(Long id);
+    List<ProductSummary> findByCustomerId(Long id);
 
 
 }

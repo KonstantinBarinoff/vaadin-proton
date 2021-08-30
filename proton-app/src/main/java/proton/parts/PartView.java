@@ -15,7 +15,7 @@ import javax.annotation.PostConstruct;
 import java.util.List;
 
 @Slf4j
-@Route(value = "Part-view", layout = MainView.class)
+@Route(value = "part-view", layout = MainView.class)
 @PageTitle("Детали")
 public class PartView extends BaseDictView<Part, PartService> {
 

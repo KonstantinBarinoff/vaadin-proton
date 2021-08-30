@@ -1,0 +1,13 @@
+{
+  "properties": [
+    {
+      "name": "waffle.sso.enabled",
+      "type": "java.lang.String",
+      "description": "Description for waffle.sso.enabled."
+    },
+    {
+      "name": "waffle.sso.enabled",
+      "type": "java.lang.String",
+      "description": "Description for waffle.sso.enabled."
+    }
+  ] }

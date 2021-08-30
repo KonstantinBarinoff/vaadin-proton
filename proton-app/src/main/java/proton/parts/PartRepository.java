@@ -9,11 +9,19 @@ import java.util.List;
 @Repository
 public interface PartRepository extends BaseRepository<Part> {
 
-    //@Query("select p from Part p where p.product.id = ?1")
     List<Part> findByProductId(Long id);
 
-
-    @Query(value = "SELECT p1 FROM Part p1 LEFT JOIN FETCH p1.product p2")
+    /**
+     * Выборка вложенных @ManyToOne сущностей с помошью одного запроса с вложенными LEFT JOIN FETCH
+     * Отключение аннотации @Query приводит к 5-ти отдельным запросам
+     */
+    @Query(value = """
+                SELECT part FROM Part part
+                LEFT JOIN FETCH part.product product
+                    LEFT JOIN FETCH product.produceEmployee
+                    LEFT JOIN FETCH product.checkEmployee
+                    LEFT JOIN FETCH product.customer
+            """)
     @Override
     List<Part> findAll();
 

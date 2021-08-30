@@ -42,11 +42,19 @@ public abstract class BaseEntity {
 
     @PrePersist
     protected void onCreate() {
+        /** Внутри Теста SecurityContext не создается */
+        if (isJUnitTest()) {
+            return;
+        }
         createdBy = SecurityContextHolder.getContext().getAuthentication().getName();
     }
 
     @PreUpdate
     protected void onUpdate() {
+        /** Внутри Теста SecurityContext не создается */
+        if (isJUnitTest()) {
+            return;
+        }
         modifiedBy = SecurityContextHolder.getContext().getAuthentication().getName();
     }
 
@@ -77,4 +85,16 @@ public abstract class BaseEntity {
         return String.format("%s [id=%d]", this.getClass().getSimpleName(), this.getId());
     }
 
+
+    /**
+     * Проверка на выполнения внутри теста
+     */
+    public static boolean isJUnitTest() {
+        for (StackTraceElement element : Thread.currentThread().getStackTrace()) {
+            if (element.getClassName().startsWith("org.junit.")) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

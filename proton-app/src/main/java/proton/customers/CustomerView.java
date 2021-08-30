@@ -6,7 +6,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import lombok.extern.slf4j.Slf4j;
 import proton.base.BaseDictView;
-import proton.products.ProductGeneral;
+import proton.products.ProductSummary;
 import proton.products.ProductService;
 import proton.views.MainView;
 
@@ -20,7 +20,7 @@ public class CustomerView extends BaseDictView<Customer, CustomerService> {
 
     ProductService productService;
 
-    protected final Grid<ProductGeneral> productGrid = new Grid<>();
+    protected final Grid<ProductSummary> productGrid = new Grid<>();
 
     public CustomerView(CustomerService service, ProductService productService) {
         this.productService = productService;
@@ -31,9 +31,9 @@ public class CustomerView extends BaseDictView<Customer, CustomerService> {
     @PostConstruct
     public void init() {
         setupView();
-        productGrid.addColumn(ProductGeneral::getId).setKey("id").setHeader("Код изделия").setFlexGrow(1);
-        productGrid.addColumn(ProductGeneral::getName).setKey("name").setHeader("Наименование изделия").setFlexGrow(1);
-        productGrid.addColumn(ProductGeneral::getDescription).setKey("description").setHeader("Примечание").setFlexGrow(1);
+        productGrid.addColumn(ProductSummary::getId).setKey("id").setHeader("Код изделия").setFlexGrow(1);
+        productGrid.addColumn(ProductSummary::getName).setKey("name").setHeader("Наименование изделия").setFlexGrow(1);
+        productGrid.addColumn(ProductSummary::getDescription).setKey("description").setHeader("Примечание").setFlexGrow(1);
     }
 
     @Override
