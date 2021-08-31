@@ -4,14 +4,19 @@ package proton.base;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * В простом случае классы Сервисов яыляются обертками над репозиториями,
+ * т.е. просто транслируют запросы соответствуемущему репозиторию.
+ * Дополнительно могут реализовывать бизнес-логику.
+ */
 public abstract class BaseServiceImpl<E extends BaseDict, R extends BaseRepository<E>>
         implements BaseService<E> {
 
     protected final R repository;
 
-    public R getRepository() {
-        return repository;
-    }
+// //   public R getRepository() {
+//        return repository;
+//    }
 
     public BaseServiceImpl(R repository) {
         this.repository = repository;

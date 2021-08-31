@@ -13,7 +13,7 @@ public interface PartRepository extends BaseRepository<Part> {
 
     /**
      * Выборка вложенных @ManyToOne сущностей с помошью одного запроса с вложенными LEFT JOIN FETCH
-     * Отключение аннотации @Query приводит к 5-ти отдельным запросам
+     * Отключение аннотации @Query и выполнение запроса по умолчанию приводит к 5-ти отдельным запросам
      */
     @Query(value = """
                 SELECT part FROM Part part

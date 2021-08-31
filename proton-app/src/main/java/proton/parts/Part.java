@@ -11,7 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
- * Детали (изделия)
+ * Детали
  */
 @Entity
 @Table(name = "Parts")

@@ -24,12 +24,23 @@ import javax.persistence.OptimisticLockException;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 
+/**
+ * Базовый класс формы просмотра таблицы в виде Grid <p>
+ * Работает совместно с BaseDictViewEditor, реализующего модальную форму редактирования.
+ *
+ * @param <E> Редактируемая сущность
+ * @param <S> Сервис отвечающий за чтение/запись в БД
+ */
 @Slf4j
 public abstract class BaseDictView<E extends BaseDict, S extends BaseService<E>>
         extends VerticalLayout {
 
     protected E item;
 
+    /**
+     * Фабричный метод для создания экземпляра сущности
+     * с которой работает наследник BaseDictView
+     */
     protected abstract E getNewItem();
 
     protected BaseService<E> service;

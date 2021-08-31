@@ -104,7 +104,8 @@ public class MainView extends AppLayout {
         MenuItem mi6 = menuBar.addItem("Настройки");
 
         menuBar.setOpenOnHover(true);
-        menuBar.getItems().forEach(item -> item.getElement().setAttribute("style","justify-content: left;")); //TODO: Почему не работает???
+        //TODO: Почему не работает???
+        menuBar.getItems().forEach(item -> item.getElement().setAttribute("style","justify-content: left;"));
 
         // Adjust the opening position with JavaScript
         menuBar.getElement().executeJs("""

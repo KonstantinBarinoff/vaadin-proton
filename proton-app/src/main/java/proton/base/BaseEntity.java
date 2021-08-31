@@ -12,8 +12,8 @@ import java.time.LocalDateTime;
 
 
 /**
- * Базовый класс сущности - общий предок всех сущностей.
- * Все таблицы БД должны иметь эти поля
+ * Общий предок всех сущностей.
+ * Все таблицы БД должны включать эти поля!
  */
 @EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass
@@ -21,21 +21,28 @@ import java.time.LocalDateTime;
 @Setter
 public abstract class BaseEntity {
 
+    /**
+     * Первичный ключ, автогенерируемый на стороне MSSQL
+     * MSSQL: ID bigint IDENTITY(1,1) NOT NULL
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**
-     * Для поддержки Оптимистических блокировок, Hibernate увеличивает поле version
-     * при каждом изменении записи.
-     * Значение NULL недопустимо - ломается логика JPA (Insert вместо Update)
+     * Для поддержки Оптимистических блокировок Hibernate увеличивает поле version
+     * при каждом изменении записи. <p>
+     * Значение NULL недопустимо - ломается логика JPA (Insert вместо Update) <p>
      * MSSQL: Version int NOT NULL CONSTRAINT DF_version DEFAULT 0
      */
     @Version
     private int version;
 
-    // MSSQL: DATETIME
-    /** Дата/время создания записи*/
+    /**
+     * Дата/время создания записи
+     * MSSQL: Created_At datetime NULL
+     * */
+    // TODO: Попробовать совместную генерацию с DEFAULT значениями на стороне БД
     @CreatedDate
     private LocalDateTime createdAt;
 
@@ -49,22 +56,31 @@ public abstract class BaseEntity {
     /** Учетная запись пользователя последнего изменения записи */
     private String modifiedBy;
 
+    // TODO: Протестировать
     public boolean isPersisted() {
         return id != null;
     }
 
+    /**
+     * Сохранение login пользователя создавшего запись
+     * Обходим в Тестах, т.к. при выполнения Теста SecurityContext не создается
+     */
     @PrePersist
+    // TODO: Private?
     protected void onCreate() {
-        /** Обходим т.к. при выполнения Теста SecurityContext не создается */
         if (isJUnitTest()) {
             return;
         }
         createdBy = SecurityContextHolder.getContext().getAuthentication().getName();
     }
 
+    /**
+     * Сохранение login пользователя изменившего запись
+     * Обходим в Тестах, т.к. при выполнения Теста SecurityContext не создается
+     */
     @PreUpdate
+    // TODO: Private?
     protected void onUpdate() {
-        /** Обходим т.к. при выполнения Теста SecurityContext не создается */
         if (isJUnitTest()) {
             return;
         }
@@ -99,7 +115,7 @@ public abstract class BaseEntity {
     }
 
     /**
-     * Проверка на выполнения внутри теста
+     * Проверка на выполнение внутри теста
      */
     public static boolean isJUnitTest() {
         for (StackTraceElement element : Thread.currentThread().getStackTrace()) {

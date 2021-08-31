@@ -4,7 +4,8 @@ import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotNull;
 
 /**
- * Расширение для сущностей представляющих из себя вид справочников, т.е. имеющих поля Наименование и Примечание (Описание)
+ * Расширение для сущностей представляющих из себя вид справочников,
+ * т.е. имеющих поля Наименование и Примечание (Описание)
  */
 @MappedSuperclass
 public abstract class BaseDict extends BaseEntity {
