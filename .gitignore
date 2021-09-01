@@ -26,3 +26,4 @@ types.d.ts
 
 #vaadin-grid-flow-integration-tests/benchmark/reference-clone/
 #vaadin-grid-flow-integration-tests/benchmark/results
+/proton-app/spy.log
