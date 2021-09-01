@@ -21,11 +21,6 @@ import javax.annotation.PostConstruct;
 @PageTitle("Изделия")
 public class ProductView extends BaseDictView<Product, ProductService> {
 
-
-
-
-//    private final EmployeeService employeeService;
-//    private final CustomerService customerService;
     private final PartService partService;
     private final ProductService productService;
 
@@ -35,8 +30,6 @@ public class ProductView extends BaseDictView<Product, ProductService> {
     public ProductView(ProductService productService, EmployeeService employeeService, CustomerService customerService, PartService partService) {
         this.service = productService;
         this.productService = productService;
-//        this.employeeService = employeeService;
-//        this.customerService = customerService;
         this.partService = partService;
         editor = new ProductViewEditor(productService, employeeService, customerService);
     }

@@ -128,6 +128,7 @@ public abstract class BaseDictViewEditor<E extends BaseDict, S extends BaseServi
         if (i.isPersisted()) {
             item = service.findById(i.getId()).get();
         } else {
+            assert true : "Вызов editItem c non Persisted аргументом";
             item = i;
         }
         revertButton.setEnabled(true);
@@ -139,13 +140,14 @@ public abstract class BaseDictViewEditor<E extends BaseDict, S extends BaseServi
     public final void newItem(@NotNull E i) {
         revertButton.setEnabled(false);
         if (i.isPersisted()) {
+            assert true : "Вызов newItem c Persisted аргументом";
             item = service.findById(i.getId()).get();
         } else {
             item = i;
         }
         binder.setBean(item);
         nameField.focus();
-//        log.debug("NEW ITEM: {}", item);
+        log.debug("NEW ITEM: {}", item);
     }
 
     public void setOnChange(OnChangeHandler h) {

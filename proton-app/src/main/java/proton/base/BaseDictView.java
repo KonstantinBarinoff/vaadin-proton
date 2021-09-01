@@ -149,7 +149,7 @@ public abstract class BaseDictView<E extends BaseDict, S extends BaseService<E>>
             editor.editItem(grid.getSelectedItems().stream().findFirst().get());
             editor.open();
         } catch (NoSuchElementException e) {
-//            new ProtonWarningDialog(e.getMessage(), NestedExceptionUtils.getMostSpecificCause(e).getMessage());
+            new ProtonWarningDialog(e.getMessage(), NestedExceptionUtils.getMostSpecificCause(e).getMessage());
             refreshGrid();
         }
     }

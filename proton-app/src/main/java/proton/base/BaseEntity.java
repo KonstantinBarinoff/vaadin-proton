@@ -56,7 +56,6 @@ public abstract class BaseEntity {
     /** Учетная запись пользователя последнего изменения записи */
     private String modifiedBy;
 
-    // TODO: Протестировать
     public boolean isPersisted() {
         return id != null;
     }
