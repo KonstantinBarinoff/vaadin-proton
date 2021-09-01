@@ -4,8 +4,10 @@ import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.spring.annotation.SpringComponent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import proton.base.BaseDictView;
 import proton.products.Product;
 import proton.products.ProductService;
@@ -17,13 +19,15 @@ import java.util.List;
 @Slf4j
 @Route(value = "part-view", layout = MainView.class)
 @PageTitle("Детали")
+@SpringComponent        // для подчиненных (Detail) форм дополнительно указываем для возможности внедрения в Master-форму
+@Scope("prototype")     // View не могут создаваться вне контекста сессии (как singleton-ы)
 
 public class PartView extends BaseDictView<Part, PartService> {
 
     ProductService productService;
 
     public enum ViewType {
-        /** Тип формы: дочерняя - отображает отфильтрованные детали по выбранному в {@see #filteredProduct} Продукту */
+        /** Тип формы: дочерняя (подчиненная) - отображает отфильтрованные детали по выбранному в {@see #filteredProduct} Продукту */
         FILTERED,
         /** Тип формы: основная - все детали всех продуктов, без фильтрации */
         ALL_RECORDS

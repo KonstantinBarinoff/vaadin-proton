@@ -13,7 +13,6 @@ import proton.customers.CustomerService;
 import proton.employees.EmployeeService;
 import proton.parts.PartService;
 import proton.parts.PartView;
-import proton.parts.PartViewEditor;
 import proton.views.MainView;
 
 import javax.annotation.PostConstruct;
@@ -23,30 +22,26 @@ import javax.annotation.PostConstruct;
 @PageTitle("Изделия")
 public class ProductView extends BaseDictView<Product, ProductService> {
 
+    /** Дочерняя форма для отображения Деталей выбранного Изделия **/
     @Autowired
-    private PartViewEditor partViewEditor;
+    private PartView partView;
 
-    private final PartService partService;
-    private final ProductService productService;
-
-    /** Дочерний форма для отображения Деталей выбранного Изделия **/
-    PartView    partView;
+//    private final PartService partService;
+//    private final ProductService productService;
 
     public ProductView(ProductService productService, EmployeeService employeeService,
                        CustomerService customerService, PartService partService, ProductViewEditor editor) {
         log.debug("CONSTRUCTOR");
         this.service = productService;
-        this.productService = productService;
-        this.partService = partService;
+//        this.productService = productService;
+//        this.partService = partService;
         this.editor = editor;
-//        this.partView = partView;
     }
 
     @PostConstruct
     public void init() {
-        //TODO: Вынести непосредственно в место создания. (Вариант не вызывать конструкттор напрямую, но инжектить бин)
         log.debug("POSTCONSTRUCT");
-        partView = new PartView(partService, productService, partViewEditor);
+        // partView = new PartView(partService, productService, partViewEditor);
         setupView();
     }
 
