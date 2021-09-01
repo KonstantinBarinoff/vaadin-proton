@@ -63,11 +63,10 @@ public abstract class BaseEntity {
 
     /**
      * Сохранение login пользователя создавшего запись
-     * Обходим в Тестах, т.к. при выполнения Теста SecurityContext не создается
+     * Обходим при выполнении теста (SecurityContext не создаётся)
      */
     @PrePersist
-    // TODO: Private?
-    protected void onCreate() {
+    private void onCreate() {
         if (isJUnitTest()) {
             return;
         }
@@ -76,11 +75,10 @@ public abstract class BaseEntity {
 
     /**
      * Сохранение login пользователя изменившего запись
-     * Обходим в Тестах, т.к. при выполнения Теста SecurityContext не создается
+     * Обходим при выполнении теста (SecurityContext не создаётся)
      */
     @PreUpdate
-    // TODO: Private?
-    protected void onUpdate() {
+    private void onUpdate() {
         if (isJUnitTest()) {
             return;
         }

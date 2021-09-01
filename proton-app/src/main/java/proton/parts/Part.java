@@ -23,5 +23,4 @@ public class Part extends BaseDict {
     @ManyToOne()
     @JoinColumn(name="Product_Id", referencedColumnName = "id")
     private Product product;
-
 }

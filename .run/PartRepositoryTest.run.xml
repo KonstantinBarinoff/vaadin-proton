@@ -1,0 +1,15 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="PartRepositoryTest" type="JUnit" factoryName="JUnit">
+    <module name="proton-app" />
+    <option name="PACKAGE_NAME" value="" />
+    <option name="MAIN_CLASS_NAME" value="PartRepositoryTest" />
+    <option name="METHOD_NAME" value="deleteProduct" />
+    <option name="TEST_OBJECT" value="uniqueId" />
+    <uniqueIds>
+      <uniqueId value="[engine:junit-jupiter]/[class:PartRepositoryTest]" />
+    </uniqueIds>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

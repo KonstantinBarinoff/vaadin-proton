@@ -15,11 +15,7 @@ import static performancetuning.sqltracker.QueryCountInfoHolder.getQueryInfo;
 @SpringBootTest
 @Transactional
 public abstract class BaseTest {
-    private static final String[] DB_UNIT_SET_UP = {"",
-            "****************************************************************",
-            "*************** DATABASE HAS BEEN ALREADY SET UP ***************",
-            "****************************************************************"
-    };
+    private static final String[] DB_UNIT_SET_UP = {"", "****************************************************************", };
 
     @PersistenceContext
     protected EntityManager em;

@@ -11,6 +11,7 @@ import java.util.List;
 @Transactional
 public interface ProductRepository extends BaseRepository<Product> {
 
+    //TODO: Попробовать с NativeQuery
     @Query(value = """
         SELECT p FROM Product p
             LEFT JOIN FETCH p.produceEmployee
@@ -19,8 +20,6 @@ public interface ProductRepository extends BaseRepository<Product> {
         """)
     @Override
     List<Product> findAll();
-
-//    List<ProductGeneral> findAll(Long id);
 
     List<ProductSummary> findByCustomerId(Long id);
 

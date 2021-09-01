@@ -2,7 +2,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import performancetuning.sqltracker.AssertSqlCount;
 import proton.ProtonApplication;
 import proton.parts.Part;
 import proton.parts.PartRepository;
@@ -14,17 +13,19 @@ import static performancetuning.sqltracker.AssertSqlCount.*;
 
 
 /**
- * Тесты репозитория на серверной базе
+ * Тесты репозитория на MSSQL базе
  * Каждый метод выполняется в отдельной транзакции
  */
 @SpringBootTest(classes = ProtonApplication.class)
 @Transactional
-//@RunWith(SpringRunner.class)
-//@DataJpaTest
 public class PartRepositoryTest extends BaseTest {
 
+    private final PartRepository repo;
+
     @Autowired
-    private PartRepository repo;
+    public PartRepositoryTest(PartRepository repo) {
+        this.repo = repo;
+    }
 
     @Test
     void findAll() {
@@ -58,14 +59,12 @@ public class PartRepositoryTest extends BaseTest {
         System.out.println(part.getProduct().getCustomer());
 
         part.setName("New Name");
-        AssertSqlCount.reset();
         repo.saveAndFlush(part);
         assertUpdateCount(1);
     }
 
     @Test
     void deleteProduct() {
-        AssertSqlCount.reset();
         repo.deleteById(10L);
         repo.flush();
         assertSelectCount(1);
