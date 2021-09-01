@@ -33,6 +33,7 @@ public class PartView extends BaseDictView<Part, PartService> {
 
     @Autowired
     public PartView(PartService service, ProductService productService) {
+        log.debug("CONSTRUCTOR");
         this.service = service;
         this.productService = productService;
         //TODO: Вынести непосредственно в место создания. (Вариант не вызывать конструутор напрямую, но инжектить бин)
@@ -41,6 +42,8 @@ public class PartView extends BaseDictView<Part, PartService> {
 
     @PostConstruct
     private void initNotFiltered() {
+        log.debug("POSTCONSTRUCT");
+
         viewType = ViewType.ALL_RECORDS;
         setupView();
     }

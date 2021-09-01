@@ -12,6 +12,7 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.validator.IntegerRangeValidator;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import proton.base.BaseDictViewEditor;
 import proton.customers.Customer;
@@ -23,12 +24,14 @@ import util.ProtonStrings;
 
 @SpringComponent
 @UIScope
+@Slf4j
 public class ProductViewEditor extends BaseDictViewEditor<Product, ProductService> {
 
     EmployeeService employeeService;
     CustomerService customerService;
 
     public ProductViewEditor(ProductService productService, EmployeeService employeeService, CustomerService customerService) {
+        log.debug("CONSTRUCTOR");
         this.service = productService;
         this.customerService = customerService;
         this.employeeService = employeeService;

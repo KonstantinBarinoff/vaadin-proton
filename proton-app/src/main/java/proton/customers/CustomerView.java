@@ -23,6 +23,7 @@ public class CustomerView extends BaseDictView<Customer, CustomerService> {
     protected final Grid<ProductSummary> productGrid = new Grid<>();
 
     public CustomerView(CustomerService service, ProductService productService) {
+        log.debug("CONSTRUCTOR");
         this.productService = productService;
         this.service = service;
         editor = new CustomerViewEditor(service);
@@ -30,6 +31,7 @@ public class CustomerView extends BaseDictView<Customer, CustomerService> {
 
     @PostConstruct
     public void init() {
+        log.debug("POSTCONSTRUCT");
         setupView();
         productGrid.addColumn(ProductSummary::getId).setKey("id").setHeader("Код изделия").setFlexGrow(1);
         productGrid.addColumn(ProductSummary::getName).setKey("name").setHeader("Наименование изделия").setFlexGrow(1);

@@ -28,6 +28,7 @@ public class ProductView extends BaseDictView<Product, ProductService> {
     PartView    partView;
 
     public ProductView(ProductService productService, EmployeeService employeeService, CustomerService customerService, PartService partService) {
+        log.debug("CONSTRUCTOR");
         this.service = productService;
         this.productService = productService;
         this.partService = partService;
@@ -37,6 +38,7 @@ public class ProductView extends BaseDictView<Product, ProductService> {
     @PostConstruct
     public void init() {
         //TODO: Вынести непосредственно в место создания. (Вариант не вызывать конструкттор напрямую, но инжектить бин)
+        log.debug("POSTCONSTRUCT");
         partView = new PartView(partService, productService);
         setupView();
     }

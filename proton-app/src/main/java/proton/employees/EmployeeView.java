@@ -16,12 +16,14 @@ public class EmployeeView extends BaseDictView<Employee, EmployeeService> {
 
     @Autowired
     public EmployeeView(EmployeeService service) {
+        log.debug("CONSTRUCTOR");
         this.service = service;
         editor = new EmployeeViewEditor(service);
     }
 
     @PostConstruct
     public void init() {
+        log.debug("POSTCONSTRUCT");
         setupView();
     }
 

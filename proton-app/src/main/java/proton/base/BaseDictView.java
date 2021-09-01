@@ -61,6 +61,11 @@ public abstract class BaseDictView<E extends BaseDict, S extends BaseService<E>>
     protected final Button refreshButton = new Button(ProtonStrings.REFRESH, VaadinIcon.REFRESH.create());
     protected final Button editButton = new Button(ProtonStrings.EDIT, VaadinIcon.EDIT.create());
 
+    public BaseDictView() {
+        super();
+        log.debug("CONSTRUCTOR");
+    }
+
     public void setupView() {
         setupBrowserWindowResizeListener();
         setupLayout();

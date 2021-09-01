@@ -75,7 +75,7 @@ public class ImageForm extends Dialog implements KeyNotifier {
         form.add(image);
 
         setupLayout();
-        log.debug("IMAGE FORM CONSTRUCTOR");
+        log.debug("CONSTRUCTOR");
     }
 
     public void setupLayout() {

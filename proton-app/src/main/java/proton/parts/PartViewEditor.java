@@ -4,6 +4,7 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import proton.base.BaseDictViewEditor;
@@ -13,6 +14,7 @@ import util.ProtonStrings;
 
 @SpringComponent
 @UIScope
+@Slf4j
 public class PartViewEditor extends BaseDictViewEditor<Part, PartService> {
 
 
@@ -22,6 +24,7 @@ public class PartViewEditor extends BaseDictViewEditor<Part, PartService> {
 
     @Autowired
     public PartViewEditor(PartService service, ProductService productService) {
+        log.debug("CONSTRUCTOR");
         this.productService = productService;
         this.service = service;
         binder = new Binder<>(Part.class);
