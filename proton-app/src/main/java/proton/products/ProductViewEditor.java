@@ -11,9 +11,9 @@ import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.validator.IntegerRangeValidator;
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import com.vaadin.flow.spring.annotation.UIScope;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.context.annotation.Scope;
 import proton.base.BaseDictViewEditor;
 import proton.customers.Customer;
 import proton.customers.CustomerService;
@@ -23,7 +23,7 @@ import util.ProtonDatePicker;
 import util.ProtonStrings;
 
 @SpringComponent
-@UIScope
+@Scope("prototype")
 @Slf4j
 public class ProductViewEditor extends BaseDictViewEditor<Product, ProductService> {
 

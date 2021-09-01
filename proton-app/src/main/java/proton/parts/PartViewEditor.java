@@ -3,17 +3,17 @@ package proton.parts;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import com.vaadin.flow.spring.annotation.UIScope;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import proton.base.BaseDictViewEditor;
 import proton.products.Product;
 import proton.products.ProductService;
 import util.ProtonStrings;
 
 @SpringComponent
-@UIScope
+@Scope("prototype")
 @Slf4j
 public class PartViewEditor extends BaseDictViewEditor<Part, PartService> {
 

@@ -44,7 +44,6 @@ public abstract class BaseDictViewEditor<E extends BaseDict, S extends BaseServi
 
     public BaseDictViewEditor() {
         super();
-        log.debug("CONSTRUCTOR");
     }
 
     public void setupView() {

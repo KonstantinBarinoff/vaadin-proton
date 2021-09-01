@@ -6,8 +6,8 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import lombok.extern.slf4j.Slf4j;
 import proton.base.BaseDictView;
-import proton.products.ProductSummary;
 import proton.products.ProductService;
+import proton.products.ProductSummary;
 import proton.views.MainView;
 
 import javax.annotation.PostConstruct;
@@ -22,11 +22,11 @@ public class CustomerView extends BaseDictView<Customer, CustomerService> {
 
     protected final Grid<ProductSummary> productGrid = new Grid<>();
 
-    public CustomerView(CustomerService service, ProductService productService) {
+    public CustomerView(CustomerService service, ProductService productService, CustomerViewEditor editor) {
         log.debug("CONSTRUCTOR");
         this.productService = productService;
         this.service = service;
-        editor = new CustomerViewEditor(service);
+        this.editor = editor;
     }
 
     @PostConstruct

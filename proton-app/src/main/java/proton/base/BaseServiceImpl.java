@@ -14,10 +14,6 @@ public abstract class BaseServiceImpl<E extends BaseDict, R extends BaseReposito
 
     protected final R repository;
 
-// //   public R getRepository() {
-//        return repository;
-//    }
-
     public BaseServiceImpl(R repository) {
         this.repository = repository;
     }

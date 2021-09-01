@@ -17,6 +17,7 @@ import java.util.List;
 @Slf4j
 @Route(value = "part-view", layout = MainView.class)
 @PageTitle("Детали")
+
 public class PartView extends BaseDictView<Part, PartService> {
 
     ProductService productService;
@@ -32,12 +33,11 @@ public class PartView extends BaseDictView<Part, PartService> {
     private Product filteredProduct;
 
     @Autowired
-    public PartView(PartService service, ProductService productService) {
+    public PartView(PartService service, ProductService productService, PartViewEditor editor) {
         log.debug("CONSTRUCTOR");
         this.service = service;
         this.productService = productService;
-        //TODO: Вынести непосредственно в место создания. (Вариант не вызывать конструутор напрямую, но инжектить бин)
-        editor = new PartViewEditor(service, productService);
+        this.editor = editor;
     }
 
     @PostConstruct
@@ -47,7 +47,6 @@ public class PartView extends BaseDictView<Part, PartService> {
         viewType = ViewType.ALL_RECORDS;
         setupView();
     }
-
     /**
      * @param filteredProduct Код изделия для фильтрации деталей
      */

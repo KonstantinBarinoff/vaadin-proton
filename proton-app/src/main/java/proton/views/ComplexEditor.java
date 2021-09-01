@@ -10,16 +10,13 @@ import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.validator.IntegerRangeValidator;
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import com.vaadin.flow.spring.annotation.UIScope;
 import proton.base.BaseDictViewEditor;
 import proton.products.Product;
 import proton.products.ProductService;
 import util.ProtonDatePicker;
 import util.ProtonStrings;
 
-@SpringComponent
-@UIScope
+
 public class ComplexEditor extends BaseDictViewEditor<Product, ProductService> {
 
     public ComplexEditor(ProductService service) {

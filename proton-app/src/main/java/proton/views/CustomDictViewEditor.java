@@ -23,8 +23,6 @@ import com.vaadin.flow.data.validator.BigDecimalRangeValidator;
 import com.vaadin.flow.data.validator.IntegerRangeValidator;
 import com.vaadin.flow.data.validator.StringLengthValidator;
 import com.vaadin.flow.data.value.ValueChangeMode;
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import com.vaadin.flow.spring.annotation.UIScope;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,9 +42,6 @@ import java.time.LocalDate;
 //import java.time.LocalDate;
 
 
-
-@SpringComponent
-@UIScope
 @org.springframework.transaction.annotation.Transactional
 @Slf4j
 public class CustomDictViewEditor extends Dialog implements KeyNotifier {

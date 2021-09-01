@@ -63,7 +63,6 @@ public abstract class BaseDictView<E extends BaseDict, S extends BaseService<E>>
 
     public BaseDictView() {
         super();
-        log.debug("CONSTRUCTOR");
     }
 
     public void setupView() {

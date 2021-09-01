@@ -15,10 +15,10 @@ import javax.annotation.PostConstruct;
 public class EmployeeView extends BaseDictView<Employee, EmployeeService> {
 
     @Autowired
-    public EmployeeView(EmployeeService service) {
+    public EmployeeView(EmployeeService service, EmployeeViewEditor editor) {
         log.debug("CONSTRUCTOR");
         this.service = service;
-        editor = new EmployeeViewEditor(service);
+        this.editor = editor; //new EmployeeViewEditor(service);
     }
 
     @PostConstruct
