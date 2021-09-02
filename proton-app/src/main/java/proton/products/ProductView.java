@@ -9,9 +9,6 @@ import com.vaadin.flow.router.Route;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import proton.base.BaseDictView;
-import proton.customers.CustomerService;
-import proton.employees.EmployeeService;
-import proton.parts.PartService;
 import proton.parts.PartView;
 import proton.views.MainView;
 
@@ -26,22 +23,16 @@ public class ProductView extends BaseDictView<Product, ProductService> {
     @Autowired
     private PartView partView;
 
-//    private final PartService partService;
-//    private final ProductService productService;
-
-    public ProductView(ProductService productService, EmployeeService employeeService,
-                       CustomerService customerService, PartService partService, ProductViewEditor editor) {
+    ProductView(ProductService productService, ProductViewEditor editor) {
         log.debug("CONSTRUCTOR");
         this.service = productService;
-//        this.productService = productService;
-//        this.partService = partService;
         this.editor = editor;
+        editor.setOwnerDictView(this);
     }
 
     @PostConstruct
     public void init() {
         log.debug("POSTCONSTRUCT");
-        // partView = new PartView(partService, productService, partViewEditor);
         setupView();
     }
 
@@ -76,7 +67,6 @@ public class ProductView extends BaseDictView<Product, ProductService> {
             partView.refreshProductFilter(null);
         }
     }
-
 
     @Override
     public void setupView() {

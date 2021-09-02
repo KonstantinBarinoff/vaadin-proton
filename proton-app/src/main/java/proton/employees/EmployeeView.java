@@ -18,7 +18,8 @@ public class EmployeeView extends BaseDictView<Employee, EmployeeService> {
     public EmployeeView(EmployeeService service, EmployeeViewEditor editor) {
         log.debug("CONSTRUCTOR");
         this.service = service;
-        this.editor = editor; //new EmployeeViewEditor(service);
+        this.editor = editor;
+        editor.setOwnerDictView(this);
     }
 
     @PostConstruct

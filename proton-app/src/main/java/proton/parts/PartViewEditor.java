@@ -17,7 +17,6 @@ import util.ProtonStrings;
 @Slf4j
 public class PartViewEditor extends BaseDictViewEditor<Part, PartService> {
 
-
     private final ProductService productService;
 
     public ComboBox<Product> productComboBox;
@@ -48,5 +47,10 @@ public class PartViewEditor extends BaseDictViewEditor<Part, PartService> {
         super.setupFields();
         productComboBox = getProductCombobox();
         form.add(productComboBox);
+    }
+
+    public void setupFilteredProduct(Product filteredProduct) {
+        productComboBox.setValue(filteredProduct);
+        productComboBox.setEnabled(false);
     }
 }

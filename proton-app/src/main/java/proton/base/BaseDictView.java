@@ -45,7 +45,7 @@ public abstract class BaseDictView<E extends BaseDict, S extends BaseService<E>>
 
     protected BaseService<E> service;
 
-    protected BaseDictViewEditor editor;
+    protected BaseDictViewEditor<E, S> editor;
 
     protected final Grid<E> grid = new Grid<>();
 

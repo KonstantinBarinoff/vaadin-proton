@@ -27,6 +27,8 @@ public class CustomerView extends BaseDictView<Customer, CustomerService> {
         this.productService = productService;
         this.service = service;
         this.editor = editor;
+        editor.setOwnerDictView(this);
+
     }
 
     @PostConstruct

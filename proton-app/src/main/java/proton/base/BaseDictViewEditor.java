@@ -27,6 +27,9 @@ import java.util.NoSuchElementException;
 //@CssImport(themeFor = "vaadin-grid", value = "./styles/layout-with-border.css")
 public abstract class BaseDictViewEditor<E extends BaseDict, S extends BaseService<E>> extends Dialog implements KeyNotifier {
 
+    /** Ссылка на View-владельца, которому принадлежит данная форма редактирования */
+    private BaseDictView<E, S> ownerDictView;
+
     private final TextField nameField = new TextField("Наименование (Alt+N)");
     private final TextField descriptionField = new TextField("Примечание");
 
@@ -34,7 +37,6 @@ public abstract class BaseDictViewEditor<E extends BaseDict, S extends BaseServi
     private final Button revertButton = new Button(ProtonStrings.REVERT, VaadinIcon.REFRESH.create());
     private final Button closeButton = new Button(ProtonStrings.CLOSE, VaadinIcon.CLOSE.create());
 
-    //protected BaseRepository<E> repo;
     protected BaseService<E> service;
     protected Binder<E> binder = null;
     protected final FormLayout form = new FormLayout();
@@ -156,6 +158,14 @@ public abstract class BaseDictViewEditor<E extends BaseDict, S extends BaseServi
 
     public void setOnChange(OnChangeHandler h) {
         onChangeHandler = h;
+    }
+
+    public BaseDictView<E, S> getOwnerDictView() {
+        return ownerDictView;
+    }
+
+    public void setOwnerDictView(BaseDictView<E, S> ownerDictView) {
+        this.ownerDictView = ownerDictView;
     }
 
 }
