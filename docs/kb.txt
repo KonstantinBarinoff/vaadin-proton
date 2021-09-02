@@ -24,4 +24,25 @@ View (detail) @SpringComponent     - Для подчиненных (Detail) фо
 Editor      @SpringComponent
             @Scope("prototype") - Prototype scope. Editor создается каждый раз для внедрения в соответствующее View
 
+
 --------------------------------------------------------------------------------
+Создание Detail-формы через наследование Master пока не работает нужным образом.
+Переход по part-view приводит к созданию экземпляра наследника PartViewDetail,
+вместо ожидаемого PartView (?????)
+--------------------------------------------------------------------------------
+From MainView:
+    MenuItem mi10 = menuBar.addItem("Детали (Master)");
+    mi10.addClickListener(e -> UI.getCurrent().navigate(PartView.class));
+
+public class PartViewDetail extends PartView {
+    public PartViewDetail(PartService service, PartViewEditor editor) {
+        super(service, editor);
+    }
+}
+
+@Route(value = "part-view", layout = MainView.class)
+public class PartView extends BaseDictView<Part, PartService> {
+    ...
+}
+--------------------------------------------------------------------------------
+

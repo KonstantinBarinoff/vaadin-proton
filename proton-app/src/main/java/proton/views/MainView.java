@@ -25,6 +25,7 @@ import org.jetbrains.annotations.NotNull;
 import proton.customers.CustomerView;
 import proton.employees.EmployeeView;
 import proton.parts.PartView;
+import proton.parts.PartViewMasterDetail;
 import proton.products.ProductView;
 
 import java.util.Optional;
@@ -88,8 +89,11 @@ public class MainView extends AppLayout {
         MenuItem mi1 = menuBar.addItem("Изделия...");
         mi1.addClickListener(e -> UI.getCurrent().navigate(ProductView.class));
 
-        MenuItem mi7 = menuBar.addItem("Детали");
-        mi7.addClickListener(e -> UI.getCurrent().navigate(PartView.class));
+        MenuItem mi7 = menuBar.addItem("Детали (Master/Detail)");
+        mi7.addClickListener(e -> UI.getCurrent().navigate(PartViewMasterDetail.class));
+
+        MenuItem mi10 = menuBar.addItem("Детали (Master)");
+        mi10.addClickListener(e -> UI.getCurrent().navigate(PartView.class));
 
         MenuItem mi2 = menuBar.addItem(new Div(new Span("Справочники"), VaadinIcon.ANGLE_RIGHT.create()));
 
@@ -104,8 +108,6 @@ public class MainView extends AppLayout {
         MenuItem mi6 = menuBar.addItem("Настройки");
 
         menuBar.setOpenOnHover(true);
-        //TODO: Почему не работает???
-        menuBar.getItems().forEach(item -> item.getElement().setAttribute("style","justify-content: left;"));
 
         // Adjust the opening position with JavaScript
         menuBar.getElement().executeJs("""

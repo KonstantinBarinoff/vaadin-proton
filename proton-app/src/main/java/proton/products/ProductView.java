@@ -9,7 +9,7 @@ import com.vaadin.flow.router.Route;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import proton.base.BaseDictView;
-import proton.parts.PartView;
+import proton.parts.PartViewMasterDetail;
 import proton.views.MainView;
 
 import javax.annotation.PostConstruct;
@@ -21,7 +21,7 @@ public class ProductView extends BaseDictView<Product, ProductService> {
 
     /** Дочерняя форма для отображения Деталей выбранного Изделия **/
     @Autowired
-    private PartView partView;
+    private PartViewMasterDetail partView;
 
     ProductView(ProductService productService, ProductViewEditor editor) {
         log.debug("CONSTRUCTOR");
