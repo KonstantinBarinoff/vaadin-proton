@@ -21,6 +21,7 @@ public interface ProductRepository extends BaseRepository<Product> {
     @Override
     List<Product> findAll();
 
+
     List<ProductSummary> findByCustomerId(Long id);
 
 

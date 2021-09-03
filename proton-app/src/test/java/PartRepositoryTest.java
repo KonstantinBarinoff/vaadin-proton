@@ -18,7 +18,7 @@ import static performancetuning.sqltracker.AssertSqlCount.*;
  */
 @SpringBootTest(classes = ProtonApplication.class)
 @Transactional
-public class PartRepositoryTest extends BaseTest {
+public class PartRepositoryTest extends BaseRepositoryTest {
 
     private final PartRepository repo;
 

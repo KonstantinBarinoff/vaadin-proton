@@ -8,6 +8,8 @@ public interface BaseService<E extends BaseDict> {
 
     List<E> findAll();
 
+    List<E> findAll(String filter);
+
     Optional<E> findById(Long id);
 
     E save(E entity);

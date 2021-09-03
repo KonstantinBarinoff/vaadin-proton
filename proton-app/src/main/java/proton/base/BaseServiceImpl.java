@@ -29,6 +29,15 @@ public abstract class BaseServiceImpl<E extends BaseDict, R extends BaseReposito
     }
 
     @Override
+    public List<E> findAll(String filter) {
+        if (filter == null || filter.isEmpty()) {
+            return repository.findAll();
+        } else {
+            return repository.findByFilter(filter);
+        }
+    }
+
+    @Override
     public E save(E entity) {
         return repository.save(entity);
     }
@@ -44,5 +53,7 @@ public abstract class BaseServiceImpl<E extends BaseDict, R extends BaseReposito
     }
 
     @Override
-    public void deleteById(Long id) { repository.deleteById(id); }
+    public void deleteById(Long id) {
+        repository.deleteById(id);
+    }
 }

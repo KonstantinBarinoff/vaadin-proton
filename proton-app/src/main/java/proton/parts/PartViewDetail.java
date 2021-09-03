@@ -2,11 +2,12 @@ package proton.parts;
 
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * Создание Detail-формы через наследование Master пока не работает нужным образом.
- * Переход по part-view приводит к созданию экземпляра наследника PartViewDetail,
- * вместо ожидаемого PartView (?????)
- */
+
+//TODO: Как вариант, реализовать через наследования: PartDetailView extends PartView
+//  Создание Detail-формы через наследование Master пока не работает нужным образом.
+//  Переход по part-view приводит к созданию экземпляра наследника PartViewDetail,
+//  вместо ожидаемого PartView (?????)
+
 @Slf4j
 //@PageTitle("Детали")
 //@SpringComponent        // для подчиненных (Detail) форм дополнительно указываем для возможности внедрения в Master-форму

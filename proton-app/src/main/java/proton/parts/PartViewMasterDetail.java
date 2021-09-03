@@ -24,7 +24,6 @@ import java.util.List;
 
 public class PartViewMasterDetail extends BaseDictView<Part, PartService> {
 
-    // TODO: Как вариант, реализовать через наследования: PartDetailView extends PartView
     private enum ViewType {
         /** Тип формы: дочерняя (подчиненная) - отображает отфильтрованные детали по выбранному в {@see #filteredProduct} Продукту */
         FILTERED,
@@ -71,12 +70,13 @@ public class PartViewMasterDetail extends BaseDictView<Part, PartService> {
      * Переопределение базового обработчика обновления таблицы для возможной выборки деталей по продукту
      */
     @Override
+    //TODO: Почему при фильтрации именно в PartViewMasterDetail, ValueChangeListener вызывается два раза?
     protected void refreshGrid() {
         if (viewType == ViewType.ALL_RECORDS) {
-            grid.setItems(service.findAll());
+            grid.setItems(service.findAll(filterField.getValue()));
         } else {
             if (filteredProduct != null) {
-                grid.setItems(((PartService) service).findByProductId(filteredProduct.getId()));
+                grid.setItems(((PartService) service).findByProductId(filteredProduct.getId(), filterField.getValue()));
                 insertButton.setEnabled(true);
                 refreshButton.setEnabled(true);
             } else {
@@ -95,11 +95,7 @@ public class PartViewMasterDetail extends BaseDictView<Part, PartService> {
     @Override
     public void setupGrid() {
         super.setupGrid();
-        if (viewType == ViewType.ALL_RECORDS) {
-            productColumn.setVisible(true);
-        } else {
-            productColumn.setVisible(false);
-        }
+        productColumn.setVisible(viewType == ViewType.ALL_RECORDS);
     }
 
     @Override

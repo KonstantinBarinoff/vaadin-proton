@@ -14,7 +14,7 @@ import static performancetuning.sqltracker.QueryCountInfoHolder.getQueryInfo;
 
 @SpringBootTest
 @Transactional
-public abstract class BaseTest {
+public abstract class BaseRepositoryTest {
     private static final String[] DB_UNIT_SET_UP = {"", "****************************************************************", };
 
     @PersistenceContext

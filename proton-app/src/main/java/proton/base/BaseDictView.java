@@ -11,7 +11,9 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.page.Page;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.selection.SelectionEvent;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.NestedExceptionUtils;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -24,7 +26,6 @@ import javax.persistence.OptimisticLockException;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 
-// TODO: Релизовать поле поиска-фильтра
 // TODO: Сделать генераторы для заполнения таблиц (проверить отклик интерфейса на больших таблицах)
 // TODO: Test Lazy Loading
 // TODO: Selenium UI Testing
@@ -69,6 +70,7 @@ public abstract class BaseDictView<E extends BaseDict, S extends BaseService<E>>
     protected final Button deleteButton = new Button(ProtonStrings.DELETE, VaadinIcon.MINUS.create());
     protected final Button refreshButton = new Button(ProtonStrings.REFRESH, VaadinIcon.REFRESH.create());
     protected final Button editButton = new Button(ProtonStrings.EDIT, VaadinIcon.EDIT.create());
+    protected final TextField filterField = new TextField();
 
     public BaseDictView() {
         super();
@@ -76,17 +78,13 @@ public abstract class BaseDictView<E extends BaseDict, S extends BaseService<E>>
 
     public void setupView() {
         setupBrowserWindowResizeListener();
-        setupLayout();
+        setDefaultHorizontalComponentAlignment(Alignment.BASELINE);
+        setSizeFull();
         setupGrid();
         setupEditor();
         refreshGrid();
-        add(setupButtons());
+        add(setupTopLayout());
         add(grid);
-    }
-
-    public void setupLayout() {
-        setDefaultHorizontalComponentAlignment(Alignment.BASELINE);
-        setSizeFull();
     }
 
     public void setupBrowserWindowResizeListener() {
@@ -96,17 +94,23 @@ public abstract class BaseDictView<E extends BaseDict, S extends BaseService<E>>
     }
 
     protected void refreshGrid() {
-        grid.setItems(service.findAll());
+        grid.setItems(service.findAll(filterField.getValue()));
     }
 
-    public HorizontalLayout setupButtons() {
+    public HorizontalLayout setupTopLayout() {
         insertButton.addClickListener(this::onInsertButtonClick);
         deleteButton.addClickListener(this::onDeleteButtonClick);
         refreshButton.addClickListener(this::onRefreshButtonClick);
         editButton.addClickListener(this::onEditButtonClick);
         deleteButton.setEnabled(false);
         editButton.setEnabled(false);
-        return new HorizontalLayout(insertButton, deleteButton, refreshButton, editButton);
+        filterField.setPlaceholder("Поиск (server-side)");
+        filterField.setClearButtonVisible(true);
+        filterField.addValueChangeListener(e -> refreshGrid());
+        filterField.setValueChangeMode(ValueChangeMode.ON_CHANGE);
+
+
+        return new HorizontalLayout(insertButton, deleteButton, refreshButton, editButton, filterField);
     }
 
     public void setupGrid() {

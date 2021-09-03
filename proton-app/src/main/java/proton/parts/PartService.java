@@ -15,7 +15,16 @@ public class PartService extends BaseServiceImpl<Part, PartRepository> {
         log.debug("CONSTRUCTOR");
     }
 
-    public List<Part> findByProductId(Long id) {
-        return repository.findByProductId(id);
+//    public List<Part> findByProductId(Long id) {
+//        return repository.findByProductId(id);
+//    }
+
+    public List<Part> findByProductId(Long id, String filter) {
+        if (filter == null || filter.isEmpty()) {
+            return ((PartRepository)repository).findByProductId(id);
+        } else {
+            return ((PartRepository)repository).findByProductIdFilter(id, filter);
+        }
     }
+
 }
