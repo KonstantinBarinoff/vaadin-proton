@@ -3,6 +3,7 @@ package proton.base;
 import java.util.List;
 import java.util.Optional;
 
+// TODO: Проверить механизм работы со Stored Procedures
 public interface BaseService<E extends BaseDict> {
 
     List<E> findAll();

@@ -92,7 +92,7 @@ public class MainView extends AppLayout {
         MenuItem mi7 = menuBar.addItem("Детали (Master/Detail)");
         mi7.addClickListener(e -> UI.getCurrent().navigate(PartViewMasterDetail.class));
 
-        MenuItem mi10 = menuBar.addItem("Детали (Master)");
+        MenuItem mi10 = menuBar.addItem("Детали (Master)-не работает");
         mi10.addClickListener(e -> UI.getCurrent().navigate(PartView.class));
 
         MenuItem mi2 = menuBar.addItem(new Div(new Span("Справочники"), VaadinIcon.ANGLE_RIGHT.create()));

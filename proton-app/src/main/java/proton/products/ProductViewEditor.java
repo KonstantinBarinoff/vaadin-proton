@@ -25,6 +25,8 @@ import util.ProtonStrings;
 @SpringComponent
 @Scope("prototype")
 @Slf4j
+
+// TODO: Дополнить ProductViewEditor встраиванием в качестве немодальной формы просмотра в ProductView
 public class ProductViewEditor extends BaseDictViewEditor<Product, ProductService> {
 
     EmployeeService employeeService;

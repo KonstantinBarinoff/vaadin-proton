@@ -24,6 +24,15 @@ import javax.persistence.OptimisticLockException;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 
+// TODO: Релизовать поле поиска-фильтра
+// TODO: Сделать генераторы для заполнения таблиц (проверить отклик интерфейса на больших таблицах)
+// TODO: Test Lazy Loading
+// TODO: Selenium UI Testing
+// TODO: Multitab Edit Form
+// TODO: Сделать Custom-компонент редактирования, например для @Embedded Dimensions (длина, ширина, высота)
+
+// ALEXZ: Мой персональный комментарий :)
+
 /**
  * Базовый класс формы просмотра таблицы в виде Grid <p>
  * Работает совместно с BaseDictViewEditor, реализующего модальную форму редактирования.
