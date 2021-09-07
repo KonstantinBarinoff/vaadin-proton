@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
 public abstract class BaseEntity {
 
     /**
-     * Первичный ключ, автогенерируемый на стороне MSSQL
+     * Первичный ключ, автогенерируемый на стороне MSSQL <p>
      * MSSQL: ID bigint IDENTITY(1,1) NOT NULL
      */
     @Id

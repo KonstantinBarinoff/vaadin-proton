@@ -37,4 +37,5 @@ public abstract class BaseRepositoryTest {
     protected SessionFactory getSessionFactory() {
         return session.getSessionFactory();
     }
+
 }

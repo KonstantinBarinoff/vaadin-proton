@@ -10,11 +10,15 @@ import java.util.List;
 public interface BaseRepository<E extends BaseDict> extends JpaRepository<E, Long> {
 
     @Query("""
-    		SELECT e 
-    		FROM #{#entityName} e 
-    		WHERE e.name LIKE %?1% 
-    			OR e.description LIKE %?1% 
-    			""")
-//	ORDER BY e.name
+            SELECT e
+            FROM #{#entityName} e
+            WHERE e.name LIKE %?1%
+            	OR e.description LIKE %?1%
+            ORDER BY e.name
+       """)
+
     <E extends BaseDict> List<E> findByFilter(String filter);
+
+    @Query(value = "SELECT coalesce(max(e.id), 0) FROM #{#entityName} e")
+    long getMaxId();
 }

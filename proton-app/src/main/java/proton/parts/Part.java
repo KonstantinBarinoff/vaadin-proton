@@ -17,6 +17,8 @@ import javax.persistence.Table;
 @Table(name = "Parts")
 @Getter
 @Setter
+
+
 public class Part extends BaseDict {
 
     /** Изделие, которому принадлежит данная деталь */

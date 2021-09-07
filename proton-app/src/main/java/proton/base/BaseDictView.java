@@ -7,7 +7,6 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.Grid.SelectionMode;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.page.Page;
@@ -89,8 +88,8 @@ public abstract class BaseDictView<E extends BaseDict, S extends BaseService<E>>
 
     public void setupBrowserWindowResizeListener() {
         Page page = UI.getCurrent().getPage();
-        page.addBrowserWindowResizeListener(
-                e -> Notification.show("Window width=" + e.getWidth() + ", height=" + e.getHeight()));
+//        page.addBrowserWindowResizeListener(
+//                e -> Notification.show("Window width=" + e.getWidth() + ", height=" + e.getHeight()));
     }
 
     protected void refreshGrid() {

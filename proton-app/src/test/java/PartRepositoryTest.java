@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 import proton.ProtonApplication;
 import proton.parts.Part;
 import proton.parts.PartRepository;
+import proton.products.ProductRepository;
 
 import java.util.List;
 
@@ -20,18 +21,20 @@ import static performancetuning.sqltracker.AssertSqlCount.*;
 @Transactional
 public class PartRepositoryTest extends BaseRepositoryTest {
 
-    private final PartRepository repo;
+    private final PartRepository partRepo;
+    private final ProductRepository productRepo;
 
     @Autowired
-    public PartRepositoryTest(PartRepository repo) {
-        this.repo = repo;
+    public PartRepositoryTest(PartRepository partRepo, ProductRepository productRepo) {
+        this.partRepo = partRepo;
+        this.productRepo = productRepo;
     }
 
     @Test
     void findAll() {
-        assertThat(repo).isNotNull();
+        assertThat(partRepo).isNotNull();
 
-        List<Part> partList = repo.findAll();
+        List<Part> partList = partRepo.findAll();
         assertSelectCount(1);
 
         Part part = partList.stream().findAny().get();
@@ -44,9 +47,9 @@ public class PartRepositoryTest extends BaseRepositoryTest {
 
     @Test
     void findByProductIdAndUpdate() {
-        assertThat(repo).isNotNull();
+        assertThat(partRepo).isNotNull();
 
-        List<Part> partList = repo.findByProductId(162L);
+        List<Part> partList = partRepo.findByProductId(162L);
         // 1 запрос: Деталь и Изделие
         // 2 запрос: Заказчиков, Сотрудников (изготовил, проверил) для Изделия
         assertSelectCount(2);
@@ -59,16 +62,27 @@ public class PartRepositoryTest extends BaseRepositoryTest {
         System.out.println(part.getProduct().getCustomer());
 
         part.setName("New Name");
-        repo.saveAndFlush(part);
+        partRepo.saveAndFlush(part);
         assertUpdateCount(1);
     }
 
     @Test
     void deleteProduct() {
-        repo.deleteById(10L);
-        repo.flush();
+        partRepo.deleteById(10L);
+        partRepo.flush();
         assertSelectCount(1);
         assertDeleteCount(1);
     }
+
+    @Test
+    void findByProductIdFilter() {
+        List<Part> partList = partRepo.findByProductIdFilter(162L, "Крышка");
+        assertSelectCount(1);
+        Part part = partList.stream().findAny().get();
+        assertThat(part.getId() == 9);
+
+
+    }
+
 
 }

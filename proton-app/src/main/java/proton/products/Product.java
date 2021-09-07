@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 @Table(name = "Products")
 @Getter
 @Setter
+
 public class Product extends BaseDict {
 
     /** Пример поля с дробным числом */
@@ -35,7 +36,7 @@ public class Product extends BaseDict {
     private LocalDateTime dateTime;     // MSSQL: Data type: DateTime       Column name: Date_Time
 
     /** Пример поля с отметкой */
-    private Boolean checked;            // MSSQL: Bit
+    private Boolean checked = false;            // MSSQL: Bit
 
     /** Сотрудник изготовивший изделие */
     @ManyToOne()
