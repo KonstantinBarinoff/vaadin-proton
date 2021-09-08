@@ -1,13 +1,17 @@
 package proton.base;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.MappedSuperclass;
-import javax.validation.constraints.NotNull;
 
 /**
  * Расширение для сущностей представляющих из себя вид справочников,
  * т.е. имеющих поля Наименование и Примечание (Описание)
  */
 @MappedSuperclass
+@Getter
+@Setter
 public abstract class BaseDict extends BaseEntity {
 
     /** Наименование */
@@ -19,21 +23,5 @@ public abstract class BaseDict extends BaseEntity {
     @Override
     public String toString() {
         return String.format("%s [id=%d, name=%s]", this.getClass().getSimpleName(), this.getId(), this.getName());
-    }
-
-    public @NotNull String getName() {
-        return this.name;
-    }
-
-    public void setName(@NotNull String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return this.description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 }

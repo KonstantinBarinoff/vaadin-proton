@@ -1,7 +1,7 @@
 package proton.base;
 
 import com.vaadin.flow.component.ClickEvent;
-import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.Grid.SelectionMode;
@@ -9,7 +9,6 @@ import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.page.Page;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.selection.SelectionEvent;
 import com.vaadin.flow.data.value.ValueChangeMode;
@@ -30,8 +29,6 @@ import java.util.NoSuchElementException;
 // TODO: Selenium UI Testing
 // TODO: Multitab Edit Form
 // TODO: Сделать Custom-компонент редактирования, например для @Embedded Dimensions (длина, ширина, высота)
-
-// ALEXZ: Мой персональный комментарий :)
 
 /**
  * Базовый класс формы просмотра таблицы в виде Grid <p>
@@ -58,18 +55,11 @@ public abstract class BaseDictView<E extends BaseDict, S extends BaseService<E>>
 
     protected final Grid<E> grid = new Grid<>();
 
-
-    private final Grid.Column<E> idColumn = grid.addColumn(E::getId).setKey("id").setHeader("Код").setFlexGrow(1);
-    private final Grid.Column<E> nameColumn = grid.addColumn(E::getName)
-            .setKey("name").setHeader("Наименование").setFlexGrow(100);
-    private final Grid.Column<E> descriptionColumn = grid.addColumn(E::getDescription)
-            .setKey("description").setHeader("Примечание").setFlexGrow(50);
-
-    protected final Button insertButton = new Button(ProtonStrings.INSERT, VaadinIcon.PLUS.create());
-    protected final Button deleteButton = new Button(ProtonStrings.DELETE, VaadinIcon.MINUS.create());
-    protected final Button refreshButton = new Button(ProtonStrings.REFRESH, VaadinIcon.REFRESH.create());
-    protected final Button editButton = new Button(ProtonStrings.EDIT, VaadinIcon.EDIT.create());
-    protected final TextField filterField = new TextField();
+    protected Button insertButton;
+    protected Button deleteButton;
+    protected Button refreshButton;
+    protected Button editButton;
+    protected TextField filterField;
 
     public BaseDictView() {
         super();
@@ -81,33 +71,45 @@ public abstract class BaseDictView<E extends BaseDict, S extends BaseService<E>>
         setSizeFull();
         setupGrid();
         setupEditor();
-        refreshGrid();
         add(setupTopLayout());
         add(grid);
+        refreshGrid();
     }
 
     public void setupBrowserWindowResizeListener() {
-        Page page = UI.getCurrent().getPage();
+//        Page page = UI.getCurrent().getPage();
 //        page.addBrowserWindowResizeListener(
 //                e -> Notification.show("Window width=" + e.getWidth() + ", height=" + e.getHeight()));
     }
 
     protected void refreshGrid() {
-        grid.setItems(service.findAll(filterField.getValue()));
+            grid.setItems(service.findAll(filterField.getValue()));
     }
 
     public HorizontalLayout setupTopLayout() {
+        insertButton = new Button(ProtonStrings.INSERT + " (F2)", VaadinIcon.PLUS.create());
         insertButton.addClickListener(this::onInsertButtonClick);
+        insertButton.addClickShortcut(Key.F2);
+
+        deleteButton = new Button(ProtonStrings.DELETE + " (F8)", VaadinIcon.MINUS.create());
         deleteButton.addClickListener(this::onDeleteButtonClick);
-        refreshButton.addClickListener(this::onRefreshButtonClick);
-        editButton.addClickListener(this::onEditButtonClick);
+        deleteButton.addClickShortcut(Key.F8);
         deleteButton.setEnabled(false);
+
+        refreshButton = new Button(ProtonStrings.REFRESH + " (F5)", VaadinIcon.REFRESH.create());
+        refreshButton.addClickListener(this::onRefreshButtonClick);
+        refreshButton.addClickShortcut(Key.F5);
+
+        editButton = new Button(ProtonStrings.EDIT + " (F3)", VaadinIcon.EDIT.create());
+        editButton.addClickListener(this::onEditButtonClick);
+        editButton.addClickShortcut(Key.F3);
         editButton.setEnabled(false);
+
+        filterField = new TextField();
         filterField.setPlaceholder("Поиск (server-side)");
         filterField.setClearButtonVisible(true);
         filterField.addValueChangeListener(e -> refreshGrid());
         filterField.setValueChangeMode(ValueChangeMode.ON_CHANGE);
-
 
         return new HorizontalLayout(insertButton, deleteButton, refreshButton, editButton, filterField);
     }
@@ -116,6 +118,20 @@ public abstract class BaseDictView<E extends BaseDict, S extends BaseService<E>>
         grid.addSelectionListener(this::onGridSelectionEvent);
         grid.setSelectionMode(SelectionMode.SINGLE);
         grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT, GridVariant.MATERIAL_COLUMN_DIVIDERS, GridVariant.LUMO_COMPACT);
+        grid.addThemeVariants(GridVariant.LUMO_COLUMN_BORDERS);
+
+        grid.addColumn(E::getId)
+//                .setKey("id")       // Назначаем ключи колонкам для доступа к колонкам из наследников
+                .setHeader("Код")
+                .setFlexGrow(5);
+        grid.addColumn(E::getName)
+//                .setKey("name")
+                .setHeader("Наименование")
+                .setFlexGrow(100);
+        grid.addColumn(E::getDescription)
+//                .setKey("description")        // FIXME
+                .setHeader("Примечание")
+                .setFlexGrow(50);
     }
 
     public void setupEditor() {
@@ -185,8 +201,6 @@ public abstract class BaseDictView<E extends BaseDict, S extends BaseService<E>>
         editor.newItem(getNewItem());
         editor.open();
     }
-
-
 
 
 }

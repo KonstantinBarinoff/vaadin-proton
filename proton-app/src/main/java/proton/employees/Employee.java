@@ -11,4 +11,5 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "Employees")
 public class Employee extends BaseDict {
+
 }

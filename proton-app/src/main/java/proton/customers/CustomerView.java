@@ -18,7 +18,7 @@ import java.util.List;
 @PageTitle("Заказчики")
 public class CustomerView extends BaseDictView<Customer, CustomerService> {
 
-    ProductService productService;
+    private final ProductService productService;
 
     protected final Grid<ProductSummary> productGrid = new Grid<>();
 
