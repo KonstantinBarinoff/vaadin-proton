@@ -15,7 +15,7 @@ import javax.persistence.MappedSuperclass;
 public abstract class BaseDict extends BaseEntity {
 
     /** Наименование */
-    private String name;
+    protected String name;
 
     /** Примечание */
     private String description;

@@ -25,7 +25,7 @@ import javax.persistence.EntityManagerFactory;
 
 @Slf4j
 @Route(value = "dictionary1-dialog", layout = MainView.class)
-@PageTitle("CustomDict Dialog Editor")
+@PageTitle("Custom Dictionary (Изображение в таблице)")
 public class CustomDictView extends VerticalLayout {
 
     private final CustomDictRepo repository;
@@ -45,6 +45,8 @@ public class CustomDictView extends VerticalLayout {
             .setHeader("Количество (целое > 0)");
     private final Grid.Column<CustomDict> priceColumn = grid.addColumn(CustomDict::getPrice)
             .setHeader("Цена");
+    private final Grid.Column<CustomDict> scanDocColumn = grid.addColumn(i -> i.isImagePresent() ? "Скан" : " - ")
+            .setHeader("Скан");
     private final Grid.Column<CustomDict> dateColumn = grid.addColumn(CustomDict::getDate)
             .setHeader("Дата");
     private final Grid.Column<CustomDict> descriptionColumn = grid.addColumn(CustomDict::getDescription)
@@ -145,11 +147,11 @@ public class CustomDictView extends VerticalLayout {
 
         imageButton.addClickListener(e -> {
             Long id = grid.getSelectedItems().stream().findFirst().get().getId();
-            ImageForm imageForm = new ImageForm(id, properties.getImagePath(), emf);
-            imageForm.setChangeHandler(() -> {
-                imageForm.close();
+            ImageDBForm imageDBForm = new ImageDBForm(id, properties.getImagePath(), emf);
+            imageDBForm.setChangeHandler(() -> {
+                imageDBForm.close();
             });
-            imageForm.open();
+            imageDBForm.open();
         });
 
         return new HorizontalLayout(insertButton, deleteButton, refreshButton, editButton, printButton, imageButton);

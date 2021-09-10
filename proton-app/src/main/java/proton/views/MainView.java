@@ -27,6 +27,7 @@ import proton.customers.CustomerView;
 import proton.employees.EmployeeView;
 import proton.parts.PartView;
 import proton.products.ProductView;
+import proton.scanned_docs.ScannedDocView;
 
 import java.util.Optional;
 
@@ -100,6 +101,9 @@ public class MainView extends AppLayout {
 
         MenuItem mi8 = menuBar.addItem("Custom Dictionary");
         mi8.addClickListener(e -> UI.getCurrent().navigate(CustomDictView.class));
+
+        MenuItem mi9 = menuBar.addItem("Сканы");
+        mi9.addClickListener(e -> UI.getCurrent().navigate(ScannedDocView.class));
 
         MenuItem mi2 = menuBar.addItem(new Div(new Span("Справочники"), VaadinIcon.ANGLE_RIGHT.create()));
 

@@ -35,6 +35,10 @@ public class CustomDict extends BaseDict {
     @Column(name = "image")
     private byte[] image;
 
+    public boolean isImagePresent() {
+        return image != null && image.length > 0;
+    }
+
     public int isChecked() {
         if (checked == null)
             return -1;

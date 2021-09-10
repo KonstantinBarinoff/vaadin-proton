@@ -84,27 +84,20 @@ public class CustomDictViewEditor extends Dialog implements KeyNotifier {
         add(upload, output);
 
         // Configure upload component
-        upload.setAcceptedFileTypes("image/jpeg", "image/png", "image/gif");
+        upload.setAcceptedFileTypes("image/jpeg", "image/png", "image/tiff");
         upload.addSucceededListener(event -> {
             try {
                 byte[] bytes = IOUtils.toByteArray(buffer.getInputStream());
-//			emf = javax.persistence.Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
 
                 EntityManager em = emf.createEntityManager();
                 em.getTransaction().begin();
 
-                // Upload image to database to user id = 1
                 Query query = em.createQuery("UPDATE CustomDict u SET u.image = :data WHERE u.id = :id");
                 query.setParameter("data", bytes);
                 query.setParameter("id", item.getId());
                 query.executeUpdate();
                 em.getTransaction().commit();
 
-//			// Retrieve image from database from user id = 1
-//			q = em.createQuery("SELECT u.image FROM CustomDict u WHERE u.id = '83'");
-//			bytes = (byte[]) q.getSingleResult();
-//			// Set the image from database
-//			output.getElement().setAttribute("src", new StreamResource("", this::loadFile));
                 em.close();
             } catch (Exception e) {
                 e.printStackTrace();

@@ -30,12 +30,12 @@ public abstract class BaseDictViewEditor<E extends BaseDict, S extends BaseServi
     /** Ссылка на View-владельца, которому принадлежит данная форма редактирования */
     private BaseDictView<E, S> ownerDictView;
 
-    private final TextField nameField = new TextField("Наименование (Alt+N)");
-    private final TextField descriptionField = new TextField("Примечание");
+    protected final TextField nameField = new TextField("Наименование (Alt+N)");
+    protected final TextField descriptionField = new TextField("Примечание");
 
-    private final Button saveButton = new Button(ProtonStrings.SAVE, VaadinIcon.CHECK.create());
-    private final Button revertButton = new Button(ProtonStrings.REVERT, VaadinIcon.REFRESH.create());
-    private final Button closeButton = new Button(ProtonStrings.CLOSE, VaadinIcon.CLOSE.create());
+    protected final Button saveButton = new Button(ProtonStrings.SAVE, VaadinIcon.CHECK.create());
+    protected final Button revertButton = new Button(ProtonStrings.REVERT, VaadinIcon.REFRESH.create());
+    protected final Button closeButton = new Button(ProtonStrings.CLOSE, VaadinIcon.CLOSE.create());
 
     protected BaseService<E> service;
     protected Binder<E> binder = null;
@@ -103,7 +103,7 @@ public abstract class BaseDictViewEditor<E extends BaseDict, S extends BaseServi
         return new HorizontalLayout(saveButton, revertButton, closeButton);
     }
 
-    void closeEditor() {
+    protected void closeEditor() {
         onChangeHandler.onChange();
     }
 
