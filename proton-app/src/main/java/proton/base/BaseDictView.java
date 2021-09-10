@@ -158,6 +158,7 @@ public abstract class BaseDictView<E extends BaseDict, S extends BaseService<E>>
                     }
                     service.delete(item);
                 }
+
             } catch (DataIntegrityViolationException ex) {
                 new ProtonWarningDialog(ProtonStrings.DATA_INTEGRITY_VIOLATION,
                         NestedExceptionUtils.getMostSpecificCause(ex).getMessage());

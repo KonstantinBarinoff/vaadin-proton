@@ -10,6 +10,8 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "Employees")
+//@SQLDelete(sql = "UPDATE Employees SET deleted=1 WHERE id=? AND version=?")
+//@Where(clause = "deleted=false")
 public class Employee extends BaseDict {
 
 }

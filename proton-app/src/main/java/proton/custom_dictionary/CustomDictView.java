@@ -1,4 +1,4 @@
-package proton.views;
+package proton.custom_dictionary;
 
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -15,8 +15,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import proton.base.CustomDictionary;
-import proton.repositories.CustomDictRepo;
+import proton.views.MainView;
 import util.ProtonConfirmationDialog;
 import util.ProtonNotification;
 import util.ProtonProperties;
@@ -36,23 +35,23 @@ public class CustomDictView extends VerticalLayout {
     private final CustomDictViewEditor editor;
     // private final ImageForm imageForm;
 
-    private final Grid<CustomDictionary> grid = new Grid<>();
+    private final Grid<CustomDict> grid = new Grid<>();
 //    private final Binder<Dictionary1> binder = new Binder<>(Dictionary1.class);
 
-    private final Grid.Column<CustomDictionary> idColumn = grid.addColumn(CustomDictionary::getId).setHeader("Код");
-    private final Grid.Column<CustomDictionary> nameColumn = grid.addColumn(CustomDictionary::getName)
+    private final Grid.Column<CustomDict> idColumn = grid.addColumn(CustomDict::getId).setHeader("Код");
+    private final Grid.Column<CustomDict> nameColumn = grid.addColumn(CustomDict::getName)
             .setHeader("Наименование (не пуст.)");
-    private final Grid.Column<CustomDictionary> numberColumn = grid.addColumn(CustomDictionary::getNumber)
+    private final Grid.Column<CustomDict> numberColumn = grid.addColumn(CustomDict::getNumber)
             .setHeader("Количество (целое > 0)");
-    private final Grid.Column<CustomDictionary> priceColumn = grid.addColumn(CustomDictionary::getPrice)
+    private final Grid.Column<CustomDict> priceColumn = grid.addColumn(CustomDict::getPrice)
             .setHeader("Цена");
-    private final Grid.Column<CustomDictionary> dateColumn = grid.addColumn(CustomDictionary::getDate)
+    private final Grid.Column<CustomDict> dateColumn = grid.addColumn(CustomDict::getDate)
             .setHeader("Дата");
-    private final Grid.Column<CustomDictionary> descriptionColumn = grid.addColumn(CustomDictionary::getDescription)
+    private final Grid.Column<CustomDict> descriptionColumn = grid.addColumn(CustomDict::getDescription)
             .setHeader("Примечание");
-    private final Grid.Column<CustomDictionary> checkedColumn = grid.addColumn(i -> i.getChecked() ? "Да" : "")
+    private final Grid.Column<CustomDict> checkedColumn = grid.addColumn(i -> i.getChecked() ? "Да" : "")
             .setHeader("Отметка");
-    private final Grid.Column<CustomDictionary> emailColumn = grid.addColumn(CustomDictionary::getEmail)
+    private final Grid.Column<CustomDict> emailColumn = grid.addColumn(CustomDict::getEmail)
             .setHeader("E-mail");
 
     private final Button insertButton = new Button(ProtonStrings.INSERT, VaadinIcon.PLUS.create());
@@ -97,6 +96,7 @@ public class CustomDictView extends VerticalLayout {
         Page page = UI.getCurrent().getPage();
         page.addBrowserWindowResizeListener(
                 e -> Notification.show("Window width=" + e.getWidth() + ", height=" + e.getHeight()));
+
     }
 
     public HorizontalLayout setupButtons() {
@@ -106,7 +106,7 @@ public class CustomDictView extends VerticalLayout {
         imageButton.setEnabled(false);
 
         insertButton.addClickListener(e -> {
-            editor.newItem(new CustomDictionary());
+            editor.newItem(new CustomDict());
             editor.open();
         });
 
@@ -122,7 +122,7 @@ public class CustomDictView extends VerticalLayout {
             }
             ProtonConfirmationDialog dialog = new ProtonConfirmationDialog(ProtonStrings.DELETE_RECORD_Q);
             dialog.showConfirmation(e -> {
-                for (CustomDictionary item : grid.getSelectedItems()) {
+                for (CustomDict item : grid.getSelectedItems()) {
                     log.debug("DELETE ITEM: {}", item);
                     repository.delete(item);
                 }

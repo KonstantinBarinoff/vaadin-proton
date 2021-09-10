@@ -30,6 +30,12 @@ public abstract class BaseEntity {
     private Long id;
 
     /**
+     * Признак удаленной записи <p>
+     * MSSQL: [Deleted] [bit] NULL CONSTRAINT [DF_Products_Deleted]  DEFAULT ((0))
+     */
+    private boolean deleted = false;
+
+    /**
      * Для поддержки Оптимистических блокировок Hibernate увеличивает поле version
      * при каждом изменении записи. <p>
      * Значение NULL недопустимо - ломается логика JPA (Insert вместо Update) <p>
@@ -39,7 +45,7 @@ public abstract class BaseEntity {
     private int version;
 
     /**
-     * Дата/время создания записи
+     * Дата/время создания записи <p>
      * MSSQL: Created_At datetime NULL
      * */
     // TODO: Попробовать совместную генерацию с DEFAULT значениями на стороне БД

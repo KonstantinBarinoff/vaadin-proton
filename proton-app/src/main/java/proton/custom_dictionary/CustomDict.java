@@ -1,8 +1,9 @@
-package proton.base;
+package proton.custom_dictionary;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import proton.base.BaseDict;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -15,7 +16,7 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 @Getter
 @Setter
-public class CustomDictionary extends BaseDict {
+public class CustomDict extends BaseDict {
 
     @NotEmpty
     @NotNull

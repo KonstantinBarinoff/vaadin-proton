@@ -44,7 +44,7 @@ public class PartView extends BaseDictView<Part, PartService> {
     }
 
     @PostConstruct
-    private void initNotFilteredViewType() {
+    private void initMasterView() {
         log.debug("POSTCONSTRUCT");
         viewType = ViewType.MASTER;
         setupView();
@@ -53,7 +53,7 @@ public class PartView extends BaseDictView<Part, PartService> {
     /**
      * @param filteredProduct Код изделия по которому выбираются детали
      */
-    public void initFilteredViewType(Product filteredProduct) {
+    public void initSlaveView(Product filteredProduct) {
         this.viewType = ViewType.SLAVE;
         if (filteredProduct != null) {
             this.filteredProduct = filteredProduct;
@@ -71,7 +71,6 @@ public class PartView extends BaseDictView<Part, PartService> {
      * Переопределение базового обработчика обновления таблицы для возможной выборки деталей по продукту
      */
     @Override
-    //TODO: Почему при фильтрации именно в PartViewMasterDetail, ValueChangeListener вызывается два раза?
     protected void refreshGrid() {
         if (viewType == ViewType.MASTER) {
             grid.setItems(service.findAll(filterField.getValue()));

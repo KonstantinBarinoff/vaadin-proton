@@ -136,7 +136,7 @@ public class ProductView extends BaseDictView<Product, ProductService> {
         add(headerLayout);
 
         partView = new PartView(partService, partViewEditor);
-        partView.initFilteredViewType(null);
+        partView.initSlaveView(null);
         add(partView);
     }
 

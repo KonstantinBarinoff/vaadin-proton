@@ -22,6 +22,7 @@ import com.vaadin.flow.component.tabs.TabsVariant;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.RouterLink;
 import org.jetbrains.annotations.NotNull;
+import proton.custom_dictionary.CustomDictView;
 import proton.customers.CustomerView;
 import proton.employees.EmployeeView;
 import proton.parts.PartView;
@@ -91,13 +92,16 @@ public class MainView extends AppLayout {
         MenuItem mi7 = menuBar.addItem("Детали");
         mi7.addClickListener(e -> UI.getCurrent().navigate(PartView.class));
 
-        MenuItem mi2 = menuBar.addItem(new Div(new Span("Справочники"), VaadinIcon.ANGLE_RIGHT.create()));
-
-        MenuItem mi3 = mi2.getSubMenu().addItem("Сотрудники");
+        MenuItem mi3 = menuBar.addItem("Сотрудники");
         mi3.addClickListener(e -> UI.getCurrent().navigate(EmployeeView.class));
 
-        MenuItem mi4 = mi2.getSubMenu().addItem("Заказчики");
+        MenuItem mi4 = menuBar.addItem("Заказчики");
         mi4.addClickListener(e -> UI.getCurrent().navigate(CustomerView.class));
+
+        MenuItem mi8 = menuBar.addItem("Custom Dictionary");
+        mi8.addClickListener(e -> UI.getCurrent().navigate(CustomDictView.class));
+
+        MenuItem mi2 = menuBar.addItem(new Div(new Span("Справочники"), VaadinIcon.ANGLE_RIGHT.create()));
 
         MenuItem mi5 = menuBar.addItem("Отчеты");
 
@@ -132,7 +136,6 @@ public class MainView extends AppLayout {
         tabs.add(createTab("Byte Array to Image", ByteArrayToImage.class));
         return tabs;
     }
-
 
     private static Tab createTab(String text, Class<? extends Component> navigationTarget) {
         final Tab tab = new Tab();
