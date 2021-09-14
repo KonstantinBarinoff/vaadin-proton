@@ -59,7 +59,7 @@ public class ScannedDocViewEditor extends BaseDictViewEditor<ScannedDoc, Scanned
             try {
                 nameField.setValue(event.getFileName());
                 byte[] bytes = IOUtils.toByteArray(buffer.getInputStream());
-                fileStorageService.save(bytes, event.getFileName());
+                item = fileStorageService.save(bytes, event.getFileName());
             } catch (Exception e) {
                 e.printStackTrace();
             }

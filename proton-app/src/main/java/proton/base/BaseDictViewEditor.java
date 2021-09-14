@@ -40,7 +40,7 @@ public abstract class BaseDictViewEditor<E extends BaseDict, S extends BaseServi
     protected BaseService<E> service;
     protected Binder<E> binder = null;
     protected final FormLayout form = new FormLayout();
-    private E item;
+    protected E item;
 
     private OnChangeHandler onChangeHandler;
 

@@ -5,28 +5,35 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import util.ProtonProperties;
 
 @Service
 class FileStorageService {
 
     @Autowired
-    FileStorageRepository fileSystemRepo;
+    private FileStorageRepository fileSystemRepo;
     @Autowired
-    ScannedDocRepository scannedDocRepo;
+    private ScannedDocRepository scannedDocRepo;
+    @Autowired
+    private ProtonProperties properties;
 
-    //  TODO: initFileStorage(int width) - создание двухуровневой структуры папок width * width
-    //      L1, L2 int - номера подпапок уровней сохраняются в базе
-    //      check() - сканирование папок, проверка соответствия таблицы содержимому файлового хранилища
 
-    Long save(byte[] bytes, String imageName) throws Exception {
-        String filePath = fileSystemRepo.save(bytes, imageName);
-        return scannedDocRepo.save(new ScannedDoc(imageName, filePath)).getId();
+    ScannedDoc save(byte[] bytes, String imageName) throws Exception {
+
+        ScannedDoc scannedDoc = new ScannedDoc(scannedDocRepo.getNextId(), imageName, properties.getFileStorageWidth());
+
+        String storagePath = org.apache.commons.lang3.StringUtils.removeEnd(properties.getFileStoragePath(), "/");
+        String fullPathName = storagePath + scannedDoc.getFilePathName();
+
+        fileSystemRepo.save(bytes, fullPathName);
+
+        return scannedDoc;
     }
 
-    FileSystemResource find(Long imageId) {
-        ScannedDoc image = scannedDocRepo.findById(imageId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        return fileSystemRepo.findInFileSystem(image.getFilePath());
+    FileSystemResource findById(Long id) {
+        String storagePath = org.apache.commons.lang3.StringUtils.removeEnd(properties.getFileStoragePath(), "/");
+        ScannedDoc scannedDoc = scannedDocRepo.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        return fileSystemRepo.findByFullPath(storagePath + "/" + scannedDoc.getFilePathName());
     }
 
 }

@@ -19,6 +19,6 @@ public interface BaseRepository<E extends BaseDict> extends JpaRepository<E, Lon
     List<E> findByFilter(String filter);
 
 
-    @Query(value = "SELECT coalesce(max(e.id), 0) FROM #{#entityName} e")
-    long getMaxId();
+    @Query(value = "SELECT coalesce(max(e.id), 0) + 1 FROM #{#entityName} e")
+    long getNextId();
 }

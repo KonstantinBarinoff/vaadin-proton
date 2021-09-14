@@ -18,24 +18,18 @@ import org.springframework.core.io.FileSystemResource;
 import proton.custom_dictionary.CustomDictViewEditor.ChangeHandler;
 import util.ProtonStrings;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
-import java.awt.image.WritableRaster;
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
+import java.util.Optional;
 
 @Slf4j
 @SpringComponent
 @UIScope
-public class ImageFileStorageForm extends Dialog implements KeyNotifier {
+public class ScannedDocPreviewForm extends Dialog implements KeyNotifier {
 
-    @Autowired
     FileStorageService fileStorageService;
+    ScannedDocService scannedDocService;
 
-
-    private String imagePath;
     private ChangeHandler changeHandler;
     private final FormLayout form = new FormLayout();
     private final Button closeButton = new Button(ProtonStrings.CLOSE, VaadinIcon.CLOSE.create());
@@ -43,40 +37,27 @@ public class ImageFileStorageForm extends Dialog implements KeyNotifier {
     private Anchor downloadAnchor;
 
     @Autowired
-    public ImageFileStorageForm(Long id, String imagePath, FileStorageService fileStorageService) {
+    public ScannedDocPreviewForm(Long id, FileStorageService fileStorageService, ScannedDocService scannedDocService) throws IOException {
         this.fileStorageService = fileStorageService;
-        this.imagePath = imagePath;
-
-//        EntityManager em = emf.createEntityManager();
-//        em.getTransaction().begin();
-//        Query query = em.createQuery("SELECT u.image FROM CustomDict u WHERE u.id = :id");
-//        query.setParameter("id", id);
-
+        this.scannedDocService = scannedDocService;
         Image image;
-
-        StreamResource streamResource;
-        FileSystemResource fileSystemResource = fileStorageService.find(id);
-
-        byte[] bytes = new byte[0];
-        try {
-            bytes = fileSystemResource.getInputStream().readAllBytes();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        byte[] bytes;
+        FileSystemResource fileSystemResource = fileStorageService.findById(id);
+        bytes = fileSystemResource.getInputStream().readAllBytes();
 
         if (bytes != null) {
-            byte[] finalBytes = bytes;
-            streamResource = new StreamResource("image.jpg", () -> new ByteArrayInputStream(finalBytes));
+            Optional<ScannedDoc> scannedDoc = scannedDocService.findById(id);
+
+            StreamResource streamResource = new StreamResource(scannedDoc.get().getName(), () -> new ByteArrayInputStream(bytes));
             image = new Image(streamResource, "Image... ");
 
-            streamResource.setContentType("image/jpg");
+            streamResource.setContentType("image/tiff");
             downloadAnchor = new Anchor(streamResource, "");
             downloadAnchor.getElement().setAttribute("download", true);
             downloadAnchor.add(downloadButton);
             form.add(image);
             form.add(downloadAnchor);
         }
-
         setupLayout();
         log.debug("CONSTRUCTOR");
     }
@@ -85,22 +66,9 @@ public class ImageFileStorageForm extends Dialog implements KeyNotifier {
         setModal(true);
         setCloseOnOutsideClick(false);
         setCloseOnEsc(true);
-        log.debug("IMAGE PATH : {}", imagePath);
-
         add(form);
         add(new Paragraph());
         add(setupButtons());
-    }
-
-    public byte[] extractBytes(String ImageName) throws IOException {
-        // open image
-        BufferedImage bufferedImage = ImageIO.read(new File(ImageName));
-
-        // get DataBufferBytes from Raster
-        WritableRaster raster = bufferedImage.getRaster();
-        DataBufferByte data = (DataBufferByte) raster.getDataBuffer();
-
-        return (data.getData());
     }
 
     public HorizontalLayout setupButtons() {
@@ -115,5 +83,4 @@ public class ImageFileStorageForm extends Dialog implements KeyNotifier {
     public void setChangeHandler(ChangeHandler h) {
         changeHandler = h;
     }
-
 }

@@ -5,11 +5,19 @@ import org.springframework.stereotype.Component;
 
 @Component
 @ConfigurationProperties("proton")
-
 public class ProtonProperties {
 
     private String imagePath;
     private String fileStoragePath;
+    private Integer fileStorageWidth = 10;
+
+    public Integer getFileStorageWidth() {
+        return fileStorageWidth;
+    }
+
+    public void setFileStorageWidth(Integer fileStorageWidth) {
+        this.fileStorageWidth = fileStorageWidth;
+    }
 
     public String getImagePath() {
         return imagePath;

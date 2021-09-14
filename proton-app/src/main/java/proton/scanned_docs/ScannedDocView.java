@@ -7,10 +7,11 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.NestedExceptionUtils;
 import proton.base.BaseDictView;
 import proton.views.MainView;
-import util.ProtonProperties;
 import util.ProtonStrings;
+import util.ProtonWarningDialog;
 
 import javax.annotation.PostConstruct;
 
@@ -20,11 +21,9 @@ import javax.annotation.PostConstruct;
 public class ScannedDocView extends BaseDictView<ScannedDoc, ScannedDocService> {
 
     @Autowired
-    ProtonProperties properties;
-
-    @Autowired
     FileStorageService fileStorageService;
-
+    @Autowired
+    ScannedDocService scannedDocService;
 
     @Autowired
     public ScannedDocView(ScannedDocService service, ScannedDocViewEditor editor) {
@@ -46,9 +45,14 @@ public class ScannedDocView extends BaseDictView<ScannedDoc, ScannedDocService> 
 
         imageButton.addClickListener(e -> {
             Long id = grid.getSelectedItems().stream().findFirst().get().getId();
-            ImageFileStorageForm imageFileStorageForm = new ImageFileStorageForm(id, properties.getFileStoragePath(), fileStorageService);
-            imageFileStorageForm.setChangeHandler(imageFileStorageForm::close);
-            imageFileStorageForm.open();
+            try {
+                ScannedDocPreviewForm scannedDocPreviewForm = new ScannedDocPreviewForm(id, fileStorageService, scannedDocService);
+                scannedDocPreviewForm.setChangeHandler(scannedDocPreviewForm::close);
+                scannedDocPreviewForm.open();
+            } catch (Exception ex) {
+                new ProtonWarningDialog("Ошибка загрузки файла.", NestedExceptionUtils.getMostSpecificCause(ex).getMessage());
+                ex.printStackTrace();
+            }
         });
         return new HorizontalLayout(super.setupTopLayout(), imageButton);
     }
@@ -56,12 +60,22 @@ public class ScannedDocView extends BaseDictView<ScannedDoc, ScannedDocService> 
     @Override
     public void setupGrid() {
         super.setupGrid();
-        grid.addColumn(ScannedDoc::getFilePath)
-//                .setKey("id")       // Назначаем ключи колонкам для доступа к колонкам из наследников
+        grid.addColumn(ScannedDoc::getFileName)
                 .setHeader("Файл")
                 .setFlexGrow(100);
+        grid.addColumn(ScannedDoc::getLevel1)
+                .setHeader("L1")
+                .setFlexGrow(1);
+        grid.addColumn(ScannedDoc::getLevel2)
+                .setHeader("L2")
+                .setFlexGrow(1);
+        grid.addColumn(ScannedDoc::getGuid)
+                .setHeader("GUID")
+                .setFlexGrow(200);
+        grid.addColumn(ScannedDoc::getExtension)
+                .setHeader("Ext")
+                .setFlexGrow(1);
     }
-
 
     @Override
     protected ScannedDoc getNewItem() {

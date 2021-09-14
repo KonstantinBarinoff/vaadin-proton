@@ -43,7 +43,7 @@ public class TestDataGenerator {
 
         List<Product> products = productRepo.findAll();
 
-        long startId = partRepo.getMaxId() + 1;
+        long startId = partRepo.getNextId();
         for (long i = startId; i < startId + 10000; i++) {
             Part item = new Part();
             item.setName("Test Деталь " + String.valueOf(i));
@@ -61,7 +61,7 @@ public class TestDataGenerator {
         List<Employee> employees = employeeRepo.findAll();
         List<Customer> customers = customerRepo.findAll();
 
-        long startId = productRepo.getMaxId() + 1;
+        long startId = productRepo.getNextId();
         for (long i = startId; i < startId + 1000; i++) {
             Product item = new Product();
             item.setName("Test Изделие " + i);
