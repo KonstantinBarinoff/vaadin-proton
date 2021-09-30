@@ -2,6 +2,7 @@ package proton.base;
 
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.Key;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.Grid.SelectionMode;
@@ -12,9 +13,15 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.selection.SelectionEvent;
 import com.vaadin.flow.data.value.ValueChangeMode;
+import com.vaadin.flow.server.StreamRegistration;
+import com.vaadin.flow.server.StreamResource;
+import com.vaadin.flow.server.VaadinSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.NestedExceptionUtils;
 import org.springframework.dao.DataIntegrityViolationException;
+import proton.reports.ExcelCreator;
+import proton.reports.PdfCreator;
+import proton.reports.ReportFactory;
 import util.ProtonConfirmationDialog;
 import util.ProtonNotification;
 import util.ProtonStrings;
@@ -22,6 +29,7 @@ import util.ProtonWarningDialog;
 
 import javax.persistence.OptimisticLockException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 // TODO: Сделать генераторы для заполнения таблиц (проверить отклик интерфейса на больших таблицах)
@@ -59,6 +67,8 @@ public abstract class BaseDictView<E extends BaseDict, S extends BaseService<E>>
     protected Button deleteButton;
     protected Button refreshButton;
     protected Button editButton;
+    protected Button exportPDFButton;
+    protected Button exportExcelButton;
     protected TextField filterField;
 
     public BaseDictView() {
@@ -112,8 +122,13 @@ public abstract class BaseDictView<E extends BaseDict, S extends BaseService<E>>
         filterField.addValueChangeListener(e -> refreshGrid());
         filterField.setValueChangeMode(ValueChangeMode.ON_CHANGE);
 
-        return new HorizontalLayout(insertButton, deleteButton, refreshButton, editButton, filterField);
-    }
+        exportPDFButton = new Button(ProtonStrings.EXPORT_PDF, VaadinIcon.FILE_TEXT.create());
+        exportPDFButton.addClickListener(this::exportReport);
+
+        exportExcelButton = new Button(ProtonStrings.EXPORT_EXCEL, VaadinIcon.FILE_TABLE.create());
+        exportExcelButton.addClickListener(this::exportReport);
+
+        return new HorizontalLayout(insertButton, deleteButton, refreshButton, editButton, filterField, exportPDFButton, exportExcelButton);    }
 
     public void setupGrid() {
         grid.addSelectionListener(this::onGridSelectionEvent);
@@ -211,5 +226,19 @@ public abstract class BaseDictView<E extends BaseDict, S extends BaseService<E>>
         editor.close();
     }
 
+    private void exportReport(ClickEvent<Button> event) {
+        ReportFactory factory;
+        if ("Excel".equals(event.getSource().getText())) {
+            factory = new ExcelCreator();
+        } else {
+            factory = new PdfCreator();
+        }
+        List<E> content = service.findAll();
+        factory.setReportForm("classpath:TestReport.jrxml");
+        factory.setReportContent(content);
+        StreamResource resource = factory.getReportResource();
+        StreamRegistration registration = VaadinSession.getCurrent().getResourceRegistry().registerResource(resource);
+        UI.getCurrent().getPage().open(registration.getResourceUri().toString(), "_blank");
+    }
 
 }
