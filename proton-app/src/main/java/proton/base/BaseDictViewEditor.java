@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.core.NestedExceptionUtils;
 import org.springframework.dao.DataIntegrityViolationException;
+import util.ProtonConfirmationDialog;
 import util.ProtonStrings;
 import util.ProtonWarningDialog;
 
@@ -27,7 +28,20 @@ import java.util.NoSuchElementException;
 //@CssImport(themeFor = "vaadin-grid", value = "./styles/layout-with-border.css")
 public abstract class BaseDictViewEditor<E extends BaseDict, S extends BaseService<E>> extends Dialog implements KeyNotifier {
 
-    /** Ссылка на View-владельца, которому принадлежит данная форма редактирования */
+    private enum EditorMode {
+        /** Форма редактора открыта для редактирования строки таблицы */
+        MODE_EDIT,
+        /**
+         * Форма редактора открыта при вставке строки в таблицу
+         */
+        MODE_INSERT
+    }
+
+    private EditorMode editorMode;
+
+    /**
+     * Ссылка на View-владельца, которому принадлежит данная форма редактирования
+     */
     private BaseDictView<E, S> ownerDictView;
 
     protected final TextField nameField = new TextField("Наименование (Alt+N)");
@@ -42,7 +56,32 @@ public abstract class BaseDictViewEditor<E extends BaseDict, S extends BaseServi
     protected final FormLayout form = new FormLayout();
     protected E item;
 
-    private OnChangeHandler onChangeHandler;
+    public interface OnSaveHandler {
+        void onSave();
+    }
+    private OnSaveHandler onSaveHandler;
+    public void setOnSave(OnSaveHandler h) {
+        onSaveHandler = h;
+    }
+
+    public interface OnCancelHandler {
+        void onCancel();
+    }
+    private OnCancelHandler onCancelHandler;
+    public void setOnCancel(OnCancelHandler h) {
+        onCancelHandler = h;
+    }
+
+    protected void closeEditor() {
+        if (binder.hasChanges()) {
+            ProtonConfirmationDialog dialog = new ProtonConfirmationDialog("Есть несохраненные изменения. Вы уверены?");
+            dialog.showConfirmation(e -> {
+                    dialog.close();
+                    return;
+            });
+        }
+        onCancelHandler.onCancel();
+    }
 
     public BaseDictViewEditor() {
         super();
@@ -103,16 +142,22 @@ public abstract class BaseDictViewEditor<E extends BaseDict, S extends BaseServi
         return new HorizontalLayout(saveButton, revertButton, closeButton);
     }
 
-    protected void closeEditor() {
-        onChangeHandler.onChange();
-    }
-
     void saveItem() {
         if (!binder.validate().isOk())
             return;
         try {
+            binder.writeBean(item);
             service.save(item);
-            onChangeHandler.onChange();
+            ownerDictView.grid.getDataProvider().refreshItem(item);
+
+//            if (editorMode == EditorMode.MODE_EDIT) { // При редактировании достаточно обновить строку таблицы
+//                ownerDictView.refreshGrid();
+//                //ownerDictView.grid.getDataProvider().refreshItem(item);
+//            }
+//            if (editorMode == EditorMode.MODE_INSERT) {
+//                ownerDictView.refreshGrid();
+//            }
+            onSaveHandler.onSave();
         } catch (DataIntegrityViolationException e) {
             new ProtonWarningDialog(ProtonStrings.ERROR, NestedExceptionUtils.getMostSpecificCause(e).getMessage());
             log.error(Arrays.toString(e.getStackTrace()));
@@ -123,11 +168,9 @@ public abstract class BaseDictViewEditor<E extends BaseDict, S extends BaseServi
         }
     }
 
-    public interface OnChangeHandler {
-        void onChange();
-    }
 
     public final void editItem(@NotNull E i) {
+        editorMode = EditorMode.MODE_EDIT;
         if (!service.existsById(i.getId())) {
             throw new NoSuchElementException(ProtonStrings.RECORD_NOT_FOUND + ": " + i);
         }
@@ -138,12 +181,14 @@ public abstract class BaseDictViewEditor<E extends BaseDict, S extends BaseServi
             item = i;
         }
         revertButton.setEnabled(true);
-        binder.setBean(item);
+//        binder.setBean(item);
+        binder.readBean(item);
         nameField.focus();
         log.debug("EDIT ITEM: {}", item);
     }
 
     public final void newItem(@NotNull E i) {
+        editorMode = EditorMode.MODE_INSERT;
         revertButton.setEnabled(false);
         if (i.isPersisted()) {
             assert true : "Вызов newItem c Persisted аргументом";
@@ -151,13 +196,10 @@ public abstract class BaseDictViewEditor<E extends BaseDict, S extends BaseServi
         } else {
             item = i;
         }
-        binder.setBean(item);
+//        binder.setBean(item);
+        binder.readBean(item);
         nameField.focus();
         log.debug("NEW ITEM: {}", item);
-    }
-
-    public void setOnChange(OnChangeHandler h) {
-        onChangeHandler = h;
     }
 
     public BaseDictView<E, S> getOwnerDictView() {

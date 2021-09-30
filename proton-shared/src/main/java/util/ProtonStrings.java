@@ -24,5 +24,7 @@ public final class ProtonStrings {
     public static final String OPTLOCK_DELETE_ERROR = "Запись была удалена другим пользователеи";
     public static final String DATA_INTEGRITY_VIOLATION = "Невозможно выполнить оперцию. Нарушение целостности данных.";
     public static final String ERROR = "Ошибка приложения. Обратитесь к разработчикам.";
+    public static final String EXPORT_EXCEL = "Excel";
+    public static final String EXPORT_PDF = "PDF";
     private ProtonStrings() {}
 }
