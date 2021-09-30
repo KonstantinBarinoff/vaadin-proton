@@ -1,36 +1,27 @@
 package proton.reports;
 
 import com.vaadin.flow.server.StreamResource;
+import proton.base.BaseEntity;
+
 import java.util.List;
 
 /**
  * Абстрактный класс, включающий в себя фабричный метод для создания отчётов различных форматов (Excel, PDF)
  */
-public abstract class ReportFactory {
+public abstract class ReportFactory<E extends BaseEntity> {
 
-    Report report = createReport();
+    GridReport<E> report = createGridReport();
 
     /**
      * Фабричный метод
-     * @return Экземпляр, наследующий класс Report
+     * @return Экземпляр, наследующий класс GridReport
      */
-    protected abstract Report createReport();
-
-    /**
-     * Файл-разметка отчета *.jrxml
-     * @param reportForm Путь к файлу отчёта (например "classpath:FirstReport.jrxml")
-     */
-    //TODO 27.09.2021 ovsyannikov_sn: Пока жестко указывается путь к файлу.
-    // Требуется доработка, для автоматического выбора формы отчета, зависящей от
-    // текущего представления. Разобраться с фиксированными формами отчёта.
-    public void setReportForm(String reportForm) {
-        report.setReportForm(reportForm);
-    }
+    protected abstract GridReport<E> createGridReport();
 
     /**
      * @param reportContent Коллекция данных для отчета
      */
-    public void setReportContent(List reportContent) {
+    public void setReportContent(List <E> reportContent) {
         report.setReportContent(reportContent);
     }
 

@@ -1,9 +1,11 @@
 package proton.reports;
 
-public class ExcelCreator extends ReportFactory {
+import proton.base.BaseEntity;
+
+public class ExcelCreator <E extends BaseEntity> extends ReportFactory<E> {
 
     @Override
-    protected Report createReport() {
-       return new Excel();
+    protected GridReport<E> createGridReport() {
+       return new ExcelReport<>();
    }
 }

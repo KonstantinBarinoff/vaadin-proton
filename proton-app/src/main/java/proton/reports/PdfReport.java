@@ -3,11 +3,12 @@ package proton.reports;
 import com.vaadin.flow.server.StreamResource;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
+import proton.base.BaseEntity;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-public class Pdf extends Report {
+public class PdfReport <E extends BaseEntity> extends GridReport<E> {
 
     /**
      * @see ReportFactory#getReportResource()

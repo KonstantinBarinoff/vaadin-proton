@@ -227,14 +227,13 @@ public abstract class BaseDictView<E extends BaseDict, S extends BaseService<E>>
     }
 
     private void exportReport(ClickEvent<Button> event) {
-        ReportFactory factory;
+        ReportFactory<E> factory;
         if ("Excel".equals(event.getSource().getText())) {
-            factory = new ExcelCreator();
+            factory = new ExcelCreator<>();
         } else {
-            factory = new PdfCreator();
+            factory = new PdfCreator<>();
         }
         List<E> content = service.findAll();
-        factory.setReportForm("classpath:TestReport.jrxml");
         factory.setReportContent(content);
         StreamResource resource = factory.getReportResource();
         StreamRegistration registration = VaadinSession.getCurrent().getResourceRegistry().registerResource(resource);
